@@ -19,12 +19,16 @@ import javax.swing.JPanel;
 
 public class GamePanel extends JPanel {
     
-    private int xPos, yPos;
+   
     private BufferedImage img;
     private BufferedImage[][] animations;
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
     private int p_Action = idling;
-    private int p_Dir = 0;
+    
+    private int xPos, yPos;
+    private int p_xDir = 0;
+    private int p_yDir = 0;
+    
     private boolean moveState = false;
     
     public GamePanel(){
@@ -45,6 +49,11 @@ public class GamePanel extends JPanel {
     public void importImg(){
         String path = "src/main/resources/assets/";
         try{
+//            if(p_xDir == -1){
+//                img = ImageIO.read(new File( path + "Soldier.png"));
+//            }else{
+//                
+//            }
             img = ImageIO.read(new File( path + "Soldier.png"));
         }
         catch(IOException e){
@@ -60,31 +69,38 @@ public class GamePanel extends JPanel {
         }
     }
     
-    public void setDir(int dir){
-        this.p_Dir = dir;
-        moveState = true;
+    
+    public void setXDir(int dir){
+        this.p_xDir = dir;
+        if(dir == 0)changeMoveState(false);
+        else{changeMoveState(true);}
+    }
+    
+    public void setYDir(int dir){
+        this.p_yDir = dir;
+        if(dir == 0)changeMoveState(false);
+        else{changeMoveState(true);}
     }
     
     public void changeMoveState(boolean movestate){
         this.moveState = movestate;
     }
     
+    public boolean isMoving(){
+        if((p_yDir!=0)&&(p_xDir!=0))return true;
+        else{
+            return false;
+        }
+    }
+    
     public void changePos(){
-        if(moveState){
-            switch(p_Dir){
-                case up:
-                    yPos -= 5;
-                    break;
-                case down:
-                    yPos += 5;
-                    break;
-                case left:
-                    xPos -= 5;
-                    break;
-                case right:
-                    xPos += 5;
-                    break;
-            }
+        if((p_yDir != 0) && (p_xDir != 0)){
+            int diag_dist = (int)Math.floor(Math.sqrt(Math.pow((double)(movespeed*p_yDir),2) + Math.pow((double)(movespeed*p_xDir),2)));
+            xPos += diag_dist*p_xDir; //x = -5
+            yPos += diag_dist*p_yDir; //y = +5
+        }else{
+            yPos += movespeed*p_yDir;
+            xPos += movespeed*p_xDir;
         }
     }
     

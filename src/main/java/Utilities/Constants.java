@@ -22,11 +22,14 @@ public class Constants {
         }
     }
     
+    
     public static class Dir{
-        public final static int up = 1;
-        public final static int down = 2;
-        public final static int left = 3;
-        public final static int right = 4;
+        public final static int movespeed = 1;
+        public final static int up = -1;
+        public final static int down = 1;
+        public final static int left = -1;
+        public final static int right = 1;
+       
     }
     
 }
