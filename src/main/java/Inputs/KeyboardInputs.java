@@ -4,6 +4,7 @@ import Gamecode.GamePanel;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import static Utilities.Constants.Dir.*;
+import static Utilities.Constants.playerConstants.*;
 
 /**
  *
@@ -25,7 +26,8 @@ public class KeyboardInputs implements KeyListener{
     @Override
     public void keyReleased(KeyEvent e){
         switch(e.getKeyCode()){
-            case KeyEvent.VK_W: 
+            case KeyEvent.VK_W:
+                jumpcount++;
                 gamepanel.setYDir(0);break;
             case KeyEvent.VK_S: 
                 gamepanel.setYDir(0);break;
@@ -41,13 +43,14 @@ public class KeyboardInputs implements KeyListener{
     public void keyPressed(KeyEvent e){
         switch(e.getKeyCode()){
             case KeyEvent.VK_W:
-                gamepanel.setYDir(up);break;
+                //adding jump
+                gamepanel.jump();break;
             case KeyEvent.VK_S:
                 gamepanel.setYDir(down);break;
             case KeyEvent.VK_A:
-                gamepanel.setXDir(left);break;
+                gamepanel.walk(left);break;
             case KeyEvent.VK_D:
-                gamepanel.setXDir(right);break;
+                gamepanel.walk(right);break;
         }      
     }
     
