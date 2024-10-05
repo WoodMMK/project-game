@@ -72,18 +72,14 @@ public class GamePanel extends JPanel {
     
     public void setXDir(int dir){
         this.p_xDir = dir;
-        if(dir == 0)changeMoveState(false);
-        else{changeMoveState(true);}
     }
     
     public void setYDir(int dir){
         this.p_yDir = dir;
-        if(dir == 0)changeMoveState(false);
-        else{changeMoveState(true);}
     }
     
-    public void changeMoveState(boolean movestate){
-        this.moveState = movestate;
+    public void changeMoveState(){
+        this.moveState = (this.p_xDir != 0 || this.p_yDir != 0);
     }
     
     public boolean isMoving(){
@@ -127,6 +123,7 @@ public class GamePanel extends JPanel {
     public void gupdate(){
         updateAniTick();
         changePos();
+        changeMoveState();
         assignAni();
     }
     
