@@ -19,37 +19,36 @@ public class KeyboardInputs implements KeyListener{
     
     @Override
     public void keyTyped(KeyEvent e){
-        
+        // we don't use this function
     }
     
     @Override
     public void keyReleased(KeyEvent e){
         switch(e.getKeyCode()){
-            case KeyEvent.VK_W:
-            case KeyEvent.VK_S:
-            case KeyEvent.VK_A:
-            case KeyEvent.VK_D:
-                gamepanel.changeMoveState(false);
-                break;
+            case KeyEvent.VK_W: 
+                gamepanel.setYDir(0);break;
+            case KeyEvent.VK_S: 
+                gamepanel.setYDir(0);break;
+            case KeyEvent.VK_A: 
+                gamepanel.setXDir(0);break;
+            case KeyEvent.VK_D: 
+                gamepanel.setXDir(0);break;
         }
+        
     }
     
     @Override
     public void keyPressed(KeyEvent e){
         switch(e.getKeyCode()){
             case KeyEvent.VK_W:
-                gamepanel.setDir(up);
-                break;
+                gamepanel.setYDir(up);break;
             case KeyEvent.VK_S:
-                gamepanel.setDir(down);
-                break;
+                gamepanel.setYDir(down);break;
             case KeyEvent.VK_A:
-                gamepanel.setDir(left);
-                break;
+                gamepanel.setXDir(left);break;
             case KeyEvent.VK_D:
-                gamepanel.setDir(right);
-                break;
-        }
+                gamepanel.setXDir(right);break;
+        }      
     }
     
 }
