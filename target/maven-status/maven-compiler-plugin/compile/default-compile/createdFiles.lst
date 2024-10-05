@@ -1,6 +1,5 @@
 Utilities\Constants.class
 Gamecode\GamePanel.class
-Utilities\Constants$Level.class
 Gamecode\MainClass.class
 Inputs\KeyboardInputs.class
 Utilities\Constants$playerConstants.class

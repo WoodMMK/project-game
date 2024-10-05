@@ -7,9 +7,10 @@ package Gamecode;
 
 import Inputs.KeyboardInputs;
 import Inputs.MouseInputs;
+import Level.LevelHandler;
+import static Level.LevelHandler.gravity;
 import static Utilities.Constants.playerConstants.*;
 import static Utilities.Constants.Dir.*;
-import static Utilities.Constants.Level.*;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -19,8 +20,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel {
-    
-   
     private BufferedImage img;
     private BufferedImage[][] animations;
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
@@ -32,11 +31,22 @@ public class GamePanel extends JPanel {
     
     private boolean moveState = false;
     
+    long keyPressStartTime = 0;
+    long keyPressLimit = 300;
+    private boolean isJumpPressed;
+    
+    public void jumplimit(){
+        //start jump limit
+        setJumpPressed(true);
+        this.keyPressStartTime = System.currentTimeMillis();
+    }
+    public void setJumpPressed(boolean b){
+        this.isJumpPressed = b;
+    }
     public GamePanel(){
         importImg();
         setPanelSize();
         getAnimations();
-       
         addKeyListener(new KeyboardInputs(this));
         addMouseListener(new MouseInputs());
         addMouseMotionListener(new MouseInputs());             
@@ -72,16 +82,19 @@ public class GamePanel extends JPanel {
     
     public void walk(int dir){
         if(dir + p_xDir == 0){
-            setXDir(0);
+            this.p_xDir = 0;
         }else{
-            setXDir(dir);
+            this.p_xDir = dir;
         }
     }
     
     public void jump(){
         if(jumpcount<maxjump){
-            setYDir(up*jump_power);
+            this.p_yDir = up;
         }
+    }
+    public void drop(){
+        this.p_yDir = down;
     }
     
     public void setXDir(int dir){
@@ -97,23 +110,31 @@ public class GamePanel extends JPanel {
     }
     
     public boolean isMoving(){
-        if((p_yDir!=0)&&(p_xDir!=0))return true;
-        else{
-            return false;
-        }
+        return (p_yDir!=0)&&(p_xDir!=0);
+    }
+    
+    public boolean isOnground(){
+        return yPos == LevelHandler.GroundPos;
     }
     
     public void changePos(){
-//        if((p_yDir != 0) && (p_xDir != 0)){
-//            int diag_dist = (int)Math.floor(Math.sqrt(Math.pow((double)(movespeed*p_yDir),2) + Math.pow((double)(movespeed*p_xDir),2)));
-//            xPos += diag_dist*p_xDir; //x = -5
-//            yPos += diag_dist*p_yDir; //y = +5
-        //}else{
+        if (this.isJumpPressed && System.currentTimeMillis() - keyPressStartTime > keyPressLimit){
+            this.isJumpPressed = false;
+            setYDir(0);
+        }
+        xPos += movespeed*p_xDir;
+        if(p_yDir == down){
             yPos += movespeed*p_yDir;
-            xPos += movespeed*p_xDir;
-        //}
-        if(yPos<500)yPos+= movespeed * p_yDir + gravity;
-        else if(yPos==500)jumpcount = 0;
+        }
+        else if(p_yDir == up){
+            yPos += jump_power*p_yDir;
+        }
+        
+        if (yPos >= LevelHandler.GroundPos) {
+            yPos = LevelHandler.GroundPos;
+            jumpcount =0;
+        }
+        yPos += gravity;
     }
     
     private void updateAniTick() {
@@ -144,7 +165,7 @@ public class GamePanel extends JPanel {
     }
     
     public void paintComponent(Graphics g){
-        super.paintComponent(g);        
+        super.paintComponent(g);
         g.drawImage(animations[p_Action][aniIndex], 0 + xPos, 0 + yPos, 100 * 3, 100 * 3, null);
     }
 

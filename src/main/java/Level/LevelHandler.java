@@ -9,5 +9,7 @@ package Level;
  * @author woody bvvgffb                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
  */
 public class LevelHandler {
-    int ground_pos = 500;
+    public final static int gravity = 2;
+    public final static int GroundPos = 500;
+    
 }

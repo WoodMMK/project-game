@@ -11,7 +11,8 @@ import static Utilities.Constants.playerConstants.*;
  * @author Gateaux
  */
 public class KeyboardInputs implements KeyListener{
-    
+    long keyPressStartTime = 0;
+    long keyPressLimit = 500; // 1 second
     private GamePanel gamepanel;
     
     public KeyboardInputs(GamePanel gamepanel){
@@ -27,6 +28,7 @@ public class KeyboardInputs implements KeyListener{
     public void keyReleased(KeyEvent e){
         switch(e.getKeyCode()){
             case KeyEvent.VK_W:
+                gamepanel.setJumpPressed(false);
                 jumpcount++;
                 gamepanel.setYDir(0);break;
             case KeyEvent.VK_S: 
@@ -43,10 +45,10 @@ public class KeyboardInputs implements KeyListener{
     public void keyPressed(KeyEvent e){
         switch(e.getKeyCode()){
             case KeyEvent.VK_W:
-                //adding jump
+                gamepanel.jumplimit();
                 gamepanel.jump();break;
             case KeyEvent.VK_S:
-                gamepanel.setYDir(down);break;
+                gamepanel.drop();break;
             case KeyEvent.VK_A:
                 gamepanel.walk(left);break;
             case KeyEvent.VK_D:
