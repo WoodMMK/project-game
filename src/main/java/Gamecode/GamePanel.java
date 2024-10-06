@@ -32,17 +32,9 @@ public class GamePanel extends JPanel {
     private boolean moveState = false;
     
     long keyPressStartTime = 0;
-    long keyPressLimit = 300;
-    private boolean isJumpPressed;
+    long keyPressLimit = 200;
     
-    public void jumplimit(){
-        //start jump limit
-        setJumpPressed(true);
-        this.keyPressStartTime = System.currentTimeMillis();
-    }
-    public void setJumpPressed(boolean b){
-        this.isJumpPressed = b;
-    }
+    
     public GamePanel(){
         importImg();
         setPanelSize();
@@ -88,11 +80,7 @@ public class GamePanel extends JPanel {
         }
     }
     
-    public void jump(){
-        if(jumpcount<maxjump){
-            this.p_yDir = up;
-        }
-    }
+    
     public void drop(){
         this.p_yDir = down;
     }
@@ -117,11 +105,23 @@ public class GamePanel extends JPanel {
         return yPos == LevelHandler.GroundPos;
     }
     
+    public void jump(){
+        if(jumpcount<maxjump && isOnground()){
+            jumpcount++;
+            this.p_yDir = up;
+            this.keyPressStartTime = System.currentTimeMillis();
+        }
+    }
+    
     public void changePos(){
-        if (this.isJumpPressed && System.currentTimeMillis() - keyPressStartTime > keyPressLimit){
-            this.isJumpPressed = false;
+        long timedif = System.currentTimeMillis() - keyPressStartTime;
+        if (this.p_yDir == up &&  timedif> keyPressLimit){
+            jumpcount++;
+            keyPressStartTime = 0;
             setYDir(0);
         }
+        
+        //move a character
         xPos += movespeed*p_xDir;
         if(p_yDir == down){
             yPos += movespeed*p_yDir;
@@ -130,11 +130,13 @@ public class GamePanel extends JPanel {
             yPos += jump_power*p_yDir;
         }
         
+        yPos += gravity;
+        
+        //jump reset
         if (yPos >= LevelHandler.GroundPos) {
             yPos = LevelHandler.GroundPos;
             jumpcount =0;
         }
-        yPos += gravity;
     }
     
     private void updateAniTick() {
