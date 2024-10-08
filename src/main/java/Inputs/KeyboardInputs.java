@@ -45,9 +45,13 @@ public class KeyboardInputs implements KeyListener{
             case KeyEvent.VK_S:
                 gamepanel.setYDir(down);break;
             case KeyEvent.VK_A:
-                gamepanel.setXDir(left);break;
+                gamepanel.setXDir(left);
+                gamepanel.setFacing(left);
+                break;
             case KeyEvent.VK_D:
-                gamepanel.setXDir(right);break;
+                gamepanel.setXDir(right);
+                gamepanel.setFacing(right);
+                break;
         }      
     }
     
