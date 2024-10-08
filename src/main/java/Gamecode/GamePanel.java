@@ -26,8 +26,8 @@ public class GamePanel extends JPanel {
     private int p_Action = idling;
     
     private int xPos, yPos;
-    private int p_xDir = 0;
-    private int p_yDir = 0;
+    private int p_speedX = 0;
+    private int p_speedY = 0;
     
     private boolean moveState = false;
     
@@ -52,7 +52,7 @@ public class GamePanel extends JPanel {
     public void importImg(){
         String path = "src/main/resources/assets/";
         try{
-//            if(p_xDir == -1){
+//            if(p_speedX == -1){
 //                img = ImageIO.read(new File( path + "Soldier.png"));
 //            }else{
 //                
@@ -73,32 +73,32 @@ public class GamePanel extends JPanel {
     }
     
     public void walk(int dir){
-        if(dir + p_xDir == 0){
-            this.p_xDir = 0;
+        if(dir + p_speedX == 0){
+            this.p_speedX = 0;
         }else{
-            this.p_xDir = dir;
+            this.p_speedX = dir;
         }
     }
     
     
     public void drop(){
-        this.p_yDir = down;
+        this.p_speedY = down;
     }
     
     public void setXDir(int dir){
-        this.p_xDir = dir;
+        this.p_speedX = dir;
     }
     
     public void setYDir(int dir){
-        this.p_yDir = dir;
+        this.p_speedY = dir;
     }
     
     public void changeMoveState(){
-        this.moveState = (this.p_xDir != 0 || this.p_yDir != 0);
+        this.moveState = (this.p_speedX != 0 || this.p_speedY != 0);
     }
     
     public boolean isMoving(){
-        return (p_yDir!=0)&&(p_xDir!=0);
+        return (p_speedY!=0)&&(p_speedX!=0);
     }
     
     public boolean isOnground(){
@@ -108,26 +108,26 @@ public class GamePanel extends JPanel {
     public void jump(){
         if(jumpcount<maxjump && isOnground()){
             jumpcount++;
-            this.p_yDir = up;
+            this.p_speedY = up;
             this.keyPressStartTime = System.currentTimeMillis();
         }
     }
     
     public void changePos(){
         long timedif = System.currentTimeMillis() - keyPressStartTime;
-        if (this.p_yDir == up &&  timedif> keyPressLimit){
+        if (this.p_speedY == up &&  timedif> keyPressLimit){
             jumpcount++;
             keyPressStartTime = 0;
             setYDir(0);
         }
         
         //move a character
-        xPos += movespeed*p_xDir;
-        if(p_yDir == down){
-            yPos += movespeed*p_yDir;
+        xPos += movespeed*p_speedX;
+        if(p_speedY == down){
+            yPos += movespeed*p_speedY;
         }
-        else if(p_yDir == up){
-            yPos += jump_power*p_yDir;
+        else if(p_speedY == up){
+            yPos += jump_power*p_speedY;
         }
         
         yPos += gravity;
