@@ -30,12 +30,12 @@ public class GamePanel extends JPanel {
     private int p_yDir = 0;
     
     private boolean moveState = false;
+    private int p_facing = 1;
     
     public GamePanel(){
         importImg();
-        setPanelSize();
         getAnimations();
-       
+        setPanelSize();  
         addKeyListener(new KeyboardInputs(this));
         addMouseListener(new MouseInputs());
         addMouseMotionListener(new MouseInputs());             
@@ -83,7 +83,8 @@ public class GamePanel extends JPanel {
     }
     
     public boolean isMoving(){
-        if((p_yDir!=0)&&(p_xDir!=0))return true;
+        if((p_yDir!=0)&&(p_xDir!=0))
+            return true;
         else{
             return false;
         }
@@ -127,9 +128,17 @@ public class GamePanel extends JPanel {
         assignAni();
     }
     
+    public void setFacing(int facing){
+        p_facing = facing;
+    }
+    
     public void paintComponent(Graphics g){
-        super.paintComponent(g);        
-        g.drawImage(animations[p_Action][aniIndex], 0 + xPos, 0 + yPos, 100 * 3, 100 * 3, null);
+        super.paintComponent(g);
+        
+        if(p_facing == right)
+            g.drawImage(animations[p_Action][aniIndex], 0 + xPos, 0 + yPos, 100 * 3, 100 * 3, null);
+        else if(p_facing == left)
+            g.drawImage(animations[p_Action][aniIndex], 300 + xPos, 0 + yPos, -100 * 3, 100 * 3, null);
     }
 
     
