@@ -46,9 +46,16 @@ public class KeyboardInputs implements KeyListener{
             case KeyEvent.VK_S:
                 gamepanel.drop();break;
             case KeyEvent.VK_A:
-                gamepanel.walk(left);break;
+                gamepanel.walk(left);
+                gamepanel.setXDir(left);
+                gamepanel.setFacing(left);
+                break;
+            
             case KeyEvent.VK_D:
-                gamepanel.walk(right);break;
+                gamepanel.walk(right);
+                gamepanel.setXDir(right);
+                gamepanel.setFacing(right);
+                break;
         }      
     }
     
