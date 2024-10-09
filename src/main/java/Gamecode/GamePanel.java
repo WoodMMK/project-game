@@ -7,6 +7,8 @@ package Gamecode;
 
 import Inputs.KeyboardInputs;
 import Inputs.MouseInputs;
+import Level.LevelHandler;
+import static Level.LevelHandler.gravity;
 import static Utilities.Constants.playerConstants.*;
 import static Utilities.Constants.Dir.*;
 import java.awt.Dimension;
@@ -18,8 +20,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel {
-    
-   
     private BufferedImage img;
     private BufferedImage Bg01,Bg02,Bg03,Bg04,Bg05,Bg06,Bg07;
     private BufferedImage[][] animations;
@@ -27,11 +27,15 @@ public class GamePanel extends JPanel {
     private int p_Action = idling;
     
     private int xPos, yPos;
-    private int p_xDir = 0;
-    private int p_yDir = 0;
+    private int p_speedX = 0;
+    private int p_speedY = 0;
     
     private boolean moveState = false;
     private int p_facing = 1;
+    
+    long keyPressStartTime = 0;
+    long keyPressLimit = 200;
+    
     
     public GamePanel(){
         importImg();
@@ -50,13 +54,7 @@ public class GamePanel extends JPanel {
     public void importImg(){
         String path = "src/main/resources/assets/";
         String path_bg = "src/main/resources/assets/BackGround/";
-        try{
-//            if(p_xDir == -1){
-//                img = ImageIO.read(new File( path + "Soldier.png"));
-//            }else{
-//                
-//            }
-            
+        try{            
             img = ImageIO.read(new File( path + "Soldier.png"));
             Bg01 = ImageIO.read(new File( path_bg + "Background 1.png"));
             Bg02 = ImageIO.read(new File( path_bg + "Background 2.png"));
@@ -79,36 +77,71 @@ public class GamePanel extends JPanel {
         }
     }
     
+    public void walk(int dir){
+        if(dir + p_speedX == 0){
+            this.p_speedX = 0;
+        }else{
+            this.p_speedX = dir;
+        }
+    }
+    
+    
+    public void drop(){
+        this.p_speedY = down;
+    }
     
     
     public void setXDir(int dir){
-        this.p_xDir = dir;
+        this.p_speedX = dir;
     }
     
     public void setYDir(int dir){
-        this.p_yDir = dir;
+        this.p_speedY = dir;
     }
     
     public void changeMoveState(){
-        this.moveState = (this.p_xDir != 0 || this.p_yDir != 0);
+        this.moveState = (this.p_speedX != 0 || this.p_speedY != 0);
     }
     
     public boolean isMoving(){
-        if((p_yDir!=0)&&(p_xDir!=0))
-            return true;
-        else{
-            return false;
+        return (p_speedY!=0)&&(p_speedX!=0);
+    }
+    
+    public boolean isOnground(){
+        return yPos == LevelHandler.GroundPos;
+    }
+    
+    public void jump(){
+        if(jumpcount<maxjump && isOnground()){
+            jumpcount++;
+            this.p_speedY = up;
+            this.keyPressStartTime = System.currentTimeMillis();
         }
     }
     
     public void changePos(){
-        if((p_yDir != 0) && (p_xDir != 0)){
-            int diag_dist = (int)Math.floor(Math.sqrt(Math.pow((double)(movespeed*p_yDir),2) + Math.pow((double)(movespeed*p_xDir),2)));
-            xPos += diag_dist*p_xDir; //x = -5
-            yPos += diag_dist*p_yDir; //y = +5
-        }else{
-            yPos += movespeed*p_yDir;
-            xPos += movespeed*p_xDir;
+        long timedif = System.currentTimeMillis() - keyPressStartTime;
+        if (this.p_speedY == up &&  timedif> keyPressLimit){
+            jumpcount++;
+            keyPressStartTime = 0;
+            setYDir(0);
+        }
+        
+        //move a character
+        xPos += movespeed*p_speedX;
+        if(p_speedY == down){
+            yPos += movespeed*p_speedY;
+        }
+        else if(p_speedY == up){
+            yPos += jump_power*p_speedY;
+        }
+        
+        yPos += gravity;
+        
+        //jump reset
+        if (yPos >= LevelHandler.GroundPos) {
+            yPos = LevelHandler.GroundPos;
+            jumpcount =0;
         }
     }
     

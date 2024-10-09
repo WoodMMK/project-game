@@ -1,9 +1,10 @@
+Utilities\Constants.class
+Gamecode\GamePanel.class
 Gamecode\MainClass.class
 Inputs\KeyboardInputs.class
-Utilities\Constants.class
 Utilities\Constants$playerConstants.class
-Gamecode\GamePanel.class
 Gamecode\GameWindow.class
 Inputs\MouseInputs.class
 Utilities\Constants$Dir.class
 Gamecode\Game.class
+Level\LevelHandler.class

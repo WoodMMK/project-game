@@ -43,6 +43,7 @@ public class Game implements Runnable{
         
         while(true){
             long currentTime = System.nanoTime();
+            
             fDiff += (currentTime - previousFrame) / timePerFrame;
             uDiff += (currentTime - previousFrame) / timePerUpdate;
             //System.out.printf("TPF : %f | TPU %f\n", timePerFrame, timePerUpdate);
