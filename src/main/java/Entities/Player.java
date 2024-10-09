@@ -6,6 +6,7 @@ import Levels.LevelHandler;
 import static Levels.LevelHandler.gravity;
 import Utilities.LodeSave;
 import java.awt.Graphics;
+import static java.lang.Thread.sleep;
 
 /**
  *
@@ -19,8 +20,12 @@ public class Player extends Entity {
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
     private BufferedImage[][] animations;
     private BufferedImage img;
+    
+    private long airtimeStart=0;
+    private long airtimeDif;
+    
     long keyPressStartTime = 0;
-    long keyPressLimit = 200;
+    long keyPressLimit = 100;
     private boolean Up, Right, Left, Jump ,inAir;
     int flipX;
     int fixcam = 640;
@@ -75,7 +80,10 @@ public class Player extends Entity {
     }
 
     public boolean isOnGround() {
-        return y == LevelHandler.GroundPos;
+        return this.y == LevelHandler.GroundPos;
+    }
+    public boolean isOnAir(){
+        return this.y < LevelHandler.GroundPos;
     }
 
     public void jump() {
@@ -87,11 +95,29 @@ public class Player extends Entity {
 
     public void changePos() {
         moveState = false;
-        long timedif = System.currentTimeMillis() - keyPressStartTime;
-        if (Up && timedif > keyPressLimit) {
+        long jump_timedif = System.currentTimeMillis() - keyPressStartTime;
+
+        if(isOnAir()){     
+            if (airtimeStart == 0){
+                airtimeStart = System.currentTimeMillis(); 
+            }
+            airtimeDif = System.currentTimeMillis()-airtimeStart;
+            
+            //y += gravity;);
+            y += gravity * airtimeDif/1000;
+        }
+        else{
+            airtimeDif = 0;
+            airtimeStart = 0;
+            jumpcount = 0;
+            y = LevelHandler.GroundPos;
+        }
+        
+        if(Up && jump_timedif > keyPressLimit) {
             keyPressStartTime = 0;
             setUp(false);
         }
+        
         //move a character x
         if (Right && !Left) {
             moveState = true;
@@ -109,18 +135,8 @@ public class Player extends Entity {
         if (Up) {
             y += jump_power * -1;
             moveState = true;
-
-        } else if (!isOnGround() && !Up) {
-            moveState = true;
-            y += movespeed;
         }
-        y += gravity;
-
-        //jump reset
-        if (y >= LevelHandler.GroundPos) {
-            y = LevelHandler.GroundPos;
-            jumpcount = 0;
-        }
+        
     }
 
     public void getAnimations() {
@@ -152,5 +168,5 @@ public class Player extends Entity {
     public void setJump(boolean jump) {
         this.Jump = jump;
     }
-
+    
 }

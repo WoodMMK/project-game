@@ -25,7 +25,6 @@ public class KeyboardInputs implements KeyListener {
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W:
-
                 gamepanel.getGame().getPlayer().setUp(false);
                 break;
 
