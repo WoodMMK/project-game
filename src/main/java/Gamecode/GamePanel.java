@@ -27,14 +27,16 @@ public class GamePanel extends JPanel {
     private int p_Action = idling;
     
     private int xPos, yPos;
+    private boolean left_pressed, right_pressed;
     private int p_speedX = 0;
     private int p_speedY = 0;
     
     private boolean moveState = false;
     private int p_facing = 1;
     
-    long keyPressStartTime = 0;
-    long keyPressLimit = 200;
+    private long deltatime = 0;
+    private long keyPressStartTime = 0;
+    private long keyPressLimit = 200;
     
     
     public GamePanel(){
@@ -78,7 +80,10 @@ public class GamePanel extends JPanel {
     }
     
     public void walk(int dir){
-        if(dir + p_speedX == 0){
+        if (dir==right) right_pressed = true;
+        else if (dir == left) left_pressed = true;
+        
+        if(left_pressed && right_pressed){
             this.p_speedX = 0;
         }else{
             this.p_speedX = dir;
@@ -92,6 +97,10 @@ public class GamePanel extends JPanel {
     
     
     public void setXDir(int dir){
+        if(dir == 0){
+            left_pressed = false;
+            right_pressed = false;
+        }
         this.p_speedX = dir;
     }
     
@@ -112,7 +121,7 @@ public class GamePanel extends JPanel {
     }
     
     public void jump(){
-        if(jumpcount<maxjump && isOnground()){
+        if(jumpcount<maxjump ){
             jumpcount++;
             this.p_speedY = up;
             this.keyPressStartTime = System.currentTimeMillis();
@@ -120,25 +129,29 @@ public class GamePanel extends JPanel {
     }
     
     public void changePos(){
-        long timedif = System.currentTimeMillis() - keyPressStartTime;
-        if (this.p_speedY == up &&  timedif> keyPressLimit){
+        //change x-axis position
+        xPos += movespeed*p_speedX;
+        
+        //change y-axir position
+        deltatime = System.currentTimeMillis() - keyPressStartTime;
+        if (this.p_speedY == up &&  (deltatime> keyPressLimit)){
+            // if press jump over time limit
             jumpcount++;
             keyPressStartTime = 0;
             setYDir(0);
         }
-        
-        //move a character
-        xPos += movespeed*p_speedX;
-        if(p_speedY == down){
-            yPos += movespeed*p_speedY;
+        else {
+            if(p_speedY == down){
+                yPos += movespeed*p_speedY;
+            }
+            else if(p_speedY == up){
+                yPos += jump_power*p_speedY;
+            }
         }
-        else if(p_speedY == up){
-            yPos += jump_power*p_speedY;
-        }
-        
+        //apply basic gravity
         yPos += gravity;
         
-        //jump reset
+        //set floor && jump reset 
         if (yPos >= LevelHandler.GroundPos) {
             yPos = LevelHandler.GroundPos;
             jumpcount =0;
