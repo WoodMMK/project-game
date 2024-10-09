@@ -27,7 +27,8 @@ public class KeyboardInputs implements KeyListener{
         switch(e.getKeyCode()){
             case KeyEvent.VK_W:
                 jumpcount++;
-                gamepanel.setYDir(0);break;
+                gamepanel.setYDir(0);
+                break;
             case KeyEvent.VK_S: 
                 gamepanel.setYDir(0);break;
             case KeyEvent.VK_A: 
@@ -47,13 +48,10 @@ public class KeyboardInputs implements KeyListener{
                 gamepanel.drop();break;
             case KeyEvent.VK_A:
                 gamepanel.walk(left);
-                gamepanel.setXDir(left);
                 gamepanel.setFacing(left);
                 break;
-            
             case KeyEvent.VK_D:
                 gamepanel.walk(right);
-                gamepanel.setXDir(right);
                 gamepanel.setFacing(right);
                 break;
         }      
