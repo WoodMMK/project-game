@@ -30,6 +30,9 @@ public class Player extends Entity {
         getAnimations();
     }
 
+    public int getX() {
+        return x;
+    }
     private void assignAni() {
         int startAni = p_Action;
         if (moveState) {

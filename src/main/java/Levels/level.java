@@ -27,17 +27,19 @@ public class level {
 //            }
 //        }
 
-        bg = new BufferedImage[5];
+        bg = new BufferedImage[7];
         for (int i = 0; i < bg.length; i++) {
-            bg[i] = LodeSave.getAsset("Background/" + (i + 1) + ".png");
+            bg[i] = LodeSave.getAsset("Background/Background " + (i + 1) + ".png");
         }
     }
 
     public void draw(Graphics g) {
-
+        int cameraX = game.getPlayer().getX() - 640;
+        int count = bg.length;
         for (int i = 0; i < bg.length; i++) {
             if (bg != null) {
-                g.drawImage(bg[i], 0, -1150, 2100, 2000, null);
+                g.drawImage(bg[i], (cameraX - 700) / (count * 2), -1400, 2400, 2400, null);
+                count--;
             }
         }
         //g.drawImage(tileSet, 100, 100, null);
