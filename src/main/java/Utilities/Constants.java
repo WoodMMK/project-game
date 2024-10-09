@@ -10,7 +10,8 @@ public class Constants {
     public static class playerConstants{
         public final static int idling = 0;
         public final static int running = 1;
-        public final static int maxjump = 1;
+        public final static int attacking = 2;
+        public final static int maxjump = 2;
         public static int jumpcount = 0;
         public final static int jump_power = 7;
         public final static int movespeed = 2;
@@ -20,20 +21,12 @@ public class Constants {
                 case idling:
                     return 6;
                 case running:
-                    return 8;
+                    return 7;
+                case attacking:
+                    return 6;
                 default:
                     return 0;
             }
         }
     }
-    
-    
-    public static class Dir{
-        public final static int up = -1;
-        public final static int down = 1;
-        public final static int left = -1;
-        public final static int right = 1;
-       
-    }
-    
 }
