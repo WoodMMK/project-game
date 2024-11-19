@@ -14,7 +14,7 @@ public class Constants {
         public final static int maxjump = 2;
         public static int jumpcount = 0;
         public final static int jump_power = 7;
-        public final static int movespeed = 2;
+        public final static int movespeed = 1;
         
         public static int getSpriteAmount(int p_Action){
             switch(p_Action){
