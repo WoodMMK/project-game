@@ -6,6 +6,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -181,26 +182,45 @@ public class Menu {
         startPanel.add(quitB, c);
 
         settingPanel.setLayout(new GridBagLayout());
+        JPanel difficultP = new JPanel();
+        difficultP.setLayout(new GridBagLayout());
+        c.gridx = 0;
+        c.gridy = 0;
+        difficultP.add(difficultB[0], c);
+        c.gridy = 1;
+        difficultP.add(difficultB[1], c);
+        c.gridy = 2;
+        difficultP.add(difficultB[2], c);
+        c.gridy = 0;
+        settingPanel.add(difficultP, c);
+
+        JPanel soundPanel = new JPanel();
+        soundPanel.setLayout(new GridBagLayout());
+        JPanel on_offP = new JPanel();
+        on_offP.setLayout(new GridBagLayout());
         c.gridy = 0;
         c.gridx = 0;
-        settingPanel.add(difficultB[0], c);
+        on_offP.add(soundB[0], c);
         c.gridx = 1;
-        settingPanel.add(difficultB[1], c);
-        c.gridx = 2;
-        settingPanel.add(difficultB[2], c);
+        on_offP.add(soundB[1], c);
         c.gridx = 0;
+        soundPanel.add(on_offP, c);
+
+        JPanel soundSlide = new JPanel();
+        soundSlide.setLayout(new GridBagLayout());
+        c.gridx = 0;
+        soundSlide.add(volume);
+        c.gridx = 1;
+        soundSlide.add(valueLabel, c);
+
+        soundPanel.add(soundSlide, c);
+
         c.gridy = 1;
-        settingPanel.add(soundB[0], c);
-        c.gridx = 1;
-        settingPanel.add(soundB[1], c);
+        c.gridx = 0;
+        settingPanel.add(soundPanel, c);
+
         c.gridy = 2;
-        c.gridx = 1;
-        settingPanel.add(volume, c);
-        c.gridx = 2;
-        settingPanel.add(valueLabel, c);
-        c.gridy = 3;
-        c.gridx = 1;
-        c.gridwidth = 1;
+        c.gridx = 0;
         settingPanel.add(backB, c);
 
         mainPanel.add(startPanel, "main");
