@@ -19,9 +19,11 @@ public class Player extends Entity {
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
     private BufferedImage[][] animations;
     private BufferedImage img;
-    long keyPressStartTime = 0;
-    long keyPressLimit = 200;
-    private boolean Up, Right, Left, Jump ,inAir;
+    
+    private long jumpPressedlimit = 150;
+    private long airtime;
+    private boolean Up, Right, Left,Down;
+    private boolean Jumpable = false, DbJumpable = false;
     int flipX;
     int fixcam = 640;
 
@@ -75,21 +77,12 @@ public class Player extends Entity {
     }
 
     public boolean isOnGround() {
-        return y == LevelHandler.GroundPos;
-    }
-
-    public void jump() {
-        if (jumpcount < maxjump) {
-            jumpcount++;
-            this.keyPressStartTime = System.currentTimeMillis();
-        }
+        return y >= LevelHandler.GroundPos;
     }
 
     public void changePos() {
         moveState = false;
-        long timedif = System.currentTimeMillis() - keyPressStartTime;
-        if (Up && timedif > keyPressLimit) {
-            keyPressStartTime = 0;
+        if (Up && airtime > jumpPressedlimit) {
             setUp(false);
         }
         //move a character x
@@ -106,21 +99,50 @@ public class Player extends Entity {
         }
 
         //move a character y
-        if (Up) {
-            y += jump_power * -1;
-            moveState = true;
-
-        } else if (!isOnGround() && !Up) {
+        if(Down){
             moveState = true;
             y += movespeed;
         }
-        y += gravity;
+        
+        if(Up){//need airtime to limit each jump
+            if (Jumpable) {
+                if(airtime < this.jumpPressedlimit){
+                    System.out.println("Jumping");
+                    y += jump_power * -1;
+                    moveState = true;
+                }else{
+                    Jumpable = false;
+                    airtime = 0;
+                }
+            }
+            if (DbJumpable && airtime > 50) {
+                if(airtime < this.jumpPressedlimit){
+                    Jumpable = false;
+                    System.out.println("Double Jumping");
+                    y += jump_power * -1;
+                    moveState = true;
+                }else{
+                    DbJumpable = false;
+                }
+            }
+        }
+        
+        
+        if (!isOnGround()) {
+            airtime += 1;
+            moveState = true;
+            y += gravity;
+        }
 
         //jump reset
-        if (y >= LevelHandler.GroundPos) {
+        if (isOnGround()) {
+            airtime = 0;
+            this.Jumpable = true;
+            this.DbJumpable = true;
             y = LevelHandler.GroundPos;
             jumpcount = 0;
         }
+        System.out.println("current y: " + y);
     }
 
     public void getAnimations() {
@@ -146,11 +168,22 @@ public class Player extends Entity {
     }
 
     public void setUp(boolean up) {
+//        if(Jumpable){
+//            this.Up = up;
+//        }
+//        else if(!DbJumpable){
+//            this.Up = up;
+//            DbJumpable = true;
+//        } 
         this.Up = up;
+
+        
     }
 
-    public void setJump(boolean jump) {
-        this.Jump = jump;
+//    public void setJump(boolean jump) {
+//        this.Jumpable = jump;
+//    }
+    public void setDown(boolean down){
+        this.Down = down;
     }
-
 }
