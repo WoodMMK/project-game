@@ -4,8 +4,9 @@ import java.awt.image.BufferedImage;
 import static Utilities.Constants.playerConstants.*;
 import Levels.LevelHandler;
 import static Levels.LevelHandler.gravity;
-import Utilities.*;
+import Utilities.LodeSave;
 import java.awt.Graphics;
+import static java.lang.Thread.sleep;
 
 /**
  *
@@ -20,10 +21,12 @@ public class Player extends Entity {
     private BufferedImage[][] animations;
     private BufferedImage img;
     
-    private long jumpPressedlimit = 150;
-    private long airtime;
-    private boolean Up, Right, Left,Down;
-    private boolean Jumpable = false, DbJumpable = false;
+    private long airtimeStart=0;
+    private long airtimeDif;
+    
+    long keyPressStartTime = 0;
+    long keyPressLimit = 100;
+    private boolean Up, Right, Left, Jump ,inAir;
     int flipX;
     int fixcam = 640;
 
@@ -77,14 +80,44 @@ public class Player extends Entity {
     }
 
     public boolean isOnGround() {
-        return y >= LevelHandler.GroundPos;
+        return this.y == LevelHandler.GroundPos;
     }
-    
+    public boolean isOnAir(){
+        return this.y < LevelHandler.GroundPos;
+    }
+
+    public void jump() {
+        if (jumpcount < maxjump) {
+            jumpcount++;
+            this.keyPressStartTime = System.currentTimeMillis();
+        }
+    }
+
     public void changePos() {
         moveState = false;
-        if (Up && airtime > jumpPressedlimit) {
+        long jump_timedif = System.currentTimeMillis() - keyPressStartTime;
+
+        if(isOnAir()){     
+            if (airtimeStart == 0){
+                airtimeStart = System.currentTimeMillis(); 
+            }
+            airtimeDif = System.currentTimeMillis()-airtimeStart;
+            
+            //y += gravity;);
+            y += gravity * airtimeDif/1000;
+        }
+        else{
+            airtimeDif = 0;
+            airtimeStart = 0;
+            jumpcount = 0;
+            y = LevelHandler.GroundPos;
+        }
+        
+        if(Up && jump_timedif > keyPressLimit) {
+            keyPressStartTime = 0;
             setUp(false);
         }
+        
         //move a character x
         if (Right && !Left) {
             moveState = true;
@@ -99,51 +132,11 @@ public class Player extends Entity {
         }
 
         //move a character y
-        if(Down){
+        if (Up) {
+            y += jump_power * -1;
             moveState = true;
-            y += movespeed;
         }
         
-        if(Up){//need airtime to limit each jump
-            if (Jumpable) {
-                if(airtime < this.jumpPressedlimit){
-                    System.out.println("Jumping");
-                    
-                    y += jump_power * -1;
-                    moveState = true;
-                }else{
-                    Jumpable = false;
-                    airtime = 0;
-                }
-            }
-            if (DbJumpable && airtime > 50) {
-                if(airtime < this.jumpPressedlimit){
-                    Jumpable = false;
-                    System.out.println("Double Jumping");
-                    y += jump_power * -1;
-                    moveState = true;
-                }else{
-                    DbJumpable = false;
-                }
-            }
-        }
-        
-        
-        if (!isOnGround()) {
-            airtime += 1;
-            moveState = true;
-            y += gravity;
-        }
-
-        //jump reset
-        if (isOnGround()) {
-            airtime = 0;
-            this.Jumpable = true;
-            this.DbJumpable = true;
-            y = LevelHandler.GroundPos;
-            jumpcount = 0;
-        }
-        System.out.println("current y: " + y);
     }
 
     public void getAnimations() {
@@ -169,22 +162,11 @@ public class Player extends Entity {
     }
 
     public void setUp(boolean up) {
-//        if(Jumpable){
-//            this.Up = up;
-//        }
-//        else if(!DbJumpable){
-//            this.Up = up;
-//            DbJumpable = true;
-//        } 
         this.Up = up;
-        new MySound(MySound.SOUND_JUMP).playOnce();
-        
     }
 
-//    public void setJump(boolean jump) {
-//        this.Jumpable = jump;
-//    }
-    public void setDown(boolean down){
-        this.Down = down;
+    public void setJump(boolean jump) {
+        this.Jump = jump;
     }
+    
 }
