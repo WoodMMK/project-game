@@ -23,10 +23,11 @@ public class Player extends Entity {
     
     private long airtimeStart=0;
     private long airtimeDif;
-    
-    long keyPressStartTime = 0;
+//    
+//    long keyPressStartTime = 0;
     long keyPressLimit = 100;
-    private boolean Up, Right, Left, Jump ,inAir;
+    
+    private boolean Up, Right, Left, Jump,Down;
     int flipX;
     int fixcam = 640;
 
@@ -79,64 +80,59 @@ public class Player extends Entity {
         }
     }
 
-    public boolean isOnGround() {
-        return this.y == LevelHandler.GroundPos;
-    }
+    
     public boolean isOnAir(){
         return this.y < LevelHandler.GroundPos;
     }
 
-    public void jump() {
-        if (jumpcount < maxjump) {
-            jumpcount++;
-            this.keyPressStartTime = System.currentTimeMillis();
-        }
-    }
-
     public void changePos() {
         moveState = false;
-        long jump_timedif = System.currentTimeMillis() - keyPressStartTime;
 
-        if(isOnAir()){     
-            if (airtimeStart == 0){
-                airtimeStart = System.currentTimeMillis(); 
-            }
-            airtimeDif = System.currentTimeMillis()-airtimeStart;
-            
-            //y += gravity;);
-            y += gravity * airtimeDif/1000;
+    // Gravity and air-time management
+    if (isOnAir()) {     
+        if (airtimeStart == 0) {
+            airtimeStart = System.currentTimeMillis(); 
         }
-        else{
-            airtimeDif = 0;
-            airtimeStart = 0;
-            jumpcount = 0;
-            y = LevelHandler.GroundPos;
-        }
-        
-        if(Up && jump_timedif > keyPressLimit) {
-            keyPressStartTime = 0;
-            setUp(false);
-        }
-        
-        //move a character x
-        if (Right && !Left) {
-            moveState = true;
-            flipX = 0;
-            x += movespeed;
-            p_facing = 1;
-        } else if (!Right && Left) {
-            moveState = true;
-            flipX = width;
-            x -= movespeed;
-            p_facing = -1;
-        }
+        airtimeDif = System.currentTimeMillis() - airtimeStart;
+        y += gravity;
 
-        //move a character y
-        if (Up) {
-            y += jump_power * -1;
-            moveState = true;
+        if (airtimeDif > keyPressLimit) {
+            Up = false; // Disable jump if air-time limit exceeds
         }
-        
+    } else {
+        airtimeDif = 0;
+        airtimeStart = 0;
+        jumpable = true; // Allow jump again on the ground
+        y = LevelHandler.GroundPos;
+    }
+
+    // Jumping
+    if (Up) {
+        y -= jump_power; // Move upwards
+        moveState = true;
+    }
+
+    // Dropping
+    if (isOnAir()) {
+    y += gravity; // Default gravity effect
+        if (Down) {
+            y += movespeed; // Extra downward acceleration
+        }
+    }
+    
+
+    // Horizontal movement
+    if (Right && !Left) {
+        moveState = true;
+        flipX = 0;
+        x += movespeed;
+        p_facing = 1;
+    } else if (!Right && Left) {
+        moveState = true;
+        flipX = width;
+        x -= movespeed;
+        p_facing = -1;
+    }
     }
 
     public void getAnimations() {
@@ -161,12 +157,17 @@ public class Player extends Entity {
         this.Left = left;
     }
 
-    public void setUp(boolean up) {
+    public void Jump(boolean up) {
+        if (jumpable && !isOnAir()) { // Allow jump only when on the ground
         this.Up = up;
+        airtimeStart = System.currentTimeMillis(); // Start jump timing
+        }
+    }
+    public void Drop(){
+        if (isOnAir()) { // Ensure it only applies when above the ground
+            this.Down = true;
+        }
     }
 
-    public void setJump(boolean jump) {
-        this.Jump = jump;
-    }
     
 }
