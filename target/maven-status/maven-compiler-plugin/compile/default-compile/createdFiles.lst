@@ -11,3 +11,4 @@ Inputs\KeyboardInputs.class
 Utilities\Constants$playerConstants.class
 Entities\Player.class
 Gamecode\GameWindow.class
+Utilities\MySound.class

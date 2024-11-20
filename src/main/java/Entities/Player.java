@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import static Utilities.Constants.playerConstants.*;
 import Levels.LevelHandler;
 import static Levels.LevelHandler.gravity;
-import Utilities.LodeSave;
+import Utilities.*;
 import java.awt.Graphics;
 
 /**
@@ -79,7 +79,7 @@ public class Player extends Entity {
     public boolean isOnGround() {
         return y >= LevelHandler.GroundPos;
     }
-
+    
     public void changePos() {
         moveState = false;
         if (Up && airtime > jumpPressedlimit) {
@@ -108,6 +108,7 @@ public class Player extends Entity {
             if (Jumpable) {
                 if(airtime < this.jumpPressedlimit){
                     System.out.println("Jumping");
+                    
                     y += jump_power * -1;
                     moveState = true;
                 }else{
@@ -176,7 +177,7 @@ public class Player extends Entity {
 //            DbJumpable = true;
 //        } 
         this.Up = up;
-
+        new MySound(MySound.SOUND_JUMP).playOnce();
         
     }
 
