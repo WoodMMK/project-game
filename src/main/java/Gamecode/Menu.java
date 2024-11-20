@@ -2,8 +2,10 @@ package Gamecode;
 
 import Utilities.LodeSave;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -18,6 +20,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,6 +29,7 @@ import javax.swing.JSlider;
 import javax.swing.JToggleButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.basic.BasicSliderUI;
 
 /**
  *
@@ -41,6 +45,8 @@ public class Menu {
 
     private ImageIcon[] startI, settingI, backI, quitI;
     private JSlider volume;
+    private JComboBox song;
+    private String[] songList = {"1", "2", "3", "4", "5"};
 
     public Menu() {
         readPic();
@@ -153,8 +159,37 @@ public class Menu {
                 volume.setValue(volume.getMinimum() + value);
             }
         });
+        volume.setUI(new BasicSliderUI(volume) {
+            @Override
+            public void paintTrack(Graphics g) {
+                Image trackimg = LodeSave.getAsset("bar.png");
+                Image fillimg = LodeSave.getAsset("fill.png");
+                Image trackBG = LodeSave.getAsset("barBG.png");
+                int trackHeight = slider.getHeight();
+                int trackWidth = slider.getWidth();
+                int currentValue = slider.getValue();
+                int filledWidth = (int) (((double) currentValue - slider.getMinimum())
+                        / (slider.getMaximum() - slider.getMinimum()) * trackWidth);
 
+//                g.setColor(Color.BLUE); 
+//                g.fillRect(trackRect.x, trackRect.y, filledWidth, trackRect.height);
+                g.drawImage(trackBG, trackRect.x-5, trackRect.y, trackRect.width+10, trackRect.height, null);
+                g.drawImage(fillimg, trackRect.x, trackRect.y, filledWidth, trackRect.height, null);
+                g.drawImage(trackimg, 0, (slider.getHeight() - trackHeight) / 2, trackWidth, trackHeight, null);
 
+            }
+
+            @Override
+            public void paintThumb(Graphics g) {
+                g=null;
+//                g.setColor(Color.RED);
+//                g.fillOval(thumbRect.x, thumbRect.y, thumbRect.width, thumbRect.height);
+            }
+            @Override
+            public void paintFocus(Graphics g) {
+                //remove highlight when select
+            }
+        });
 
         difficultB = new JToggleButton[3];
         difficultGrop = new ButtonGroup();
@@ -168,6 +203,14 @@ public class Menu {
         difficultGrop.add(difficultB[0]);
         difficultGrop.add(difficultB[1]);
         difficultGrop.add(difficultB[2]);
+
+        song = new JComboBox(songList);
+        song.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                //change song
+            }
+        });
 
         startPanel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -193,6 +236,8 @@ public class Menu {
         difficultP.add(difficultB[2], c);
         c.gridy = 0;
         settingPanel.add(difficultP, c);
+
+        settingPanel.add(song);
 
         JPanel soundPanel = new JPanel();
         soundPanel.setLayout(new GridBagLayout());

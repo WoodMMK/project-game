@@ -1,6 +1,7 @@
 Utilities\LodeSave.class
 Levels\LevelHandler.class
 Entities\Entity.class
+Gamecode\Menu$10.class
 Gamecode\Menu$2.class
 Gamecode\Menu$5.class
 Inputs\MouseInputs.class
@@ -8,6 +9,7 @@ Gamecode\Game.class
 Gamecode\Menu$3.class
 Gamecode\Menu$6.class
 Gamecode\GameWindow.class
+Gamecode\Menu$9.class
 Levels\level.class
 Gamecode\Menu$7.class
 Gamecode\GamePanel.class
