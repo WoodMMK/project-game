@@ -2,6 +2,7 @@ package Entities;
 
 import java.awt.image.BufferedImage;
 import static Utilities.Constants.playerConstants.*;
+import Utilities.MySound;
 import Levels.LevelHandler;
 import static Levels.LevelHandler.gravity;
 import Utilities.LodeSave;
@@ -13,7 +14,6 @@ import static java.lang.Thread.sleep;
  * @author tansan
  */
 public class Player extends Entity {
-
     private int p_facing = 1;
     private boolean moveState = false, attack = false;
     private int p_Action = idling;
@@ -36,6 +36,13 @@ public class Player extends Entity {
         getAnimations();
     }
 
+    public void attackSound() {
+        MySound.getSound(MySound.SOUND_SWORD_ATTACK).playOnce();
+    }
+    public void jumpSound(){
+        MySound.getSound(MySound.SOUND_JUMP).playOnce();
+    }
+    
     public int getX() {
         return x;
     }
@@ -46,11 +53,15 @@ public class Player extends Entity {
         } else {
             p_Action = idling;
         }
-
+        
         if (attack) {
             p_Action = attacking;
+            if (startAni != attacking) { // Trigger when change to attacking
+                attackSound(); 
+            }
         }
 
+        
         if (p_Action != startAni) {
             aniTick = 0;
             aniIndex = 0;
@@ -108,7 +119,7 @@ public class Player extends Entity {
 
     // Jumping
     if (Up) {
-        y -= jump_power; // Move upwards
+        y -= jump_power * (1-airtimeDif/100); // Move upwards
         moveState = true;
     }
 
@@ -159,7 +170,10 @@ public class Player extends Entity {
 
     public void Jump(boolean up) {
         if (jumpable && !isOnAir()) { // Allow jump only when on the ground
-        this.Up = up;
+            if(!Up){
+                jumpSound();
+            }
+            this.Up = up;
         airtimeStart = System.currentTimeMillis(); // Start jump timing
         }
     }
