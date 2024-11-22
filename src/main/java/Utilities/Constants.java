@@ -6,15 +6,15 @@ package Utilities;
  * @author Gateaux
  */
 public class Constants {
-    
+    public static float volume = 0.5f;
     public static class playerConstants{
         public final static int idling = 0;
         public final static int running = 1;
         public final static int attacking = 2;
-        public final static int maxjump = 2;
-        public static int jumpcount = 0;
-        public final static int jump_power = 7;
+        public static boolean jumpable = true;
+        public final static int jump_power = 10;
         public final static int movespeed = 1;
+
         
         public static int getSpriteAmount(int p_Action){
             switch(p_Action){
