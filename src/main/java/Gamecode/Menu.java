@@ -1,6 +1,7 @@
 package Gamecode;
 
 import Utilities.LodeSave;
+import Utilities.MySound;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -60,6 +61,8 @@ public class Menu {
             creditFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 35);
 
     public Menu() {
+        MySound.getSound(MySound.Music1).playLoop();
+        MySound.setVolume((float) 0.5);
         readPic();
 
         startPanel = new newPanelBaG(defaultBG);
@@ -159,13 +162,14 @@ public class Menu {
         soundB[0].addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                //sound on
+                //MySound.setVolume(1);
+                MySound.setVolume((float) volume.getValue() / 100);
             }
         });
         soundB[1].addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                //sound off
+                MySound.setVolume(0);
             }
         });
 
@@ -193,9 +197,13 @@ public class Menu {
         volume.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                JSlider source = (JSlider) e.getSource();
                 // Print the current value of the slider
                 valueLabel.setText("volume: " + volume.getValue());
+
+                if(soundB[0].isSelected()){
+                    MySound.setVolume((float) volume.getValue() / 100);
+                }
+                //System.out.println((float) volume.getValue() / 100);
             }
         });
         volume.addMouseListener(new MouseAdapter() {
@@ -276,7 +284,26 @@ public class Menu {
         song.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                //change song
+                String selected = (String) song.getSelectedItem();
+                int number = Integer.valueOf(selected);
+                MySound.stop();
+                switch (number) {
+                    case 1:
+                        MySound.getSound(MySound.Music1).playLoop();
+                        break;
+                    case 2:
+                        MySound.getSound(MySound.Music2).playLoop();
+                        break;
+                    case 3:
+                        MySound.getSound(MySound.Music3).playLoop();
+                        break;
+                    case 4:
+                        MySound.getSound(MySound.Music4).playLoop();
+                        break;
+                    case 5:
+                        MySound.getSound(MySound.Music5).playLoop();
+                        break;
+                }
             }
         });
 

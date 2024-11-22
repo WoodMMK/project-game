@@ -37,6 +37,7 @@ public class Player extends Entity {
     }
 
     public void attackSound() {
+        //System.out.println(MySound.volume);
         MySound.getSound(MySound.SOUND_SWORD_ATTACK).playOnce();
     }
     public void jumpSound(){
