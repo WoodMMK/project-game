@@ -25,3 +25,4 @@ Inputs\KeyboardInputs.class
 Utilities\Constants$playerConstants.class
 Entities\Player.class
 Gamecode\Menu$newPanelBaG.class
+Utilities\MySound.class

@@ -11,9 +11,8 @@ public class Constants {
         public final static int idling = 0;
         public final static int running = 1;
         public final static int attacking = 2;
-        public final static int maxjump = 2;
-        public static int jumpcount = 0;
-        public final static int jump_power = 7;
+        public static boolean jumpable = true;
+        public final static int jump_power = 10;
         public final static int movespeed = 1;
         
         public static int getSpriteAmount(int p_Action){
