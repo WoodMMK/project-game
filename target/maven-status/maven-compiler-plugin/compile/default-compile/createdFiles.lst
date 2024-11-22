@@ -14,6 +14,7 @@ Levels\level.class
 Gamecode\Menu$7.class
 Gamecode\GamePanel.class
 Gamecode\buttonMouseListener.class
+Gamecode\Menu$11.class
 Gamecode\Menu.class
 Gamecode\Menu$1.class
 Utilities\Constants.class
@@ -23,3 +24,4 @@ Gamecode\MainClass.class
 Inputs\KeyboardInputs.class
 Utilities\Constants$playerConstants.class
 Entities\Player.class
+Gamecode\Menu$newPanelBaG.class
