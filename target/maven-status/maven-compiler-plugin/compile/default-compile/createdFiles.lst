@@ -8,6 +8,7 @@ Inputs\MouseInputs.class
 Gamecode\Game.class
 Gamecode\Menu$3.class
 Gamecode\Menu$6.class
+Utilities\SoundManager.class
 Gamecode\GameWindow.class
 Gamecode\Menu$9.class
 Levels\level.class

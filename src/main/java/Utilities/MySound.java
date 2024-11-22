@@ -12,11 +12,15 @@ import java.io.IOException;
  *
  * @author woody
  */
+
 public class MySound {
     static final String SPath = "src/main/resources/assets/sfx/";
     public static final String SOUND_SWORD_ATTACK = SPath + "swoosh.wav";
-    public static final String SOUND_JUMP = SPath + "jump.wav";
-
+    public static final String SOUND_JUMP = SPath + "jump2.wav";
+    public static final String SOUND_getHit = null;
+    public static final String SOUND_HIT = null;
+    public static final String SOUND_BUTTON_RELEASED = SPath+ "mouse-released.wav";
+    public static final String SOUND_BUTTON_HOLD = SPath + "mouse-hold.wav";
     private Clip clip;
     private FloatControl gainControl;
 
@@ -34,9 +38,9 @@ public class MySound {
     }
 
     public void playOnce() {
-        if (clip != null) {
-            clip.setMicrosecondPosition(0);
-            clip.start();
+       if (clip != null) {
+        clip.setMicrosecondPosition(0);
+        clip.start();
         } else {
             System.err.println("Cannot play once: Clip not initialized.");
         }
@@ -67,9 +71,6 @@ public class MySound {
         gainControl.setValue(dB);
     }
 
-    // Static factory method
-    public static MySound getSound(String soundFileName) {
-        return new MySound(soundFileName);
-    }
+    
 }
 

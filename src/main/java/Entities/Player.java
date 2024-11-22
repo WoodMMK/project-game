@@ -6,6 +6,7 @@ import Utilities.MySound;
 import Levels.LevelHandler;
 import static Levels.LevelHandler.gravity;
 import Utilities.LodeSave;
+import Utilities.SoundManager;
 import java.awt.Graphics;
 import static java.lang.Thread.sleep;
 
@@ -23,8 +24,6 @@ public class Player extends Entity {
     
     private long airtimeStart=0;
     private long airtimeDif;
-//    
-//    long keyPressStartTime = 0;
     long keyPressLimit = 100;
     
     private boolean Up, Right, Left, Jump,Down;
@@ -34,13 +33,6 @@ public class Player extends Entity {
     public Player(int x, int y, int width, int hight) {
         super(x, y, width, hight);
         getAnimations();
-    }
-
-    public void attackSound() {
-        MySound.getSound(MySound.SOUND_SWORD_ATTACK).playOnce();
-    }
-    public void jumpSound(){
-        MySound.getSound(MySound.SOUND_JUMP).playOnce();
     }
     
     public int getX() {
@@ -57,11 +49,9 @@ public class Player extends Entity {
         if (attack) {
             p_Action = attacking;
             if (startAni != attacking) { // Trigger when change to attacking
-                attackSound(); 
+                SoundManager.playOnce(MySound.SOUND_SWORD_ATTACK);
             }
         }
-
-        
         if (p_Action != startAni) {
             aniTick = 0;
             aniIndex = 0;
@@ -100,7 +90,7 @@ public class Player extends Entity {
         moveState = false;
 
     // Gravity and air-time management
-    if (isOnAir()) {     
+    if (isOnAir()) {
         if (airtimeStart == 0) {
             airtimeStart = System.currentTimeMillis(); 
         }
@@ -110,7 +100,7 @@ public class Player extends Entity {
         if (airtimeDif > keyPressLimit) {
             Up = false; // Disable jump if air-time limit exceeds
         }
-    } else {
+    } else { // is on ground
         airtimeDif = 0;
         airtimeStart = 0;
         jumpable = true; // Allow jump again on the ground
@@ -123,26 +113,23 @@ public class Player extends Entity {
         moveState = true;
     }
 
-    // Dropping
-    if (isOnAir()) {
-    y += gravity; // Default gravity effect
-        if (Down) {
-            y += movespeed; // Extra downward acceleration
-        }
-    }
-    
-
     // Horizontal movement
     if (Right && !Left) {
         moveState = true;
         flipX = 0;
         x += movespeed;
         p_facing = 1;
+        if(!isOnAir()){
+            //SoundManager.playLoop("walking sound");
+        }
     } else if (!Right && Left) {
         moveState = true;
         flipX = width;
         x -= movespeed;
         p_facing = -1;
+        if(!isOnAir()){
+            //SoundManager.playLoop("walking sound");
+        }
     }
     }
 
@@ -168,13 +155,18 @@ public class Player extends Entity {
         this.Left = left;
     }
 
-    public void Jump(boolean up) {
+    public void setUp(boolean up){
+        if (jumpable && !(isOnAir())){
+            SoundManager.playOnce(MySound.SOUND_JUMP);
+            this.Up = true;
+            airtimeStart = System.currentTimeMillis();
+        }
+    }
+    public void Jump() {
         if (jumpable && !isOnAir()) { // Allow jump only when on the ground
-            if(!Up){
-                jumpSound();
-            }
-            this.Up = up;
-        airtimeStart = System.currentTimeMillis(); // Start jump timing
+            SoundManager.playOnce(MySound.SOUND_JUMP);
+            this.Up = true;
+            airtimeStart = System.currentTimeMillis(); // Start jump timing
         }
     }
     public void Drop(){
@@ -183,5 +175,13 @@ public class Player extends Entity {
         }
     }
 
-    
+    // wait for implement in code 
+    // >>>>>
+    public void hitSound(){
+        SoundManager.playOnce("hit sound path");
+    }
+    public void getHitSound(){
+        SoundManager.playOnce("hit sound path");
+    }
+    // <<<<<<
 }
