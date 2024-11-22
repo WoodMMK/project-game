@@ -56,7 +56,8 @@ public class Menu {
     
     private Font headerFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 60),
             defaultFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 45),
-            choicFont = LodeSave.getFont("dpcomic.ttf", Font.PLAIN, 25);
+            choicFont = LodeSave.getFont("dpcomic.ttf", Font.PLAIN, 25),
+            creditFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 35);
 
     public Menu() {
         readPic();
@@ -358,7 +359,6 @@ public class Menu {
         c.gridx = 0;
         settingPlatePanel.add(on_offLebel, c);
         JPanel on_offPanel = new JPanel();
-        on_offPanel.setOpaque(false);
         on_offPanel.setLayout(new GridBagLayout());
         on_offPanel.setOpaque(false);
         on_offPanel.setBorder(null);
@@ -394,10 +394,71 @@ public class Menu {
         c.anchor = GridBagConstraints.CENTER;
         settingPanel.add(backB, c);
 
+        JLabel creditLabelHead = newTitleLabel("Credits");
         creditPanel = new newPanelBaG(defaultBG);
+        JPanel creditPlatePanel = new newPanelBaG(settingPlate);
+        creditPanel.setLayout(new GridBagLayout());
+        creditPanel.add(creditPlatePanel);
         c = new GridBagConstraints();
-        creditPanel.add(backB2, c);
+        c.gridx = 0;
+        c.gridy = 0;
+        c.anchor = GridBagConstraints.CENTER;
+        creditPlatePanel.add(creditLabelHead, c);
+        creditPlatePanel.setOpaque(false);
+        creditPlatePanel.setBorder(null);
+        creditPlatePanel.setLayout(new GridBagLayout());
+        creditPlatePanel.setPreferredSize(new Dimension(750, 450));
 
+        JPanel creditPlateNamePanel = new JPanel();
+        creditPlateNamePanel.setLayout(new GridBagLayout());
+        creditPlateNamePanel.setOpaque(false);
+        creditPlateNamePanel.setBorder(null);
+        JLabel creditLabelFrist[] = new JLabel[4];
+        JLabel creditLabelID[] = new JLabel[4];
+        JLabel creditLabelLast[] = new JLabel[4];
+        creditLabelFrist[0] = newTitleLabel("Nantaphop");
+        creditLabelFrist[1] = newTitleLabel("Rapeepat");
+        creditLabelFrist[2] = newTitleLabel("Bhwin");
+        creditLabelFrist[3] = newTitleLabel("Maimongkol");
+        creditLabelLast[0] = newTitleLabel("Nawaphanpimol");
+        creditLabelLast[1] = newTitleLabel("Boolsuk");
+        creditLabelLast[2] = newTitleLabel("Thongrueang");
+        creditLabelLast[3] = newTitleLabel("Thokanokwan");
+        creditLabelID[0] = newTitleLabel("6613120");
+        creditLabelID[1] = newTitleLabel("6613269");
+        creditLabelID[2] = newTitleLabel("6613266");
+        creditLabelID[3] = newTitleLabel("6613268");
+        c.anchor = GridBagConstraints.WEST;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.ipadx = 20;
+        for (int i = 0; i < creditLabelFrist.length; i++) {
+            creditLabelFrist[i].setFont(creditFont);
+            creditLabelFrist[i].setForeground(Color.WHITE);
+            creditLabelID[i].setFont(creditFont);
+            creditLabelID[i].setForeground(Color.WHITE);
+            creditLabelLast[i].setFont(creditFont);
+            creditLabelLast[i].setForeground(Color.WHITE);
+            c.gridy = i + 1;
+            c.gridx = 0;
+            creditPlateNamePanel.add(creditLabelFrist[i], c);
+            c.gridx = 1;
+            creditPlateNamePanel.add(creditLabelLast[i], c);
+            c.gridx = 2;
+            creditPlateNamePanel.add(creditLabelID[i], c);
+        }
+        c.gridx = 0;
+        c.gridy = 1;
+        c.ipady = 60;
+        creditPlatePanel.add(creditPlateNamePanel, c);
+
+
+        c.anchor = GridBagConstraints.CENTER;        
+        c.gridy = 1;
+        c.gridx = 0;
+        c.ipady = 20;
+        creditPanel.add(backB2, c);
+        
         mainPanel.add(startPanel, "main");
         mainPanel.add(settingPanel, "setting");
         mainPanel.add(creditPanel, "credit");
