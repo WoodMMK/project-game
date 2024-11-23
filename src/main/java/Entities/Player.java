@@ -26,7 +26,7 @@ public class Player extends Entity {
     private long airtimeDif;
     long keyPressLimit = 100;
     
-    private boolean Up, Right, Left, Jump,Down;
+    private boolean Up, Right, Left, Jump;
     int flipX;
     int fixcam = 640;
 
@@ -41,8 +41,14 @@ public class Player extends Entity {
     private void assignAni() {
         int startAni = p_Action;
         if (moveState) {
+            if(p_Action == idling){
+                SoundManager.playLoop(MySound.SOUND_RUNNING);
+            }
             p_Action = running;
         } else {
+            if(p_Action == running){
+                SoundManager.stopSound(MySound.SOUND_RUNNING);
+            }
             p_Action = idling;
         }
         
@@ -156,22 +162,13 @@ public class Player extends Entity {
     }
 
     public void setUp(boolean up){
+        if(up == false && isOnAir()){// for keyReleased
+            Up = false;
+        }
         if (jumpable && !(isOnAir())){
             SoundManager.playOnce(MySound.SOUND_JUMP);
             this.Up = true;
             airtimeStart = System.currentTimeMillis();
-        }
-    }
-    public void Jump() {
-        if (jumpable && !isOnAir()) { // Allow jump only when on the ground
-            SoundManager.playOnce(MySound.SOUND_JUMP);
-            this.Up = true;
-            airtimeStart = System.currentTimeMillis(); // Start jump timing
-        }
-    }
-    public void Drop(){
-        if (isOnAir()) { // Ensure it only applies when above the ground
-            this.Down = true;
         }
     }
 

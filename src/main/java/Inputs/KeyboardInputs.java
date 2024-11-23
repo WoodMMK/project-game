@@ -25,10 +25,7 @@ public class KeyboardInputs implements KeyListener {
     public void keyReleased(KeyEvent e) {
     switch (e.getKeyCode()) {
         case KeyEvent.VK_W:
-            //gamepanel.getGame().getPlayer().setUp(false);
-            break;
-        case KeyEvent.VK_S:
-            gamepanel.getGame().getPlayer().Drop(); // Reset drop
+            gamepanel.getGame().getPlayer().setUp(false);
             break;
         case KeyEvent.VK_A:
             gamepanel.getGame().getPlayer().setLeft(false);
@@ -43,11 +40,7 @@ public class KeyboardInputs implements KeyListener {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W:
-//                gamepanel.getGame().getPlayer().setUp(true);
-                break;
-            case KeyEvent.VK_S:
-                //wait implementation
-                gamepanel.getGame().getPlayer().Drop();
+                gamepanel.getGame().getPlayer().setUp(true);
                 break;
             case KeyEvent.VK_A:
                 gamepanel.getGame().getPlayer().setLeft(true);

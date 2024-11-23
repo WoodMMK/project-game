@@ -63,6 +63,7 @@ public class Menu {
 
     public Menu() {
         SoundManager.playLoop(MySound.Music1);
+        SoundManager.playLoop(MySound.SOUND_RUNNING);
         //MySound.getSound(MySound.Music1).playLoop();
         //MySound.setVolume((float) 0.5);
         readPic();
