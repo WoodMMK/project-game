@@ -36,12 +36,12 @@ public class Player extends Entity {
         this.maxHP = 100;
         this.curHP = maxHP;
         getAnimations();
-        createHitbox( x, y, 30, 53);
+        createHitbox( x, y, 30, 54);
         createAttackBox();
     }
     
     private void createAttackBox(){
-        attackBox = new Rectangle2D.Float(x, y, (int) 44, (int) 53);
+        attackBox = new Rectangle2D.Float(x, y, (int) 44, (int) 54);
     }
 
     public float getX() {
@@ -75,10 +75,10 @@ public class Player extends Entity {
     }
     
     public void updateHit(){
+        //inside intersects should be enemy attackbox
         if(hitbox.intersects(200, 0, 100, 100)){
             curHP -= 1;
-            
-            System.out.printf("%d\n", curHP);
+            //System.out.printf("%d\n", curHP);
         }
     }
 
@@ -167,25 +167,6 @@ public class Player extends Entity {
         }
         
     }
-    
-//    private void changePos(){
-//        moveState = false;
-//        float xSpeed = 0, ySpeed = 0;
-//        if (!Left && !Right && !Up)
-//                return;
-//
-//        if (Left && !Right)
-//                xSpeed = -movespeed;
-//        else if (Right && !Left)
-//                xSpeed = movespeed;
-//
-//        if (Up)
-//                ySpeed = -movespeed;
-//
-//        hitbox.x += xSpeed;
-//        hitbox.y += ySpeed;
-//        moveState = true;
-//    }
 
     public void getAnimations() {
         img = LodeSave.getAsset("Soldier.png");
