@@ -93,15 +93,16 @@ public class Player extends Entity {
     
     public void updateHit(){
         //inside intersects should be enemy attackbox
-        if(hitbox.intersects(200, 0, 100, 100)){
+        if(hitbox.intersects(200, 500, 100, 100)){
             curHP -= 1;
             //System.out.printf("%d\n", curHP);
         }
     }
 
     public void render(Graphics g) {
-        g.drawRect(200, 0, 100, 100);
+        g.drawRect(200, 500, 100, 100);
         g.drawImage(animations[p_Action][aniIndex],(int) (hitbox.x - xHitboxOffset) + flipX,(int) (hitbox.y - yHitboxOffset), width * p_facing, height, null);
+        //System.out.printf("%f %f\n", hitbox.x, hitbox.y);
         showHitbox(g);
         showAttackBox(g);
     }
@@ -123,31 +124,32 @@ public class Player extends Entity {
             attackBox.x = hitbox.x + hitbox.width;
         else if(Left)
             attackBox.x = hitbox.x - hitbox.width - 15;
+        attackBox.y = hitbox.y;
     }
 
     
     public boolean isOnAir(){
-        return this.y < LevelHandler.GroundPos;
+        return hitbox.y < LevelHandler.GroundPos;
     }
 
     public void changePos() {
         moveState = false;
 
-//        if(isOnAir()){     
-//            if (airtimeStart == 0){
-//                airtimeStart = System.currentTimeMillis(); 
-//            }
-//            airtimeDif = System.currentTimeMillis()-airtimeStart;
-//            
-//            //y += gravity;);
-//            hitbox.y += gravity * airtimeDif/1000;
-//        }
-//        else{
-//            airtimeDif = 0;
-//            airtimeStart = 0;
-//            jumpcount = 0;
-//            hitbox.y = LevelHandler.GroundPos;
-//        }
+        if(isOnAir()){     
+            if (airtimeStart == 0){
+                airtimeStart = System.currentTimeMillis(); 
+            }
+            airtimeDif = System.currentTimeMillis()-airtimeStart;
+            
+            //y += gravity;);
+            hitbox.y += gravity * airtimeDif/1000;
+        }
+        else{
+            airtimeDif = 0;
+            airtimeStart = 0;
+            jumpcount = 0;
+            hitbox.y = LevelHandler.GroundPos;
+        }
         
         
         //move a character x
