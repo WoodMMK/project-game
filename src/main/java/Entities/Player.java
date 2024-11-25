@@ -2,11 +2,11 @@ package Entities;
 
 import java.awt.image.BufferedImage;
 import static Utilities.Constants.playerConstants.*;
-import Utilities.MySound;
+import static Utilities.Constants.soundConstants.*;
+import Utilities.*;
 import Levels.LevelHandler;
 import static Levels.LevelHandler.gravity;
-import Utilities.LodeSave;
-import Utilities.SoundManager;
+
 import java.awt.Graphics;
 import static java.lang.Thread.sleep;
 
@@ -22,6 +22,8 @@ public class Player extends Entity {
     private BufferedImage[][] animations;
     private BufferedImage img;
     
+    private MySound runningSound = null;
+    
     private long airtimeStart=0;
     private long airtimeDif;
     long keyPressLimit = 100;
@@ -29,10 +31,12 @@ public class Player extends Entity {
     private boolean Up, Right, Left, Jump;
     int flipX;
     int fixcam = 640;
-
+    
+    
     public Player(int x, int y, int width, int hight) {
         super(x, y, width, hight);
         getAnimations();
+        runningSound = new MySound(SOUND_RUNNING);
     }
     
     public int getX() {
@@ -42,12 +46,14 @@ public class Player extends Entity {
         int startAni = p_Action;
         if (moveState) {
             if(p_Action == idling){
-                SoundManager.playLoop(MySound.SOUND_RUNNING);
+                runningSound.stop();
+                System.out.println("player stop moving");
             }
             p_Action = running;
         } else {
             if(p_Action == running){
-                SoundManager.stopSound(MySound.SOUND_RUNNING);
+                SoundManager.stopSound(SOUND_RUNNING);
+                System.out.println("player start moving");
             }
             p_Action = idling;
         }
@@ -55,7 +61,7 @@ public class Player extends Entity {
         if (attack) {
             p_Action = attacking;
             if (startAni != attacking) { // Trigger when change to attacking
-                SoundManager.playOnce(MySound.SOUND_SWORD_ATTACK);
+                SoundManager.playOnce(SOUND_SWORD_ATTACK);
             }
         }
         if (p_Action != startAni) {
@@ -125,17 +131,12 @@ public class Player extends Entity {
         flipX = 0;
         x += movespeed;
         p_facing = 1;
-        if(!isOnAir()){
-            //SoundManager.playLoop("walking sound");
-        }
+        
     } else if (!Right && Left) {
         moveState = true;
         flipX = width;
         x -= movespeed;
         p_facing = -1;
-        if(!isOnAir()){
-            //SoundManager.playLoop("walking sound");
-        }
     }
     }
 
@@ -166,7 +167,7 @@ public class Player extends Entity {
             Up = false;
         }
         if (jumpable && !(isOnAir())){
-            SoundManager.playOnce(MySound.SOUND_JUMP);
+            SoundManager.playOnce(SOUND_JUMP);
             this.Up = true;
             airtimeStart = System.currentTimeMillis();
         }

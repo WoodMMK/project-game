@@ -1,5 +1,6 @@
 Levels\LevelHandler.class
 Gamecode\Menu$2.class
+Utilities\Constants$soundConstants.class
 Gamecode\Menu$5.class
 Inputs\MouseInputs.class
 Utilities\SoundManager.class

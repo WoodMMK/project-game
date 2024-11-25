@@ -3,6 +3,7 @@ package Gamecode;
 import Utilities.LodeSave;
 import Utilities.MySound;
 import Utilities.SoundManager;
+import static Utilities.Constants.soundConstants.*;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -40,7 +41,7 @@ import javax.swing.plaf.basic.BasicSliderUI;
  */
 public class Menu {
 
-    private String title = "one night miracle";
+    private String title = "ONE NIGHT MIRACLE";
     private JFrame jframe;
     private JPanel startPanel, settingPanel, creditPanel;
     private JButton startB, settingB, backB, quitB, creditB, backB2;
@@ -62,10 +63,7 @@ public class Menu {
             creditFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 35);
 
     public Menu() {
-        SoundManager.playLoop(MySound.Music1);
-        SoundManager.playLoop(MySound.SOUND_RUNNING);
-        //MySound.getSound(MySound.Music1).playLoop();
-        //MySound.setVolume((float) 0.5);
+        SoundManager.playTheme(Music1);
         readPic();
 
         startPanel = new newPanelBaG(defaultBG);
@@ -165,14 +163,13 @@ public class Menu {
         soundB[0].addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                //MySound.setVolume(1);
-                MySound.setVolume((float) volume.getValue() / 100);
+                SoundManager.updateAllVolume((float) volume.getValue() / 100);
             }
         });
         soundB[1].addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                MySound.setVolume(0);
+                SoundManager.updateAllVolume(0.0f);
             }
         });
 
@@ -191,22 +188,16 @@ public class Menu {
 
         JLabel valueLabel = new JLabel("volume: 50");
         valueLabel.setFont(choicFont);
-        //valueLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
         valueLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
-        //valueLabel.setPreferredSize(new Dimension(200, 50));
         volume = new JSlider(1, 100, 50);
-        //volume.setBackground(null);
         volume.setBorder(null);
         volume.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                // Print the current value of the slider
                 valueLabel.setText("volume: " + volume.getValue());
-
                 if(soundB[0].isSelected()){
-                    MySound.setVolume((float) volume.getValue() / 100);
+                    SoundManager.updateAllVolume((float) volume.getValue() / 100);
                 }
-                //System.out.println((float) volume.getValue() / 100);
             }
         });
         volume.addMouseListener(new MouseAdapter() {
@@ -289,27 +280,22 @@ public class Menu {
             public void itemStateChanged(ItemEvent e) {
                 String selected = (String) song.getSelectedItem();
                 int number = Integer.valueOf(selected);
-                MySound.stop();
+                SoundManager.stopTheme();
                 switch (number) {
                     case 1:
-                        SoundManager.playLoop(MySound.Music1);
-                        //MySound.getSound(MySound.Music1).playLoop();
+                        SoundManager.playTheme(Music1);
                         break;
                     case 2:
-                        SoundManager.playLoop(MySound.Music2);
-                       // MySound.getSound(MySound.Music2).playLoop();
+                        SoundManager.playTheme(Music2);
                         break;
                     case 3:
-                        SoundManager.playLoop(MySound.Music3);
-                        //MySound.getSound(MySound.Music3).playLoop();
+                        SoundManager.playTheme(Music3);
                         break;
                     case 4:
-                        SoundManager.playLoop(MySound.Music4);
-                        //MySound.getSound(MySound.Music4).playLoop();
+                        SoundManager.playTheme(Music4);
                         break;
                     case 5:
-                        SoundManager.playLoop(MySound.Music5);
-                        //MySound.getSound(MySound.Music5).playLoop();
+                        SoundManager.playTheme(Music5);
                         break;
                 }
             }

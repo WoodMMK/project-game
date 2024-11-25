@@ -6,24 +6,31 @@ package Utilities;
 
 import java.util.HashMap;
 import java.util.Map;
+import static Utilities.Constants.soundConstants.*;
 /**
  *
  * @author woody
  */
 public class SoundManager {
      // Cache to store preloaded sounds
-    private static float gameGain;
-    private static final Map<String, MySound> soundCache = new HashMap<>();
-
+    private static Map<String, MySound> soundCache = new HashMap<>();
+    private static MySound currentTheme = null;
     // preloaded sounds
     // so, ready since load Soundmanager
     static {
-        preloadSound(MySound.SOUND_SWORD_ATTACK);
-        preloadSound(MySound.SOUND_JUMP);
-        preloadSound(MySound.SOUND_getHit);
-        preloadSound(MySound.SOUND_HIT);
-        preloadSound(MySound.SOUND_BUTTON_HOLD);
-        preloadSound(MySound.SOUND_BUTTON_RELEASED);
+        preloadSound(Music1);
+        preloadSound(Music2);
+        preloadSound(Music3);
+        preloadSound(Music4);
+        preloadSound(Music5);
+        
+        preloadSound(SOUND_SWORD_ATTACK);
+        preloadSound(SOUND_JUMP);
+        preloadSound(SOUND_RUNNING);
+        preloadSound(SOUND_getHit);
+        preloadSound(SOUND_HIT);
+        preloadSound(SOUND_BUTTON_HOLD);
+        preloadSound(SOUND_BUTTON_RELEASED);
     }
 
     private static void preloadSound(String soundFilePath) {
@@ -40,7 +47,23 @@ public class SoundManager {
             System.err.println("Sound not found: " + soundFilePath);
         }
     }
-
+    
+    public static void playTheme(String soundFilePath) {
+        MySound sound = soundCache.get(soundFilePath);
+        if (sound != null) {
+            sound.playLoop();
+            currentTheme = sound;
+        } else {
+            System.err.println("Sound not found: " + soundFilePath);
+        }
+    }
+    
+    public static void stopTheme(){
+        if(currentTheme != null){
+            currentTheme.stop();
+        }
+    }
+    
     public static void playLoop(String soundFilePath) {
         MySound sound = soundCache.get(soundFilePath);
         if (sound != null) {
@@ -59,11 +82,15 @@ public class SoundManager {
             System.err.println("Sound not found: " + soundFilePath);
         }
     }
-
-    public static void settingSound(float gain){
-        gameGain = gain;
+    public static void updateAllVolume(float newVolume){
+        gameVolume = newVolume;
+        for (MySound s : soundCache.values()){
+            s.setVolume(gameVolume);
+        }
     }
+    
     // gain = Volume level (0.0 to 1.0)
+    // update individual sound's volume
     public static void setVolume(String soundFilePath, float gain) {
         MySound sound = soundCache.get(soundFilePath);
         if (sound != null) {
