@@ -34,7 +34,7 @@ public class level {
     }
 
     public void draw(Graphics g) {
-        int cameraX = game.getPlayer().getX() - 640;
+        int cameraX = (int)game.getPlayer().getX() - 640;
         int count = bg.length;
         for (int i = 0; i < bg.length; i++) {
             if (bg != null) {

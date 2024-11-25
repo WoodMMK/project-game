@@ -6,7 +6,7 @@ import Levels.LevelHandler;
 import static Levels.LevelHandler.gravity;
 import Utilities.LodeSave;
 import java.awt.Graphics;
-import static java.lang.Thread.sleep;
+import java.awt.geom.Rectangle2D;
 
 /**
  *
@@ -20,6 +20,7 @@ public class Player extends Entity {
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
     private BufferedImage[][] animations;
     private BufferedImage img;
+    private float xHitboxOffset = 135, yHitboxOffset = 115;
     
     private long airtimeStart=0;
     private long airtimeDif;
@@ -30,12 +31,20 @@ public class Player extends Entity {
     int flipX;
     int fixcam = 640;
 
-    public Player(int x, int y, int width, int hight) {
-        super(x, y, width, hight);
+    public Player(float x, float y, int width, int height) {
+        super(x, y, width, height);
+        this.maxHP = 100;
+        this.curHP = maxHP;
         getAnimations();
+        createHitbox( x, y, 30, 53);
+        createAttackBox();
+    }
+    
+    private void createAttackBox(){
+        attackBox = new Rectangle2D.Float(x, y, (int) 44, (int) 53);
     }
 
-    public int getX() {
+    public float getX() {
         return x;
     }
     private void assignAni() {
@@ -60,11 +69,24 @@ public class Player extends Entity {
     public void update() {
         changePos();
         updateAniTick();
+        updateAttackBox();
+        updateHit();
         assignAni();
+    }
+    
+    public void updateHit(){
+        if(hitbox.intersects(200, 0, 100, 100)){
+            curHP -= 1;
+            
+            System.out.printf("%d\n", curHP);
+        }
     }
 
     public void render(Graphics g) {
-        g.drawImage(animations[p_Action][aniIndex], x + flipX, y, width * p_facing, hight, null);
+        g.drawRect(200, 0, 100, 100);
+        g.drawImage(animations[p_Action][aniIndex],(int) (hitbox.x - xHitboxOffset) + flipX,(int) (hitbox.y - yHitboxOffset), width * p_facing, height, null);
+        showHitbox(g);
+        showAttackBox(g);
     }
 
     private void updateAniTick() {
@@ -77,6 +99,13 @@ public class Player extends Entity {
                 attack = false;
             }
         }
+    }
+    
+    private void updateAttackBox(){
+        if(Right)
+            attackBox.x = hitbox.x + hitbox.width;
+        else if(Left)
+            attackBox.x = hitbox.x - hitbox.width - 15;
     }
 
     public boolean isOnGround() {
@@ -97,21 +126,21 @@ public class Player extends Entity {
         moveState = false;
         long jump_timedif = System.currentTimeMillis() - keyPressStartTime;
 
-        if(isOnAir()){     
-            if (airtimeStart == 0){
-                airtimeStart = System.currentTimeMillis(); 
-            }
-            airtimeDif = System.currentTimeMillis()-airtimeStart;
-            
-            //y += gravity;);
-            y += gravity * airtimeDif/1000;
-        }
-        else{
-            airtimeDif = 0;
-            airtimeStart = 0;
-            jumpcount = 0;
-            y = LevelHandler.GroundPos;
-        }
+//        if(isOnAir()){     
+//            if (airtimeStart == 0){
+//                airtimeStart = System.currentTimeMillis(); 
+//            }
+//            airtimeDif = System.currentTimeMillis()-airtimeStart;
+//            
+//            //y += gravity;);
+//            hitbox.y += gravity * airtimeDif/1000;
+//        }
+//        else{
+//            airtimeDif = 0;
+//            airtimeStart = 0;
+//            jumpcount = 0;
+//            hitbox.y = LevelHandler.GroundPos;
+//        }
         
         if(Up && jump_timedif > keyPressLimit) {
             keyPressStartTime = 0;
@@ -122,22 +151,41 @@ public class Player extends Entity {
         if (Right && !Left) {
             moveState = true;
             flipX = 0;
-            x += movespeed;
+            hitbox.x += movespeed;
             p_facing = 1;
         } else if (!Right && Left) {
             moveState = true;
             flipX = width;
-            x -= movespeed;
+            hitbox.x -= movespeed;
             p_facing = -1;
         }
 
         //move a character y
         if (Up) {
-            y += jump_power * -1;
+            hitbox.y += jump_power * -1;
             moveState = true;
         }
         
     }
+    
+//    private void changePos(){
+//        moveState = false;
+//        float xSpeed = 0, ySpeed = 0;
+//        if (!Left && !Right && !Up)
+//                return;
+//
+//        if (Left && !Right)
+//                xSpeed = -movespeed;
+//        else if (Right && !Left)
+//                xSpeed = movespeed;
+//
+//        if (Up)
+//                ySpeed = -movespeed;
+//
+//        hitbox.x += xSpeed;
+//        hitbox.y += ySpeed;
+//        moveState = true;
+//    }
 
     public void getAnimations() {
         img = LodeSave.getAsset("Soldier.png");
