@@ -42,7 +42,7 @@ public class Player extends Entity {
     public Player(int x, int y, int width, int hight) {
         super(x, y, width, hight);
         getAnimations();
-        createHitbox( x, y, 30, 53);
+        createHitbox( x, y, 30, 54);
         createAttackBox();
     }
     
@@ -92,10 +92,10 @@ public class Player extends Entity {
     }
     
     public void updateHit(){
+        //inside intersects should be enemy attackbox
         if(hitbox.intersects(200, 0, 100, 100)){
             curHP -= 1;
-            
-            System.out.printf("%d\n", curHP);
+            //System.out.printf("%d\n", curHP);
         }
     }
 
@@ -204,25 +204,6 @@ public class Player extends Entity {
         p_facing = -1;
     }
     }
-    
-//    private void changePos(){
-//        moveState = false;
-//        float xSpeed = 0, ySpeed = 0;
-//        if (!Left && !Right && !Up)
-//                return;
-//
-//        if (Left && !Right)
-//                xSpeed = -movespeed;
-//        else if (Right && !Left)
-//                xSpeed = movespeed;
-//
-//        if (Up)
-//                ySpeed = -movespeed;
-//
-//        hitbox.x += xSpeed;
-//        hitbox.y += ySpeed;
-//        moveState = true;
-//    }
 
     public void getAnimations() {
         img = LodeSave.getAsset("Soldier.png");
