@@ -584,10 +584,12 @@ class buttonMouseListener extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
         button.setIcon(icon[1]);
+        SoundManager.playOnce(SOUND_BUTTON_HOLD);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         button.setIcon(icon[0]);
+        SoundManager.playOnce(SOUND_BUTTON_RELEASED);
     }
 }

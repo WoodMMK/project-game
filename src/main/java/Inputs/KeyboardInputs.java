@@ -1,6 +1,7 @@
 package Inputs;
 
 import Gamecode.GamePanel;
+import Utilities.SoundManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -51,6 +52,9 @@ public class KeyboardInputs implements KeyListener {
             case KeyEvent.VK_J:
                 gamepanel.getGame().getPlayer().setAttack(true);
                 break;
+//            case KeyEvent.VK_K:
+//                SoundManager.playOnce(Utilities.Constants.soundConstants.SOUND_GAME_OVER);
+//                break;
         }
     }
 

@@ -12,7 +12,7 @@ import static Utilities.Constants.soundConstants.*;
  * @author woody
  */
 public class SoundManager {
-     // Cache to store preloaded sounds
+    // Cache to store preloaded sounds
     private static Map<String, MySound> soundCache = new HashMap<>();
     private static MySound currentTheme = null;
     // preloaded sounds
@@ -31,6 +31,7 @@ public class SoundManager {
         preloadSound(SOUND_HIT);
         preloadSound(SOUND_BUTTON_HOLD);
         preloadSound(SOUND_BUTTON_RELEASED);
+        preloadSound(SOUND_GAME_OVER);
     }
 
     private static void preloadSound(String soundFilePath) {
@@ -44,7 +45,7 @@ public class SoundManager {
         if (sound != null) {
             sound.playOnce();
         } else {
-            System.err.println("Sound not found: " + soundFilePath);
+            System.err.println("playOnce, Sound not found: " + soundFilePath);
         }
     }
     
@@ -54,13 +55,15 @@ public class SoundManager {
             sound.playLoop();
             currentTheme = sound;
         } else {
-            System.err.println("Sound not found: " + soundFilePath);
+            System.err.println("playTheme Sound not found: " + soundFilePath);
         }
     }
     
     public static void stopTheme(){
         if(currentTheme != null){
             currentTheme.stop();
+        }else{
+            System.err.println("stopTheme method, Sound not found");
         }
     }
     
@@ -69,7 +72,7 @@ public class SoundManager {
         if (sound != null) {
             sound.playLoop();
         } else {
-            System.err.println("Sound not found: " + soundFilePath);
+            System.err.println("playLoop method, Sound not found: " + soundFilePath);
         }
     }
 
@@ -79,7 +82,7 @@ public class SoundManager {
         if (sound != null) {
             sound.stop();
         } else {
-            System.err.println("Sound not found: " + soundFilePath);
+            System.err.println("stop method, Sound not found: " + soundFilePath);
         }
     }
     public static void updateAllVolume(float newVolume){

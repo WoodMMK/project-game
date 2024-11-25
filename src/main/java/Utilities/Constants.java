@@ -13,7 +13,6 @@ public class Constants {
         public static boolean jumpable = true;
         public final static int jump_power = 10;
         public final static int movespeed = 1;
-
         
         public static int getSpriteAmount(int p_Action){
             switch(p_Action){
@@ -45,6 +44,6 @@ public class Constants {
         public static final String SOUND_HIT = null;
         public static final String SOUND_BUTTON_RELEASED = FXPath+ "mouse_released.wav";
         public static final String SOUND_BUTTON_HOLD = FXPath + "mouse_hold.wav";
+        public static final String SOUND_GAME_OVER = FXPath + "gameover.wav";
     }
-        
 }
