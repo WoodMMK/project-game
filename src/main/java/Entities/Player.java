@@ -32,15 +32,11 @@ public class Player extends Entity {
     private boolean Up, Right, Left, Jump;
     int flipX;
     int fixcam = 640;
-
-    public Player(float x, float y, int width, int height) {
-        super(x, y, width, height);
-        this.maxHP = 100;
-        this.curHP = maxHP;
-    
     
     public Player(int x, int y, int width, int hight) {
         super(x, y, width, hight);
+        this.maxHP = 100;
+        this.curHP = maxHP;
         getAnimations();
         createHitbox( x, y, 30, 54);
         createAttackBox();
@@ -147,7 +143,6 @@ public class Player extends Entity {
         else{
             airtimeDif = 0;
             airtimeStart = 0;
-            jumpcount = 0;
             hitbox.y = LevelHandler.GroundPos;
         }
         
@@ -206,8 +201,10 @@ public class Player extends Entity {
         p_facing = -1;
     }
     }
+    }
+    
 
-    public void getAnimations() {
+    public void getAnimations(){
         img = LodeSave.getAsset("Soldier.png");
         animations = new BufferedImage[7][9];
         for (int i = 0; i < animations.length; i++) {
