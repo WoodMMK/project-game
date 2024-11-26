@@ -15,6 +15,7 @@ import java.awt.geom.Rectangle2D;
  * @author tansan
  */
 public class Player extends Entity {
+
     private int p_facing = 1;
     private boolean moveState = false, attack = false;
     private int p_Action = idling;
@@ -22,50 +23,51 @@ public class Player extends Entity {
     private BufferedImage[][] animations;
     private BufferedImage img;
     private float xHitboxOffset = 135, yHitboxOffset = 115;
-    
+
     private MySound runningSound = null;
-    
-    private long airtimeStart=0;
+
+    private long airtimeStart = 0;
     private long airtimeDif;
     long keyPressLimit = 100;
-    
+
     private boolean Up, Right, Left, Jump;
     int flipX;
     int fixcam = 640;
-    
+
     public Player(int x, int y, int width, int hight) {
         super(x, y, width, hight);
         this.maxHP = 100;
         this.curHP = maxHP;
         getAnimations();
-        createHitbox( x, y, 30, 54);
+        createHitbox(x, y, 30, 54);
         createAttackBox();
     }
-    
-    private void createAttackBox(){
+
+    private void createAttackBox() {
         attackBox = new Rectangle2D.Float(x, y, (int) 44, (int) 53);
         runningSound = new MySound(SOUND_RUNNING);
     }
-    
+
     public int getX() {
         return super.x;
     }
+
     private void assignAni() {
         int startAni = p_Action;
         if (moveState) {
-            if(p_Action == idling){
-                runningSound.stop();
-                System.out.println("player stop moving");
+            if (p_Action == idling && !(isOnAir())) {// if previous is idle == start moving
+                runningSound.playLoop();
+                System.out.println("player start running");
             }
             p_Action = running;
-        } else {
-            if(p_Action == running){
-                SoundManager.stopSound(SOUND_RUNNING);
-                System.out.println("player start moving");
+        } else if (!(moveState)) {
+            if (p_Action == running && !(isOnAir())) {// if previous is running == just stop
+                runningSound.stop();
+                System.out.println("player stop running");
             }
             p_Action = idling;
         }
-        
+
         if (attack) {
             p_Action = attacking;
             if (startAni != attacking) { // Trigger when change to attacking
@@ -77,8 +79,7 @@ public class Player extends Entity {
             aniIndex = 0;
         }
     }
-       
-    
+
     public void update() {
         changePos();
         updateAniTick();
@@ -86,18 +87,21 @@ public class Player extends Entity {
         updateHit();
         assignAni();
     }
-    
-    public void updateHit(){
+
+    public void updateHit() {
         //inside intersects should be enemy attackbox
-        if(hitbox.intersects(200, 500, 100, 100)){
+        if (hitbox.intersects(200, 500, 100, 100)) {
             curHP -= 1;
-            //System.out.printf("%d\n", curHP);
+            System.out.printf("%d\n", curHP);
+            if(curHP == 0){
+                SoundManager.playOnce(SOUND_GAME_OVER);
+            }
         }
     }
 
     public void render(Graphics g) {
         g.drawRect(200, 500, 100, 100);
-        g.drawImage(animations[p_Action][aniIndex],(int) (hitbox.x - xHitboxOffset) + flipX,(int) (hitbox.y - yHitboxOffset), width * p_facing, height, null);
+        g.drawImage(animations[p_Action][aniIndex], (int) (hitbox.x - xHitboxOffset) + flipX, (int) (hitbox.y - yHitboxOffset), width * p_facing, height, null);
         //System.out.printf("%f %f\n", hitbox.x, hitbox.y);
         showHitbox(g);
         showAttackBox(g);
@@ -114,97 +118,69 @@ public class Player extends Entity {
             }
         }
     }
-    
-    private void updateAttackBox(){
-        if(Right)
+
+    private void updateAttackBox() {
+        if (Right) {
             attackBox.x = hitbox.x + hitbox.width;
-        else if(Left)
+        } else if (Left) {
             attackBox.x = hitbox.x - hitbox.width - 15;
+        }
         attackBox.y = hitbox.y;
     }
 
-    
-    public boolean isOnAir(){
+    public boolean isOnAir() {
         return hitbox.y < LevelHandler.GroundPos;
     }
 
     public void changePos() {
         moveState = false;
 
-        if(isOnAir()){     
-            if (airtimeStart == 0){
-                airtimeStart = System.currentTimeMillis(); 
-            }
-            airtimeDif = System.currentTimeMillis()-airtimeStart;
-            
-            //y += gravity;);
-            hitbox.y += gravity * airtimeDif/1000;
-        }
-        else{
-            airtimeDif = 0;
-            airtimeStart = 0;
-            hitbox.y = LevelHandler.GroundPos;
-        }
-        
-        
-        //move a character x
+        // Horizontal Movements
         if (Right && !Left) {
             moveState = true;
             flipX = 0;
+            //x += movespeed;
             hitbox.x += movespeed;
             p_facing = 1;
+
         } else if (!Right && Left) {
             moveState = true;
             flipX = width;
+            //x -= movespeed;
             hitbox.x -= movespeed;
             p_facing = -1;
+        }else{
+            moveState = false;
         }
-    // Gravity and air-time management
-    if (isOnAir()) {
-        if (airtimeStart == 0) {
-            airtimeStart = System.currentTimeMillis(); 
-        }
-        airtimeDif = System.currentTimeMillis() - airtimeStart;
-        y += gravity;
 
-        //move a character y
+        // Gravity and air-time management
+        if (isOnAir()) {
+            if (airtimeStart == 0) {
+                airtimeStart = System.currentTimeMillis();
+            }
+            airtimeDif = System.currentTimeMillis() - airtimeStart;
+            hitbox.y += gravity;
+            //y += gravity;
+            
+            if(airtimeDif > keyPressLimit){
+                Up = false; //Disable jump, if air-time limit exceeds
+            }
+
+        } else if (!(isOnAir())) { // is on ground
+            airtimeDif = 0;
+            airtimeStart = 0;
+            jumpable = true; // Allow jump again on the ground
+            y = LevelHandler.GroundPos;
+        }
+
+        // Jumping
         if (Up) {
-            hitbox.y += jump_power * -1;
+            hitbox.y -= jump_power * (1 - airtimeDif / 100); // Move upwards
             moveState = true;
-        if (airtimeDif > keyPressLimit) {
-            Up = false; // Disable jump if air-time limit exceeds
         }
-    } else { // is on ground
-        airtimeDif = 0;
-        airtimeStart = 0;
-        jumpable = true; // Allow jump again on the ground
-        y = LevelHandler.GroundPos;
     }
 
-    // Jumping
-    if (Up) {
-        y -= jump_power * (1-airtimeDif/100); // Move upwards
-        moveState = true;
-    }
-
-    // Horizontal movement
-    if (Right && !Left) {
-        moveState = true;
-        flipX = 0;
-        x += movespeed;
-        p_facing = 1;
-        
-    } else if (!Right && Left) {
-        moveState = true;
-        flipX = width;
-        x -= movespeed;
-        p_facing = -1;
-    }
-    }
-    }
-    
-
-    public void getAnimations(){
+    public void getAnimations() {
         img = LodeSave.getAsset("Soldier.png");
         animations = new BufferedImage[7][9];
         for (int i = 0; i < animations.length; i++) {
@@ -226,11 +202,11 @@ public class Player extends Entity {
         this.Left = left;
     }
 
-    public void setUp(boolean up){
-        if(up == false && isOnAir()){// for keyReleased
+    public void setUp(boolean up) {
+        if (up == false && isOnAir()) {// for keyReleased
             Up = false;
         }
-        if (jumpable && !(isOnAir())){
+        if (jumpable && !(isOnAir())) {
             SoundManager.playOnce(SOUND_JUMP);
             this.Up = true;
             airtimeStart = System.currentTimeMillis();
@@ -239,10 +215,11 @@ public class Player extends Entity {
 
     // wait for implement in code 
     // >>>>>
-    public void hitSound(){
+    public void hitSound() {
         SoundManager.playOnce("hit sound path");
     }
-    public void getHitSound(){
+
+    public void getHitSound() {
         SoundManager.playOnce("hit sound path");
     }
     // <<<<<<

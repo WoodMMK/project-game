@@ -37,7 +37,7 @@ public class Constants {
         public static final String Music5 = MusicPath + "bgm4.wav";
 
         static final String FXPath = "src/main/resources/assets/SFX/";
-        public static final String SOUND_SWORD_ATTACK = FXPath + "swoosh.wav";
+        public static final String SOUND_SWORD_ATTACK = FXPath + "attack_woosh.wav";
         public static final String SOUND_JUMP = FXPath + "edited_jump.wav";
         public static final String SOUND_RUNNING = FXPath + "running_in_grass.wav";
         public static final String SOUND_getHit = null;
