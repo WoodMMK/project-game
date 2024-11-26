@@ -10,6 +10,7 @@ public class Constants {
         public final static int idling = 0;
         public final static int running = 1;
         public final static int attacking = 2;
+        public final static int jumping = 3;
         public static boolean jumpable = true;
         public final static int jump_power = 10;
         public final static int movespeed = 1;

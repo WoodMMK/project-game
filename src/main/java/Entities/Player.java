@@ -30,7 +30,7 @@ public class Player extends Entity {
     private long airtimeDif;
     long keyPressLimit = 100;
 
-    private boolean Up, Right, Left, Jump;
+    private boolean Up, Right, Left;
     int flipX;
     int fixcam = 640;
 
@@ -53,32 +53,47 @@ public class Player extends Entity {
     }
 
     private void assignAni() {
-        int startAni = p_Action;
-        if (moveState) {
-            if (p_Action == idling && !(isOnAir())) {// if previous is idle == start moving
-                runningSound.playLoop();
-                System.out.println("player start running");
-            }
-            p_Action = running;
-        } else if (!(moveState)) {
-            if (p_Action == running && !(isOnAir())) {// if previous is running == just stop
-                runningSound.stop();
-                System.out.println("player stop running");
-            }
-            p_Action = idling;
-        }
+    int startAni = p_Action; // Store the current action for comparison
 
-        if (attack) {
-            p_Action = attacking;
-            if (startAni != attacking) { // Trigger when change to attacking
-                SoundManager.playOnce(SOUND_SWORD_ATTACK);
-            }
+    // Handle attacking animation (highest priority)
+    if (attack) {
+        if (startAni != attacking) { // Trigger attack sound only when transitioning to attacking
+            SoundManager.playOnce(SOUND_SWORD_ATTACK);
+            System.out.println("Player attack");
         }
-        if (p_Action != startAni) {
-            aniTick = 0;
-            aniIndex = 0;
-        }
+        p_Action = attacking;
     }
+    // Handle running animation (only when grounded and not attacking)
+    else if (moveState && !isOnAir()) {
+        if (startAni != running) { // Transition to running
+            runningSound.playLoop();
+            System.out.println("Player start running");
+        }
+        p_Action = running;
+    }
+    // Handle idling animation (when not moving, not attacking, and grounded)
+    else if (!moveState && !isOnAir()) {
+        if (startAni == running) { // Transition from running to idle
+            runningSound.stop();
+            System.out.println("Player stop running");
+        }
+        p_Action = idling;
+    }
+    // Handle jumping animation (when in the air and not attacking)
+    else if (isOnAir()) {
+        if (startAni != jumping) { // Transition to jumping
+            runningSound.stop(); // Ensure running sound stops
+            System.out.println("Player is on air");
+        }
+        p_Action = jumping;
+    }
+
+    // Reset animation tick if the action changes
+    if (p_Action != startAni) {
+        aniTick = 0;
+        aniIndex = 0;
+    }
+}
 
     public void update() {
         changePos();
@@ -139,18 +154,13 @@ public class Player extends Entity {
         if (Right && !Left) {
             moveState = true;
             flipX = 0;
-            //x += movespeed;
             hitbox.x += movespeed;
             p_facing = 1;
-
         } else if (!Right && Left) {
             moveState = true;
             flipX = width;
-            //x -= movespeed;
             hitbox.x -= movespeed;
             p_facing = -1;
-        }else{
-            moveState = false;
         }
 
         // Gravity and air-time management
@@ -160,7 +170,6 @@ public class Player extends Entity {
             }
             airtimeDif = System.currentTimeMillis() - airtimeStart;
             hitbox.y += gravity;
-            //y += gravity;
             
             if(airtimeDif > keyPressLimit){
                 Up = false; //Disable jump, if air-time limit exceeds
