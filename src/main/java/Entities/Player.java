@@ -16,6 +16,13 @@ import java.awt.geom.Rectangle2D;
  */
 public class Player extends Entity {
 
+    private boolean invincible = false;
+    private boolean knockedBack = false;
+    private long iframeDuration = 2000;
+    private long iframeStartTime;
+    private long knockbackStartTime;
+    private long knockbackDuration = 500;
+
     private int p_facing = 1;
     private boolean moveState = false, attack = false;
     private int p_Action = idling;
@@ -53,65 +60,99 @@ public class Player extends Entity {
     }
 
     private void assignAni() {
-    int startAni = p_Action; // Store the current action for comparison
+        int startAni = p_Action; // Store the current action for comparison
 
-    // Handle attacking animation (highest priority)
-    if (attack) {
-        if (startAni != attacking) { // Trigger attack sound only when transitioning to attacking
-            SoundManager.playOnce(SOUND_SWORD_ATTACK);
-            System.out.println("Player attack");
+        // Handle attacking animation (highest priority)
+        if (attack) {
+            if (startAni != attacking) { // Trigger attack sound only when transitioning to attacking
+                SoundManager.playOnce(SOUND_SWORD_ATTACK);
+                System.out.println("Player attack");
+            }
+            p_Action = attacking;
+        } // Handle running animation (only when grounded and not attacking)
+        else if (moveState && !isOnAir()) {
+            if (startAni != running) { // Transition to running
+                runningSound.playLoop();
+                System.out.println("Player start running");
+            }
+            p_Action = running;
+        } // Handle idling animation (when not moving, not attacking, and grounded)
+        else if (!moveState && !isOnAir()) {
+            if (startAni == running) { // Transition from running to idle
+                runningSound.stop();
+                System.out.println("Player stop running");
+            }
+            p_Action = idling;
+        } // Handle jumping animation (when in the air and not attacking)
+        else if (isOnAir()) {
+            if (startAni != jumping) { // Transition to jumping
+                runningSound.stop(); // Ensure running sound stops
+                System.out.println("Player is on air");
+            }
+            p_Action = jumping;
         }
-        p_Action = attacking;
-    }
-    // Handle running animation (only when grounded and not attacking)
-    else if (moveState && !isOnAir()) {
-        if (startAni != running) { // Transition to running
-            runningSound.playLoop();
-            System.out.println("Player start running");
-        }
-        p_Action = running;
-    }
-    // Handle idling animation (when not moving, not attacking, and grounded)
-    else if (!moveState && !isOnAir()) {
-        if (startAni == running) { // Transition from running to idle
-            runningSound.stop();
-            System.out.println("Player stop running");
-        }
-        p_Action = idling;
-    }
-    // Handle jumping animation (when in the air and not attacking)
-    else if (isOnAir()) {
-        if (startAni != jumping) { // Transition to jumping
-            runningSound.stop(); // Ensure running sound stops
-            System.out.println("Player is on air");
-        }
-        p_Action = jumping;
-    }
 
-    // Reset animation tick if the action changes
-    if (p_Action != startAni) {
-        aniTick = 0;
-        aniIndex = 0;
+        // Reset animation tick if the action changes
+        if (p_Action != startAni) {
+            aniTick = 0;
+            aniIndex = 0;
+        }
     }
-}
 
     public void update() {
+        updateHit();
         changePos();
         updateAniTick();
         updateAttackBox();
-        updateHit();
+        
         assignAni();
     }
-
-    public void updateHit() {
-        //inside intersects should be enemy attackbox
-        if (hitbox.intersects(200, 500, 100, 100)) {
-            curHP -= 1;
-            System.out.printf("%d\n", curHP);
-            if(curHP == 0){
-                SoundManager.playOnce(SOUND_GAME_OVER);
-            }
+    public void activeIframe(){
+        invincible = true;
+        iframeStartTime = System.currentTimeMillis();
+        System.out.println("now in iframe");
+    }
+    public void applyKnockback(int sourceX){
+        knockedBack = true;
+        knockbackStartTime = System.currentTimeMillis();
+        if(hitbox.x < sourceX){
+            hitbox.x -= 50;
         }
+        else if(hitbox.x > sourceX){
+            hitbox.x += 50;
+        }
+        hitbox.y -= 50;
+        System.out.println("Player knocked back!");
+    }
+    public void takeDamage(int sourceX){
+        curHP -= 1;
+        System.out.println("took damage, Current HP: "+ curHP);
+        
+        applyKnockback(sourceX);
+        
+        if (curHP <= 0){
+            SoundManager.playOnce(SOUND_GAME_OVER);
+        }
+        
+    }
+    public void updateHit() {
+//        long currentTime = System.currentTimeMillis();
+//        //inside intersects should be enemy attackbox
+//        if(invincible && (currentTime - iframeStartTime) >= iframeDuration){
+//            invincible = false;
+//            System.out.println("No longer invincible.");
+//        }
+//        if(knockedBack){
+//            if((currentTime - knockbackStartTime) >= knockbackDuration){
+//                knockedBack = false;
+//                System.out.println("end knockback");
+//            }
+//        }
+
+        if (hitbox.intersects(200, 500, 100, 100)) {// check if hit
+            takeDamage(200);
+        }
+
     }
 
     public void render(Graphics g) {
@@ -170,8 +211,8 @@ public class Player extends Entity {
             }
             airtimeDif = System.currentTimeMillis() - airtimeStart;
             hitbox.y += gravity;
-            
-            if(airtimeDif > keyPressLimit){
+
+            if (airtimeDif > keyPressLimit) {
                 Up = false; //Disable jump, if air-time limit exceeds
             }
 
