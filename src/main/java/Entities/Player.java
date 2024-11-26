@@ -52,7 +52,7 @@ public class Player extends Entity {
     }
     
     public int getX() {
-        return x;
+        return super.x;
     }
     private void assignAni() {
         int startAni = p_Action;
@@ -149,10 +149,6 @@ public class Player extends Entity {
 //            hitbox.y = LevelHandler.GroundPos;
 //        }
         
-        if(Up && jump_timedif > keyPressLimit) {
-            keyPressStartTime = 0;
-            setUp(false);
-        }
         
         //move a character x
         if (Right && !Left) {
