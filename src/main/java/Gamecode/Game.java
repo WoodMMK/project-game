@@ -82,7 +82,7 @@ public class Game implements Runnable {
 
             if (System.nanoTime() - previouscheck >= 1000000000) {
                 previouscheck = System.nanoTime();
-                System.out.printf("FPS : %d | UPS : %d\n", frames, updates);
+                //System.out.printf("FPS : %d | UPS : %d\n", frames, updates);
                 frames = 0;
                 updates = 0;
             }

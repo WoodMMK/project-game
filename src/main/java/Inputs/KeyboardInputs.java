@@ -1,6 +1,7 @@
 package Inputs;
 
 import Gamecode.GamePanel;
+import Utilities.SoundManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -25,10 +26,7 @@ public class KeyboardInputs implements KeyListener {
     public void keyReleased(KeyEvent e) {
     switch (e.getKeyCode()) {
         case KeyEvent.VK_W:
-            gamepanel.getGame().getPlayer().Jump(false); // Stop jumping
-            break;
-        case KeyEvent.VK_S:
-            gamepanel.getGame().getPlayer().Drop(); // Reset drop
+            gamepanel.getGame().getPlayer().setUp(false);
             break;
         case KeyEvent.VK_A:
             gamepanel.getGame().getPlayer().setLeft(false);
@@ -43,11 +41,7 @@ public class KeyboardInputs implements KeyListener {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W:
-                gamepanel.getGame().getPlayer().Jump(true);
-                break;
-            case KeyEvent.VK_S:
-                //wait implementation
-                gamepanel.getGame().getPlayer().Drop();
+                gamepanel.getGame().getPlayer().setUp(true);
                 break;
             case KeyEvent.VK_A:
                 gamepanel.getGame().getPlayer().setLeft(true);
@@ -58,6 +52,9 @@ public class KeyboardInputs implements KeyListener {
             case KeyEvent.VK_J:
                 gamepanel.getGame().getPlayer().setAttack(true);
                 break;
+//            case KeyEvent.VK_K:
+//                SoundManager.playOnce(Utilities.Constants.soundConstants.SOUND_GAME_OVER);
+//                break;
         }
     }
 
