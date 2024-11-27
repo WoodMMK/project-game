@@ -1,5 +1,6 @@
 package Gamecode;
 
+import Utilities.Constants;
 import Utilities.LodeSave;
 import Utilities.MySound;
 import Utilities.SoundManager;
@@ -29,6 +30,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
@@ -43,10 +45,11 @@ public class Menu {
 
     private String title = "ONE NIGHT MIRACLE";
     private JFrame jframe;
-    private JPanel startPanel, settingPanel, creditPanel;
-    private JButton startB, settingB, backB, quitB, creditB, backB2;
+    private JPanel startPanel, settingPanel, creditPanel, enterNamePanel;
+    private JButton startB, settingB, backB, quitB, creditB, backB2, goB;
     private JToggleButton[] soundB, difficultB;
     private ButtonGroup soundGroup, difficultGrop;
+    private JTextField nameField;
 
     private ImageIcon[] startI, settingI, backI, quitI, creditI, checkI;
     private JSlider volume;
@@ -56,7 +59,7 @@ public class Menu {
     private CardLayout cardLayout = new CardLayout();
     private JPanel mainPanel;
     private Image defaultBG, settingPlate;
-    
+
     private Font headerFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 60),
             defaultFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 45),
             choicFont = LodeSave.getFont("dpcomic.ttf", Font.PLAIN, 25),
@@ -68,12 +71,14 @@ public class Menu {
 
         startPanel = new newPanelBaG(defaultBG);
         settingPanel = new newPanelBaG(defaultBG);
+        enterNamePanel = new newPanelBaG(defaultBG);
 
         mainPanel = new JPanel(cardLayout);
         Dimension windowSize = new Dimension(1280, 720);
         startPanel.setPreferredSize(windowSize);
         settingPanel.setPreferredSize(windowSize);
         mainPanel.setPreferredSize(windowSize);
+        enterNamePanel.setPreferredSize(windowSize);
 
         jframe = new JFrame();
         jframe.add(mainPanel);
@@ -89,8 +94,9 @@ public class Menu {
             @Override
             public void actionPerformed(ActionEvent e) {
                 startB.setIcon(startI[1]);
-                new Game();
-                jframe.dispose();
+                cardLayout.show(mainPanel, "name");
+                //new Game();
+                //jframe.dispose();
             }
         });
         startB.addMouseListener(new buttonMouseListener(startB, startI));
@@ -124,6 +130,27 @@ public class Menu {
         backB2.setFocusPainted(false);
         backB2.setContentAreaFilled(false);
         backB2.addMouseListener(new buttonMouseListener(backB2, backI));
+
+        JLabel nametitel = new JLabel("Enter your name");
+        goB = new JButton(startI[0]);
+        goB.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String txt = nameField.getText().trim();
+                if (!txt.isEmpty()) {
+                    Constants.playerName = nameField.getText().trim();
+                    System.out.println("player name = " + Constants.playerName);
+                    new Game();
+                    jframe.dispose();
+                } else {
+                    nametitel.setText("Enter your name : plaseeee");
+                }
+            }
+        });
+        goB.setBorder(null);
+        goB.setFocusPainted(false);
+        goB.setContentAreaFilled(false);
+        goB.addMouseListener(new buttonMouseListener(goB, startI));
 
         quitB = new JButton(quitI[0]);
         quitB.addActionListener(new ActionListener() {
@@ -184,7 +211,6 @@ public class Menu {
         soundB[1].setSelectedIcon(checkI[1]);
         soundB[0].setIcon(checkI[0]);
         soundB[0].setSelectedIcon(checkI[1]);
-
 
         JLabel valueLabel = new JLabel("volume: 50");
         valueLabel.setFont(choicFont);
@@ -274,6 +300,28 @@ public class Menu {
         difficultB[2].setIcon(checkI[0]);
         difficultB[2].setSelectedIcon(checkI[1]);
 
+        difficultB[0].addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                Constants.currHeart = 5;
+                Constants.maxHeart = 5;
+            }
+        });
+        difficultB[1].addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                Constants.currHeart = 4;
+                Constants.maxHeart = 4;
+            }
+        });
+        difficultB[2].addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                Constants.currHeart = 3;
+                Constants.maxHeart = 3;
+            }
+        });
+
         song = new JComboBox(songList);
         song.addItemListener(new ItemListener() {
             @Override
@@ -301,10 +349,31 @@ public class Menu {
             }
         });
 
-        startPanel.setLayout(new GridBagLayout());
+//set grid
         GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(10, 25, 10, 100);
+        JPanel plate = new newPanelBaG(settingPlate);
+        plate.setPreferredSize(new Dimension(600, 320));
+        plate.setLayout(new GridBagLayout());
+        plate.setOpaque(false);
+        plate.setBorder(null);
+        nametitel.setFont(defaultFont);
+        nameField = new JTextField("");
+        nameField.setPreferredSize(new Dimension(300, 40));
+        nameField.setFont(choicFont);
+        enterNamePanel.setLayout(new GridBagLayout());
+        enterNamePanel.add(plate, c);
+
         c.anchor = GridBagConstraints.CENTER;
+        c.ipady = 20;
+        c.gridy = 0;
+        plate.add(nametitel, c);
+        c.gridy = 1;
+        plate.add(nameField, c);
+        c.gridy = 2;
+        plate.add(goB, c);
+
+        startPanel.setLayout(new GridBagLayout());
+        c.insets = new Insets(10, 25, 10, 100);
         //c.ipady = 10;
         c.gridx = 0;
         c.gridy = 0;
@@ -473,16 +542,16 @@ public class Menu {
         c.ipady = 60;
         creditPlatePanel.add(creditPlateNamePanel, c);
 
-
-        c.anchor = GridBagConstraints.CENTER;        
+        c.anchor = GridBagConstraints.CENTER;
         c.gridy = 1;
         c.gridx = 0;
         c.ipady = 20;
         creditPanel.add(backB2, c);
-        
+
         mainPanel.add(startPanel, "main");
         mainPanel.add(settingPanel, "setting");
         mainPanel.add(creditPanel, "credit");
+        mainPanel.add(enterNamePanel, "name");
 
         jframe.validate();
     }

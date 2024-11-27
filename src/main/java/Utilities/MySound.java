@@ -61,6 +61,8 @@ public class MySound {
         gainControl.setValue(volume);
         System.out.println("changed volume");
     }
-
+    public static MySound getSound(String soundFileName) {
+        return new MySound(soundFileName);
+    }
     
 }

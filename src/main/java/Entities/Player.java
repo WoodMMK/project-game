@@ -6,6 +6,8 @@ import static Utilities.Constants.soundConstants.*;
 import Utilities.*;
 import Levels.LevelHandler;
 import static Levels.LevelHandler.gravity;
+import Utilities.Constants;
+import Utilities.LodeSave;
 
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
@@ -29,20 +31,24 @@ public class Player extends Entity {
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
     private BufferedImage[][] animations;
     private BufferedImage img;
+    private int boarder_left = 0;
+    private int boarder_right = 1250;
     private float xHitboxOffset = 135, yHitboxOffset = 115;
 
     private MySound runningSound = null;
 
     private long airtimeStart = 0;
     private long airtimeDif;
+
+    long keyPressStartTime = 0;
     long keyPressLimit = 100;
 
-    private boolean Up, Right, Left;
+    private boolean Up, Right, Left, Down;
     int flipX;
     int fixcam = 640;
 
-    public Player(int x, int y, int width, int hight) {
-        super(x, y, width, hight);
+    public Player(float x, float y, int width, int height) {
+        super(x, y, width, height);
         this.maxHP = 100;
         this.curHP = maxHP;
         getAnimations();
@@ -55,8 +61,12 @@ public class Player extends Entity {
         runningSound = new MySound(SOUND_RUNNING);
     }
 
-    public int getX() {
-        return super.x;
+    public void jumpSound() {
+        MySound.getSound(SOUND_JUMP).playOnce();
+    }
+
+    public float getX() {
+        return hitbox.x;
     }
 
     private void assignAni() {
@@ -108,7 +118,7 @@ public class Player extends Entity {
         changePos();
         updateAniTick();
         updateAttackBox();
-
+        //updateHit();
         assignAni();
     }
 
@@ -174,6 +184,15 @@ public class Player extends Entity {
         }
     }
 
+    private void updateAttackBox() {
+        if (Right) {
+            attackBox.x = hitbox.x + hitbox.width;
+        } else if (Left) {
+            attackBox.x = hitbox.x - hitbox.width - 15;
+        }
+        attackBox.y = hitbox.y;
+    }
+
     public void render(Graphics g) {
         g.drawRect(200, 500, 100, 100);
         g.drawImage(animations[p_Action][aniIndex], (int) (hitbox.x - xHitboxOffset) + flipX, (int) (hitbox.y - yHitboxOffset), width * p_facing, height, null);
@@ -194,21 +213,37 @@ public class Player extends Entity {
         }
     }
 
-    private void updateAttackBox() {
-        if (Right) {
-            attackBox.x = hitbox.x + hitbox.width;
-        } else if (Left) {
-            attackBox.x = hitbox.x - hitbox.width - 15;
-        }
-        attackBox.y = hitbox.y;
+    public boolean isOnGround() {
+        return hitbox.y == LevelHandler.GroundPos;
     }
+    
 
     public boolean isOnAir() {
         return hitbox.y < LevelHandler.GroundPos;
     }
 
+
+    public void Jump(boolean up) {
+        if (jumpable && !isOnAir()) { // Allow jump only when on the ground
+            if (!Up) {
+                jumpSound();
+            }
+            this.Up = up;
+            //this.Jump = jump;
+            //airtimeStart = System.currentTimeMillis(); // Start jump timing
+            this.keyPressStartTime = System.currentTimeMillis();
+        }
+    }
+
+    public void Drop() {
+        if (isOnAir()) { // Ensure it only applies when above the ground
+            this.Down = true;
+        }
+    }
+
     public void changePos() {
         moveState = false;
+        long jump_timedif = System.currentTimeMillis() - keyPressStartTime;
 
         if(!isDamaged){
             // Horizontal Movements
@@ -229,25 +264,58 @@ public class Player extends Entity {
                 moveState = true;
             }  
         }
-        
-        // Gravity and air-time management
+
         if (isOnAir()) {
             if (airtimeStart == 0) {
                 airtimeStart = System.currentTimeMillis();
             }
             airtimeDif = System.currentTimeMillis() - airtimeStart;
+
+            //y += gravity;);
+            //hitbox.y += gravity * airtimeDif / 1000;
+            //hitbox.y += gravity * 2;
             hitbox.y += gravity;
-
             if (airtimeDif > keyPressLimit) {
-                Up = false; //Disable jump, if air-time limit exceeds
+                Up = false; // Disable jump if air-time limit exceeds
             }
-
-        } else if (!(isOnAir())) { // is on ground
+        } else {
             airtimeDif = 0;
             airtimeStart = 0;
-            jumpable = true; // Allow jump again on the ground
-            y = LevelHandler.GroundPos;
+            //jumpcount = 0;
+            jumpable = true;
+            hitbox.y = LevelHandler.GroundPos;
         }
+
+        //move a character y
+        if (Up) {
+            hitbox.y += jump_power * -1;
+            moveState = true;
+        }
+
+        //move a character x
+        if (Right && !Left) {
+            moveState = true;
+            flipX = 0;
+            if (hitbox.x < boarder_right) {
+                //x += movespeed;
+                hitbox.x += movespeed;
+            } else {
+                //x = 1132;
+                hitbox.x = boarder_right;
+            }
+            p_facing = 1;
+        } else if (!Right && Left) {
+            moveState = true;
+            flipX = width;
+            if (hitbox.x > boarder_left) {
+                hitbox.x -= movespeed;
+            } else {
+                hitbox.x = boarder_left;
+            }
+            //hitbox.x -= movespeed;
+            p_facing = -1;
+        }
+
 
     }
 
