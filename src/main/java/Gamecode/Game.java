@@ -40,7 +40,7 @@ public class Game implements Runnable {
     public void update() {
         //gamepanel.gupdate();
         player.update();
-        level.update();
+        //level.update();
     }
 
     public void render(Graphics g) {

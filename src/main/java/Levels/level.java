@@ -48,9 +48,4 @@ public class level {
             g.drawImage(tileSet[i], i * 32, 0, 32, 32, null);
         }
     }
-
-    public void update() {
-
-    }
-
 }

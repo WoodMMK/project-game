@@ -7,6 +7,9 @@ package Utilities;
  */
 public class Constants {
     public static float volume = 0.5f;
+    public static String playerName = "";
+    public static int maxHeart = 5, currHeart = 5;
+
     public static class playerConstants{
         public final static int idling = 0;
         public final static int running = 1;

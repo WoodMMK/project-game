@@ -11,6 +11,7 @@ Gamecode\Menu.class
 Gamecode\Menu$1.class
 Gamecode\Menu$8.class
 Inputs\KeyboardInputs.class
+Gamecode\Menu$12.class
 Gamecode\Menu$newPanelBaG.class
 Utilities\LodeSave.class
 Entities\Entity.class
@@ -25,4 +26,5 @@ Gamecode\Menu$4.class
 Gamecode\MainClass.class
 Utilities\Constants$playerConstants.class
 Entities\Player.class
+Gamecode\heartPanel.class
 Utilities\MySound.class
