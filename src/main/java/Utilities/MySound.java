@@ -1,6 +1,7 @@
 package Utilities;
 
 
+import Utilities.Constants.soundConstants;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class MySound {
             clip = AudioSystem.getClip();
             clip.open(audioStream);
             gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(gameVolume);
+            gainControl.setValue(soundConstants.gameVolume);
         } catch (Exception e) {
             e.printStackTrace();
         }

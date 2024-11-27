@@ -6,9 +6,10 @@ package Utilities;
  * @author Gateaux
  */
 public class Constants {
-    public static float volume = 0.5f;
+
     public static String playerName = "";
-    public static int maxHeart = 5, currHeart = 5;
+    public static int maxHeart = 5;
+    public static String curMusic = "src/main/resources/assets/music/bgm0.wav";
 
     public static class playerConstants{
         public final static int idling = 0;
@@ -60,9 +61,9 @@ public class Constants {
         }
     }
     public static class soundConstants{
-        public static float gameVolume = 0.1f;
+        public static float gameVolume = 0.5f;
         static final String MusicPath = "src/main/resources/assets/music/";
-        public static final String Music1 = MusicPath + "bgm0.wav";
+        public static final String Music1 = MusicPath + "bgm0.wav";//src/main/resources/assets/music/bgm0.wav
         public static final String Music2 = MusicPath + "bgm1.wav";
         public static final String Music3 = MusicPath + "bgm2.wav";
         public static final String Music4 = MusicPath + "bgm3.wav";

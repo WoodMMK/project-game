@@ -39,4 +39,17 @@ public abstract class Entity {
     public Rectangle2D.Float getHitbox(){
             return hitbox;
     }
+
+    public int getCurHP() {
+        return curHP;
+    }
+
+    public int getMaxHP() {
+        return maxHP;
+    }
+
+    public void setHP(int hp) {
+        maxHP = hp;
+        curHP = hp;
+    }
 }

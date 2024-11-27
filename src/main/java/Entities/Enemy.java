@@ -61,13 +61,13 @@ public class Enemy extends Entity {
 
         for (int k = 0; k < numSheets; k++) {
             img = LodeSave.getAsset("Enemy/Canine_White_" + k + ".png");
-            System.out.printf("Loaded sprite sheet %d\n", k);
+            //System.out.printf("Loaded sprite sheet %d\n", k);
 
             int cols = img.getWidth() / frameWidth;
             int rows = img.getHeight() / frameHeight;
             int totalSprites = cols * rows;
 
-            System.out.printf("Sprite sheet dimensions: %d x %d (rows: %d, cols: %d, total sprites: %d)\n", img.getWidth(), img.getHeight(), rows, cols, totalSprites);
+            //System.out.printf("Sprite sheet dimensions: %d x %d (rows: %d, cols: %d, total sprites: %d)\n", img.getWidth(), img.getHeight(), rows, cols, totalSprites);
 
             int spriteIndex = 0;
             for (int i = 0; i < rows; i++) {

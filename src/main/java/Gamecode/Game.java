@@ -2,6 +2,7 @@ package Gamecode;
 
 import Entities.*;
 import Levels.level;
+import Utilities.Constants;
 import java.awt.Graphics;
 
 /**
@@ -18,12 +19,13 @@ public class Game implements Runnable {
     private Player player;
     private level level;
     private Enemy enemy;
-
+    private boolean runnable = true;
     public Player getPlayer() {
         return player;
     }
     public Game() {
         player = new Player(0, 0, 300, 300);
+        player.setHP(Constants.maxHeart);
         level = new level(this);
         enemy = new Enemy(0, 0, 48 * 2, 32 * 2);
         gamepanel = new GamePanel(this);
@@ -52,6 +54,10 @@ public class Game implements Runnable {
         enemy.render(g);
     }
 
+    void setRun(boolean a) {
+        runnable = a;
+    }
+
     @Override
     public void run() {
         double timePerFrame = 1000000000.0 / FPS_MAX;
@@ -62,8 +68,7 @@ public class Game implements Runnable {
         double uDiff = 0;
         int frames = 0;
         int updates = 0;
-
-        while (true) {
+        while (runnable) {
             long currentTime = System.nanoTime();
 
             fDiff += (currentTime - previousFrame) / timePerFrame;
@@ -90,7 +95,7 @@ public class Game implements Runnable {
                 frames = 0;
                 updates = 0;
             }
-        }
 
+        }
     }
 }

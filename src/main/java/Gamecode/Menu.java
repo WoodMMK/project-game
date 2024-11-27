@@ -1,6 +1,7 @@
 package Gamecode;
 
 import Utilities.Constants;
+import Utilities.Constants.soundConstants;
 import Utilities.LodeSave;
 import Utilities.MySound;
 import Utilities.SoundManager;
@@ -60,13 +61,16 @@ public class Menu {
     private JPanel mainPanel;
     private Image defaultBG, settingPlate;
 
+    //private String curMusic = Music1;
+
     private Font headerFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 60),
             defaultFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 45),
             choicFont = LodeSave.getFont("dpcomic.ttf", Font.PLAIN, 25),
             creditFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 35);
 
     public Menu() {
-        SoundManager.playTheme(Music1);
+        SoundManager.stopTheme();
+        SoundManager.playTheme(Constants.curMusic);
         readPic();
 
         startPanel = new newPanelBaG(defaultBG);
@@ -212,10 +216,10 @@ public class Menu {
         soundB[0].setIcon(checkI[0]);
         soundB[0].setSelectedIcon(checkI[1]);
 
-        JLabel valueLabel = new JLabel("volume: 50");
+        JLabel valueLabel = new JLabel("volume: " + (int) (soundConstants.gameVolume * 100));
         valueLabel.setFont(choicFont);
         valueLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
-        volume = new JSlider(1, 100, 50);
+        volume = new JSlider(1, 100, (int) (soundConstants.gameVolume * 100));
         volume.setBorder(null);
         volume.addChangeListener(new ChangeListener() {
             @Override
@@ -303,21 +307,18 @@ public class Menu {
         difficultB[0].addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                Constants.currHeart = 5;
                 Constants.maxHeart = 5;
             }
         });
         difficultB[1].addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                Constants.currHeart = 4;
                 Constants.maxHeart = 4;
             }
         });
         difficultB[2].addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                Constants.currHeart = 3;
                 Constants.maxHeart = 3;
             }
         });
@@ -332,18 +333,23 @@ public class Menu {
                 switch (number) {
                     case 1:
                         SoundManager.playTheme(Music1);
+                        Constants.curMusic = Music1;
                         break;
                     case 2:
                         SoundManager.playTheme(Music2);
+                        Constants.curMusic = Music2;
                         break;
                     case 3:
                         SoundManager.playTheme(Music3);
+                        Constants.curMusic = Music3;
                         break;
                     case 4:
                         SoundManager.playTheme(Music4);
+                        Constants.curMusic = Music4;
                         break;
                     case 5:
                         SoundManager.playTheme(Music5);
+                        Constants.curMusic = Music5;
                         break;
                 }
             }

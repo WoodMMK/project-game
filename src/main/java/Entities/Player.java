@@ -1,5 +1,6 @@
 package Entities;
 
+import Gamecode.Menu;
 import java.awt.image.BufferedImage;
 import static Utilities.Constants.playerConstants.*;
 import static Utilities.Constants.soundConstants.*;
@@ -11,6 +12,7 @@ import Utilities.LodeSave;
 
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -49,8 +51,6 @@ public class Player extends Entity {
 
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
-        this.maxHP = 100;
-        this.curHP = maxHP;
         getAnimations();
         createHitbox(x, y, 30, 54);
         createAttackBox();
@@ -72,7 +72,7 @@ public class Player extends Entity {
     private void assignAni() {
         int startAni = p_Action; // Store the current action for comparison
         if (isDamaged) {
-            System.out.println("in assign Ani");
+            //System.out.println("in assign Ani");
             p_Action = damaged;
             return;
         }
@@ -80,28 +80,28 @@ public class Player extends Entity {
         if (attack) {
             if (startAni != attacking) { // Trigger attack sound only when transitioning to attacking
                 SoundManager.playOnce(SOUND_SWORD_ATTACK);
-                System.out.println("Player attack");
+                //System.out.println("Player attack");
             }
             p_Action = attacking;
         } // Handle running animation (only when grounded and not attacking)
         else if (moveState && !isOnAir()) {
             if (startAni != running) { // Transition to running
                 runningSound.playLoop();
-                System.out.println("Player start running");
+                //System.out.println("Player start running");
             }
             p_Action = running;
         } // Handle idling animation (when not moving, not attacking, and grounded)
         else if (!moveState && !isOnAir()) {
             if (startAni == running) { // Transition from running to idle
                 runningSound.stop();
-                System.out.println("Player stop running");
+                //System.out.println("Player stop running");
             }
             p_Action = idling;
         } // Handle jumping animation (when in the air and not attacking)
         else if (isOnAir()) {
             if (startAni != jumping) { // Transition to jumping
                 runningSound.stop(); // Ensure running sound stops
-                System.out.println("Player is on air");
+                //System.out.println("Player is on air");
             }
             p_Action = jumping;
         }
@@ -144,19 +144,20 @@ public class Player extends Entity {
 
     public void takeDamage(int sourceX) {
         if (!invincible) { // Only take damage if not currently invincible
-            curHP -= 100; // deduct hit damage
+            curHP -= 1; // deduct hit damage
             System.out.println("took damage, Current HP: " + curHP);
             SoundManager.playOnce(SOUND_getHit);
             isDamaged = true;
             runningSound.stop();
-            
+
             activeIframe(); // Activate invincibility frames
             applyKnockback(sourceX);
-
             if (curHP <= 0) {
+                activeIframe();
                 SoundManager.playOnce(SOUND_GAME_OVER);
             }
         }
+
     }
 
     public void updateHit() {
@@ -174,12 +175,12 @@ public class Player extends Entity {
             if ((currentTime - knockbackStartTime) >= knockbackDuration) {
                 knockedBack = false;
                 isDamaged = false; // <----------
-                System.out.println("end knockback");
+                //System.out.println("end knockback");
             }
         }
 
         // Check for hit only if not invincible
-        if (!invincible && hitbox.intersects(200, 500, 100, 100)) { // Check if hit
+        if (!invincible && hitbox.intersects(200, 500, 1000, 100)) { // Check if hit
             takeDamage(200);
         }
     }
@@ -194,7 +195,7 @@ public class Player extends Entity {
     }
 
     public void render(Graphics g) {
-        g.drawRect(200, 500, 100, 100);
+        g.drawRect(200, 500, 1000, 100);
         g.drawImage(animations[p_Action][aniIndex], (int) (hitbox.x - xHitboxOffset) + flipX, (int) (hitbox.y - yHitboxOffset), width * p_facing, height, null);
         //System.out.printf("%f %f\n", hitbox.x, hitbox.y);
         showHitbox(g);
@@ -216,12 +217,10 @@ public class Player extends Entity {
     public boolean isOnGround() {
         return hitbox.y == LevelHandler.GroundPos;
     }
-    
 
     public boolean isOnAir() {
         return hitbox.y < LevelHandler.GroundPos;
     }
-
 
     public void Jump(boolean up) {
         if (jumpable && !isOnAir()) { // Allow jump only when on the ground
@@ -245,7 +244,7 @@ public class Player extends Entity {
         moveState = false;
         long jump_timedif = System.currentTimeMillis() - keyPressStartTime;
 
-        if(!isDamaged){
+        if (!isDamaged) {
             // Horizontal Movements
             if (Right && !Left) {
                 moveState = true;
@@ -262,7 +261,7 @@ public class Player extends Entity {
             if (Up) {
                 hitbox.y -= jump_power * (1 - airtimeDif / 100); // Move upwards
                 moveState = true;
-            }  
+            }
         }
 
         if (isOnAir()) {
@@ -285,12 +284,6 @@ public class Player extends Entity {
             jumpable = true;
             hitbox.y = LevelHandler.GroundPos;
         }
-
-        //move a character y
-//        if (Up) {
-//            hitbox.y += jump_power * -1;
-//            moveState = true;
-//        }
 
         //move a character x
         if (Right && !Left) {
@@ -315,7 +308,6 @@ public class Player extends Entity {
             //hitbox.x -= movespeed;
             p_facing = -1;
         }
-
 
     }
 
@@ -362,4 +354,5 @@ public class Player extends Entity {
         SoundManager.playOnce("hit sound path");
     }
     // <<<<<<
+
 }

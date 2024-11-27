@@ -4,6 +4,7 @@ package Gamecode;
  *
  * @author Gateaux
  */
+import Entities.Player;
 import Utilities.Constants;
 import Utilities.LodeSave;
 import java.awt.Color;
@@ -18,6 +19,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class GameWindow {
@@ -32,7 +34,8 @@ public class GameWindow {
         jframe.add(gamepanel);
         jframe.pack();
         jframe.setLocationRelativeTo(null);
-        jframe.setDefaultCloseOperation(3);
+        //jframe.setDefaultCloseOperation(3);
+        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setVisible(true);
         gamepanel.setLayout(null);
         scoreLabel = new JLabel("score : 0");;
@@ -50,7 +53,7 @@ public class GameWindow {
         heart[1] = LodeSave.getImage("heart1.png");
         heart[0] = reScaleImage(heart[0], 3.0);
         heart[1] = reScaleImage(heart[1], 3.0);
-        JPanel heartPanel = new heartPanel(heart);
+        JPanel heartPanel = new heartPanel(heart, gamepanel, jframe);
         heartPanel.setBounds(30, 100, 500, 100);
         heartPanel.setOpaque(false);
         heartPanel.setBorder(null);
@@ -77,7 +80,6 @@ public class GameWindow {
 //        });
 //        test2B.setBounds(410, 300, 100, 100);
 //        gamepanel.add(test2B);
-
         gamepanel.add(scoreLabel);
         gamepanel.add(nameLabel);
         gamepanel.add(heartPanel);
@@ -89,30 +91,51 @@ public class GameWindow {
         Image a = i.getScaledInstance(Width, Height, Image.SCALE_SMOOTH);
         return a;
     }
+
+    public JFrame getJFrame() {
+        return jframe;
+    }
 }
 
 class heartPanel extends JPanel {
 
     private Image[] heart;
+    private Player player;
+    private JFrame jframe;
+    private Game game;
+    private boolean closeFram;
 
-    public heartPanel(Image[] i) {
+    public heartPanel(Image[] i, GamePanel gamepanel, JFrame jframe) {
         heart = i;
+        this.player = gamepanel.getGame().getPlayer();
+        this.game = gamepanel.getGame();
+        this.jframe = jframe;
+        closeFram = false;
     }
 
-    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int count = 0,border = 0;
+        int count = 0, border = 0;
         if (heart != null) {
-            for(int i =0; i <Constants.maxHeart;i++){
-                if(count < Constants.currHeart){
+            for (int i = 0; i < player.getMaxHP(); i++) {
+                if (count < player.getCurHP()) {
                     g.drawImage(heart[0], i * heart[0].getWidth(null) + border, 0, heart[0].getWidth(null), heart[0].getHeight(null), this);
                     count++;
                 } else {
                     g.drawImage(heart[1], i * heart[1].getWidth(null) + border, 0, heart[1].getWidth(null), heart[1].getHeight(null), this);
                 }
-                border +=10;
+                border += 10;
             }
         }
+        if (player.getCurHP() < 1 && !closeFram) {
+            game.setRun(false);
+            closeFram = true;
+            JOptionPane.showMessageDialog(null, "your journey end here", "game end",
+                    JOptionPane.INFORMATION_MESSAGE);
+            jframe.dispose();
+
+            new Menu();
+        }
+
     }
 }
