@@ -16,7 +16,7 @@ public class Constants {
         public final static int attacking = 2;
         public static boolean jumpable = true;
         public final static int jump_power = 10;
-        public final static int movespeed = 1;
+        public final static int movespeed = 5;
 
         
         public static int getSpriteAmount(int p_Action){

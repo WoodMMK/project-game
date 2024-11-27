@@ -10,12 +10,12 @@ import java.awt.geom.Rectangle2D;
  */
 public abstract class Entity {
 
-    protected int x, y;
+    protected float x, y;
     protected int height, width;
     protected Rectangle2D.Float hitbox, attackBox;
-    protected int maxHP, curHP, damage;
+    //protected int maxHP, curHP, damage;
 
-    public Entity(int x, int y, int width, int height) {
+    public Entity(float x, float y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;

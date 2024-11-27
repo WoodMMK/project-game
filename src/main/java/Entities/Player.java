@@ -5,9 +5,10 @@ import static Utilities.Constants.playerConstants.*;
 import Utilities.MySound;
 import Levels.LevelHandler;
 import static Levels.LevelHandler.gravity;
+import Utilities.Constants;
 import Utilities.LodeSave;
 import java.awt.Graphics;
-import static java.lang.Thread.sleep;
+import java.awt.geom.Rectangle2D;
 
 /**
  *
@@ -21,22 +22,29 @@ public class Player extends Entity {
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
     private BufferedImage[][] animations;
     private BufferedImage img;
-    private int boarder_left = -131;
-    private int boarder_right = 1132;
+    private int boarder_left = 0;
+    private int boarder_right = 1250;
+    private float xHitboxOffset = 135, yHitboxOffset = 115;
 
     private long airtimeStart = 0;
     private long airtimeDif;
-//
-//    long keyPressStartTime = 0;
+
+    long keyPressStartTime = 0;
     long keyPressLimit = 100;
 
-    private boolean Up, Right, Left, Jump, Down;
+    private boolean Up, Right, Left, Down;
     int flipX;
     int fixcam = 640;
 
-    public Player(int x, int y, int width, int hight) {
-        super(x, y, width, hight);
+    public Player(float x, float y, int width, int height) {
+        super(x, y, width, height);
         getAnimations();
+        createHitbox(x, y, 30, 54);
+        createAttackBox();
+    }
+
+    private void createAttackBox() {
+        attackBox = new Rectangle2D.Float(x, y, (int) 44, (int) 54);
     }
 
     public void attackSound() {
@@ -48,8 +56,8 @@ public class Player extends Entity {
         MySound.getSound(MySound.SOUND_JUMP).playOnce();
     }
 
-    public int getX() {
-        return x;
+    public float getX() {
+        return hitbox.x;
     }
 
     private void assignAni() {
@@ -76,12 +84,36 @@ public class Player extends Entity {
     public void update() {
         changePos();
         updateAniTick();
+        updateAttackBox();
+        //updateHit();
         assignAni();
     }
 
-    public void render(Graphics g) {
+    public void updateHit() {
+        //inside intersects should be enemy attackbox
+        if (hitbox.intersects(200, 500, 100, 100)) {
+            //if (hitbox.intersects(hitboxe)) {
+            //curHP -= 1;
+            Constants.currHeart--;
+            //System.out.println("-heart");
+        }
+    }
 
-        g.drawImage(animations[p_Action][aniIndex], x + flipX, y, width * p_facing, height, null);
+    private void updateAttackBox() {
+        if (Right) {
+            attackBox.x = hitbox.x + hitbox.width;
+        } else if (Left) {
+            attackBox.x = hitbox.x - hitbox.width - 15;
+        }
+        attackBox.y = hitbox.y;
+    }
+
+    public void render(Graphics g) {
+        //g.drawRect(200, 500, 100, 100);
+        g.drawImage(animations[p_Action][aniIndex], (int) (hitbox.x - xHitboxOffset) + flipX, (int) (hitbox.y - yHitboxOffset), width * p_facing, height, null);
+        //System.out.printf("%f %f\n", hitbox.x, hitbox.y);
+        showHitbox(g);
+        showAttackBox(g);
     }
 
     private void updateAniTick() {
@@ -96,67 +128,88 @@ public class Player extends Entity {
         }
     }
 
+    public boolean isOnGround() {
+        return hitbox.y == LevelHandler.GroundPos;
+    }
+
     public boolean isOnAir() {
-        return this.y < LevelHandler.GroundPos;
+        return hitbox.y < LevelHandler.GroundPos;
+    }
+
+
+    public void Jump(boolean up) {
+        if (jumpable && !isOnAir()) { // Allow jump only when on the ground
+            if (!Up) {
+                jumpSound();
+            }
+            this.Up = up;
+            //this.Jump = jump;
+            //airtimeStart = System.currentTimeMillis(); // Start jump timing
+            this.keyPressStartTime = System.currentTimeMillis();
+        }
+    }
+
+    public void Drop() {
+        if (isOnAir()) { // Ensure it only applies when above the ground
+            this.Down = true;
+        }
     }
 
     public void changePos() {
         moveState = false;
+        long jump_timedif = System.currentTimeMillis() - keyPressStartTime;
 
-        // Gravity and air-time management
         if (isOnAir()) {
             if (airtimeStart == 0) {
                 airtimeStart = System.currentTimeMillis();
             }
             airtimeDif = System.currentTimeMillis() - airtimeStart;
-            y += gravity;
 
+            //y += gravity;);
+            //hitbox.y += gravity * airtimeDif / 1000;
+            hitbox.y += gravity * 2;
             if (airtimeDif > keyPressLimit) {
                 Up = false; // Disable jump if air-time limit exceeds
             }
         } else {
             airtimeDif = 0;
             airtimeStart = 0;
-            jumpable = true; // Allow jump again on the ground
-            y = LevelHandler.GroundPos;
+            //jumpcount = 0;
+            jumpable = true;
+            hitbox.y = LevelHandler.GroundPos;
         }
 
-        // Jumping
+        //move a character y
         if (Up) {
-            y -= jump_power * (1 - airtimeDif / 100); // Move upwards
+            hitbox.y += jump_power * -1;
             moveState = true;
         }
 
-        // Dropping
-        if (isOnAir()) {
-            y += gravity; // Default gravity effect
-            if (Down) {
-                y += movespeed; // Extra downward acceleration
-            }
-        }
-
-        // Horizontal movement
+        //move a character x
         if (Right && !Left) {
             moveState = true;
             flipX = 0;
-            if (x < boarder_right) {
-                x += movespeed;
+            if (hitbox.x < boarder_right) {
+                //x += movespeed;
+                hitbox.x += movespeed;
             } else {
-                x = 1132;
+                //x = 1132;
+                hitbox.x = boarder_right;
             }
             p_facing = 1;
-            //System.out.printf("x %d y %d go Right\n",x,y);
         } else if (!Right && Left) {
             moveState = true;
             flipX = width;
-            if (x > boarder_left) {
-                x -= movespeed;
+            if (hitbox.x > boarder_left) {
+                hitbox.x -= movespeed;
             } else {
-                x = -131;
+                hitbox.x = boarder_left;
             }
+            //hitbox.x -= movespeed;
             p_facing = -1;
-            //System.out.printf("x %d y %d go Left\n",x,y);
         }
+
+
     }
 
     public void getAnimations() {
@@ -181,20 +234,7 @@ public class Player extends Entity {
         this.Left = left;
     }
 
-    public void Jump(boolean up) {
-        if (jumpable && !isOnAir()) { // Allow jump only when on the ground
-            if (!Up) {
-                jumpSound();
-            }
-            this.Up = up;
-            airtimeStart = System.currentTimeMillis(); // Start jump timing
-        }
+    public void setUp(boolean up) {
+        this.Up = up;
     }
-
-    public void Drop() {
-        if (isOnAir()) { // Ensure it only applies when above the ground
-            this.Down = true;
-        }
-    }
-
 }
