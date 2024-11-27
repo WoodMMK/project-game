@@ -56,27 +56,27 @@ public class GameWindow {
         heartPanel.setBorder(null);
 
 //test heart
-//        JButton test1B = new JButton("-heart");
-//        test1B.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                Constants.currHeart--;
-//                gamepanel.requestFocus();
-//            }
-//        });
-//        test1B.setBounds(300, 300, 100, 100);
-//        gamepanel.add(test1B);
-//
-//        JButton test2B = new JButton("+heart");
-//        test2B.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                Constants.currHeart++;
-//                gamepanel.requestFocus();
-//            }
-//        });
-//        test2B.setBounds(410, 300, 100, 100);
-//        gamepanel.add(test2B);
+        JButton test1B = new JButton("-heart");
+        test1B.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Constants.currHeart--;
+                gamepanel.requestFocus();
+            }
+        });
+        test1B.setBounds(300, 300, 100, 100);
+        gamepanel.add(test1B);
+
+        JButton test2B = new JButton("+heart");
+        test2B.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Constants.currHeart++;
+                gamepanel.requestFocus();
+            }
+        });
+        test2B.setBounds(410, 300, 100, 100);
+        gamepanel.add(test2B);
 
         gamepanel.add(scoreLabel);
         gamepanel.add(nameLabel);

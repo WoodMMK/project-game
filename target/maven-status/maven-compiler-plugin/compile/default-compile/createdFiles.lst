@@ -1,7 +1,9 @@
+Gamecode\GameWindow$2.class
 Levels\LevelHandler.class
 Gamecode\Menu$2.class
 Gamecode\Menu$5.class
 Inputs\MouseInputs.class
+Gamecode\Menu$14.class
 Gamecode\GameWindow.class
 Levels\level.class
 Gamecode\Menu$7.class
@@ -16,10 +18,13 @@ Gamecode\Menu$newPanelBaG.class
 Utilities\LodeSave.class
 Entities\Entity.class
 Gamecode\Menu$10.class
+Gamecode\Menu$13.class
 Gamecode\Game.class
+Gamecode\GameWindow$1.class
 Gamecode\Menu$3.class
 Gamecode\Menu$6.class
 Gamecode\Menu$9.class
+Gamecode\Menu$15.class
 Gamecode\buttonMouseListener.class
 Utilities\Constants.class
 Gamecode\Menu$4.class

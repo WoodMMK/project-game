@@ -57,7 +57,7 @@ public class Menu {
     private CardLayout cardLayout = new CardLayout();
     private JPanel mainPanel;
     private Image defaultBG, settingPlate;
-    
+
     private Font headerFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 60),
             defaultFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 45),
             choicFont = LodeSave.getFont("dpcomic.ttf", Font.PLAIN, 25),
@@ -212,7 +212,6 @@ public class Menu {
         soundB[0].setIcon(checkI[0]);
         soundB[0].setSelectedIcon(checkI[1]);
 
-
         JLabel valueLabel = new JLabel("volume: 50");
         valueLabel.setFont(choicFont);
         //valueLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -227,7 +226,7 @@ public class Menu {
                 // Print the current value of the slider
                 valueLabel.setText("volume: " + volume.getValue());
 
-                if(soundB[0].isSelected()){
+                if (soundB[0].isSelected()) {
                     MySound.setVolume((float) volume.getValue() / 100);
                 }
                 //System.out.println((float) volume.getValue() / 100);
@@ -306,6 +305,28 @@ public class Menu {
         difficultB[0].setSelectedIcon(checkI[1]);
         difficultB[2].setIcon(checkI[0]);
         difficultB[2].setSelectedIcon(checkI[1]);
+
+        difficultB[0].addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                Constants.currHeart = 5;
+                Constants.maxHeart = 5;
+            }
+        });
+        difficultB[1].addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                Constants.currHeart = 4;
+                Constants.maxHeart = 4;
+            }
+        });
+        difficultB[2].addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                Constants.currHeart = 3;
+                Constants.maxHeart = 3;
+            }
+        });
 
         song = new JComboBox(songList);
         song.addItemListener(new ItemListener() {
@@ -527,13 +548,12 @@ public class Menu {
         c.ipady = 60;
         creditPlatePanel.add(creditPlateNamePanel, c);
 
-
-        c.anchor = GridBagConstraints.CENTER;        
+        c.anchor = GridBagConstraints.CENTER;
         c.gridy = 1;
         c.gridx = 0;
         c.ipady = 20;
         creditPanel.add(backB2, c);
-        
+
         mainPanel.add(startPanel, "main");
         mainPanel.add(settingPanel, "setting");
         mainPanel.add(creditPanel, "credit");
