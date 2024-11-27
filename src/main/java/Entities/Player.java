@@ -24,7 +24,7 @@ public class Player extends Entity {
     private long knockbackDuration = 500;
 
     private int p_facing = 1;
-    private boolean moveState = false, attack = false;
+    private boolean moveState = false, attack = false, isDamaged = false;
     private int p_Action = idling;
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
     private BufferedImage[][] animations;
@@ -61,7 +61,11 @@ public class Player extends Entity {
 
     private void assignAni() {
         int startAni = p_Action; // Store the current action for comparison
-
+        if (isDamaged) {
+            System.out.println("in assign Ani");
+            p_Action = damaged;
+            return;
+        }
         // Handle attacking animation (highest priority)
         if (attack) {
             if (startAni != attacking) { // Trigger attack sound only when transitioning to attacking
@@ -104,55 +108,69 @@ public class Player extends Entity {
         changePos();
         updateAniTick();
         updateAttackBox();
-        
+
         assignAni();
     }
-    public void activeIframe(){
+
+    public void activeIframe() {
         invincible = true;
         iframeStartTime = System.currentTimeMillis();
         System.out.println("now in iframe");
     }
-    public void applyKnockback(int sourceX){
+
+    public void applyKnockback(int sourceX) {
         knockedBack = true;
         knockbackStartTime = System.currentTimeMillis();
-        if(hitbox.x < sourceX){
-            hitbox.x -= 50;
+
+        // Determine knockback direction based on the position of the source
+        if (hitbox.x < sourceX) {
+            hitbox.x -= 50; // Knockback to the left
+        } else if (hitbox.x > sourceX) {
+            hitbox.x += 50; // Knockback to the right
         }
-        else if(hitbox.x > sourceX){
-            hitbox.x += 50;
-        }
-        hitbox.y -= 50;
+        hitbox.y -= 50; // Knockback upwards
         System.out.println("Player knocked back!");
     }
-    public void takeDamage(int sourceX){
-        curHP -= 1;
-        System.out.println("took damage, Current HP: "+ curHP);
-        
-        applyKnockback(sourceX);
-        
-        if (curHP <= 0){
-            SoundManager.playOnce(SOUND_GAME_OVER);
-        }
-        
-    }
-    public void updateHit() {
-//        long currentTime = System.currentTimeMillis();
-//        //inside intersects should be enemy attackbox
-//        if(invincible && (currentTime - iframeStartTime) >= iframeDuration){
-//            invincible = false;
-//            System.out.println("No longer invincible.");
-//        }
-//        if(knockedBack){
-//            if((currentTime - knockbackStartTime) >= knockbackDuration){
-//                knockedBack = false;
-//                System.out.println("end knockback");
-//            }
-//        }
 
-        if (hitbox.intersects(200, 500, 100, 100)) {// check if hit
+    public void takeDamage(int sourceX) {
+        if (!invincible) { // Only take damage if not currently invincible
+            curHP -= 100; // deduct hit damage
+            System.out.println("took damage, Current HP: " + curHP);
+            SoundManager.playOnce(SOUND_getHit);
+            isDamaged = true;
+            runningSound.stop();
+            activeIframe(); // Activate invincibility frames
+            applyKnockback(sourceX);
+
+            if (curHP <= 0) {
+                SoundManager.playOnce(SOUND_GAME_OVER);
+            }
+        }
+    }
+
+    public void updateHit() {
+        long currentTime = System.currentTimeMillis();
+
+        // Check if invincibility frames have expired
+        if (invincible && (currentTime - iframeStartTime) >= iframeDuration) {
+            invincible = false;
+            //isDamaged = false; // <----------
+            System.out.println("No longer invincible.");
+        }
+
+        // Check if knockback has ended
+        if (knockedBack) {
+            if ((currentTime - knockbackStartTime) >= knockbackDuration) {
+                knockedBack = false;
+                isDamaged = false; // <----------
+                System.out.println("end knockback");
+            }
+        }
+
+        // Check for hit only if not invincible
+        if (!invincible && hitbox.intersects(200, 500, 100, 100)) { // Check if hit
             takeDamage(200);
         }
-
     }
 
     public void render(Graphics g) {
@@ -191,19 +209,26 @@ public class Player extends Entity {
     public void changePos() {
         moveState = false;
 
-        // Horizontal Movements
-        if (Right && !Left) {
-            moveState = true;
-            flipX = 0;
-            hitbox.x += movespeed;
-            p_facing = 1;
-        } else if (!Right && Left) {
-            moveState = true;
-            flipX = width;
-            hitbox.x -= movespeed;
-            p_facing = -1;
+        if(!isDamaged){
+            // Horizontal Movements
+            if (Right && !Left) {
+                moveState = true;
+                flipX = 0;
+                hitbox.x += movespeed;
+                p_facing = 1;
+            } else if (!Right && Left) {
+                moveState = true;
+                flipX = width;
+                hitbox.x -= movespeed;
+                p_facing = -1;
+            }
+            // Jumping
+            if (Up) {
+                hitbox.y -= jump_power * (1 - airtimeDif / 100); // Move upwards
+                moveState = true;
+            }  
         }
-
+        
         // Gravity and air-time management
         if (isOnAir()) {
             if (airtimeStart == 0) {
@@ -223,11 +248,6 @@ public class Player extends Entity {
             y = LevelHandler.GroundPos;
         }
 
-        // Jumping
-        if (Up) {
-            hitbox.y -= jump_power * (1 - airtimeDif / 100); // Move upwards
-            moveState = true;
-        }
     }
 
     public void getAnimations() {
