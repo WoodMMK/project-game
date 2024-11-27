@@ -48,7 +48,7 @@ public class level {
 
     public void draw(Graphics g) {
         int count = bg.length;
-        cameraX = game.getPlayer().getX() - 640;
+        cameraX = (int) game.getPlayer().getX() - 640;
         for (int i = 0; i < bg.length; i++) {
             if (bg != null) {
                 g.drawImage(bg[i], (cameraX - 700) / (count * 2), -1400, 2400, 2400, null);
