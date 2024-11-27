@@ -20,6 +20,8 @@ public class Player extends Entity {
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
     private BufferedImage[][] animations;
     private BufferedImage img;
+    private int boarder_left = -131;
+    private int boarder_right = 1132;
     
     private long airtimeStart=0;
     private long airtimeDif;
@@ -77,6 +79,7 @@ public class Player extends Entity {
     }
 
     public void render(Graphics g) {
+        
         g.drawImage(animations[p_Action][aniIndex], x + flipX, y, width * p_facing, hight, null);
     }
 
@@ -99,6 +102,7 @@ public class Player extends Entity {
 
     public void changePos() {
         moveState = false;
+        
 
     // Gravity and air-time management
     if (isOnAir()) {     
@@ -137,13 +141,21 @@ public class Player extends Entity {
     if (Right && !Left) {
         moveState = true;
         flipX = 0;
+        if(x<boarder_right)
         x += movespeed;
+        else
+            x =1132;
         p_facing = 1;
+        System.out.printf("x %d y %d go Right\n",x,y);
     } else if (!Right && Left) {
         moveState = true;
         flipX = width;
+        if(x>boarder_left)
         x -= movespeed;
+        else
+        x=-131;
         p_facing = -1;
+        System.out.printf("x %d y %d go Left\n",x,y);
     }
     }
 
