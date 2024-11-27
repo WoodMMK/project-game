@@ -1,5 +1,6 @@
 Levels\LevelHandler.class
 Gamecode\Menu$2.class
+Entities\Enemy.class
 Gamecode\Menu$5.class
 Inputs\MouseInputs.class
 Gamecode\Menu$14.class
@@ -21,6 +22,7 @@ Gamecode\Menu$13.class
 Gamecode\Game.class
 Gamecode\Menu$3.class
 Gamecode\Menu$6.class
+Utilities\Constants$enemyConstants.class
 Gamecode\Menu$9.class
 Gamecode\Menu$15.class
 Gamecode\buttonMouseListener.class

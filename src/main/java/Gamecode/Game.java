@@ -43,7 +43,7 @@ public class Game implements Runnable {
         //gamepanel.gupdate();
         player.update();
         enemy.update();
-        level.update();
+        //level.update();
     }
 
     public void render(Graphics g) {

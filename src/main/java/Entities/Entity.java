@@ -13,7 +13,7 @@ public abstract class Entity {
     protected float x, y;
     protected int height, width;
     protected Rectangle2D.Float hitbox, attackBox;
-    //protected int maxHP, curHP, damage;
+    protected int maxHP, curHP, damage;
 
     public Entity(float x, float y, int width, int height) {
         this.x = x;
