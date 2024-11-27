@@ -287,10 +287,10 @@ public class Player extends Entity {
         }
 
         //move a character y
-        if (Up) {
-            hitbox.y += jump_power * -1;
-            moveState = true;
-        }
+//        if (Up) {
+//            hitbox.y += jump_power * -1;
+//            moveState = true;
+//        }
 
         //move a character x
         if (Right && !Left) {
