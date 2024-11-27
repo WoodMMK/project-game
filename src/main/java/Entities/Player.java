@@ -139,6 +139,7 @@ public class Player extends Entity {
             SoundManager.playOnce(SOUND_getHit);
             isDamaged = true;
             runningSound.stop();
+            
             activeIframe(); // Activate invincibility frames
             applyKnockback(sourceX);
 

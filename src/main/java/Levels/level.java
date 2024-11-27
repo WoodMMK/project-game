@@ -31,7 +31,7 @@ public class level {
 
         bg = new BufferedImage[7];
         for (int i = 0; i < bg.length; i++) {
-            bg[i] = LodeSave.getAsset("Background/Background " + (i + 1) + ".png");
+            bg[i] = LodeSave.getAsset("Background/Background_" + (i + 1) + ".png");
         }
     }
 
