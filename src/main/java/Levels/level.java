@@ -19,7 +19,7 @@ public class level {
     public level(Game game) {
         this.game = game;
 
-        bg = new BufferedImage[7];
+        bg = new BufferedImage[5];
         cd = new BufferedImage[2];
         for (int i = 0; i < bg.length; i++) {
             bg[i] = LodeSave.getAsset("Background/Background_" + (i + 1) + ".png");
