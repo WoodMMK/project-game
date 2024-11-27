@@ -141,21 +141,21 @@ public class Player extends Entity {
     if (Right && !Left) {
         moveState = true;
         flipX = 0;
-        if(x<boarder_right)
+        if (x < boarder_right)
         x += movespeed;
         else
             x =1132;
         p_facing = 1;
-        System.out.printf("x %d y %d go Right\n",x,y);
+        //System.out.printf("x %d y %d go Right\n",x,y);
     } else if (!Right && Left) {
         moveState = true;
         flipX = width;
-        if(x>boarder_left)
+        if (x > boarder_left)
         x -= movespeed;
         else
         x=-131;
         p_facing = -1;
-        System.out.printf("x %d y %d go Left\n",x,y);
+        //System.out.printf("x %d y %d go Left\n",x,y);
     }
     }
 

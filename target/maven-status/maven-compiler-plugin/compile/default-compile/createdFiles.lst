@@ -1,4 +1,3 @@
-Gamecode\GameWindow$2.class
 Levels\LevelHandler.class
 Gamecode\Menu$2.class
 Gamecode\Menu$5.class
@@ -20,7 +19,6 @@ Entities\Entity.class
 Gamecode\Menu$10.class
 Gamecode\Menu$13.class
 Gamecode\Game.class
-Gamecode\GameWindow$1.class
 Gamecode\Menu$3.class
 Gamecode\Menu$6.class
 Gamecode\Menu$9.class
