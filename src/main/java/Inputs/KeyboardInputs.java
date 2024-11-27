@@ -23,37 +23,31 @@ public class KeyboardInputs implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_W:
-                gamepanel.getGame().getPlayer().setUp(false);
-                break;
-
-            case KeyEvent.VK_S:
-                //gamepanel.getGame().getPlayer().setDown(false);
-                break;
-            case KeyEvent.VK_A:
-                gamepanel.getGame().getPlayer().setLeft(false);
-                break;
-            case KeyEvent.VK_D:
-                gamepanel.getGame().getPlayer().setRight(false);
-
-                break;
-            case KeyEvent.VK_SPACE:
-                gamepanel.getGame().getPlayer().setJump(false);
-                break;
-        }
-
+    switch (e.getKeyCode()) {
+        case KeyEvent.VK_W:
+            gamepanel.getGame().getPlayer().Jump(false); // Stop jumping
+            break;
+        case KeyEvent.VK_S:
+            gamepanel.getGame().getPlayer().Drop(); // Reset drop
+            break;
+        case KeyEvent.VK_A:
+            gamepanel.getGame().getPlayer().setLeft(false);
+            break;
+        case KeyEvent.VK_D:
+            gamepanel.getGame().getPlayer().setRight(false);
+            break;
     }
+}
 
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W:
-                gamepanel.getGame().getPlayer().jump();
-                gamepanel.getGame().getPlayer().setUp(true);
+                gamepanel.getGame().getPlayer().Jump(true);
                 break;
             case KeyEvent.VK_S:
-                //gamepanel.getGame().getPlayer().setDown(true);
+                //wait implementation
+                gamepanel.getGame().getPlayer().Drop();
                 break;
             case KeyEvent.VK_A:
                 gamepanel.getGame().getPlayer().setLeft(true);
