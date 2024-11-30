@@ -18,9 +18,11 @@ public class Enemy extends Entity {
 
     private Player player;
     private boolean thisEntityDie = false;
+    private int enemyScore;
+    private double enemySpeed;
 
     private int e_Action = idling;
-    private boolean moveState = false, attack = false, /*hit = false,*/ aniDone = false;
+    private boolean moveState = true, attack = false, /*hit = false,*/ aniDone = false;
     private int facing = -1;
     int flipX;
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
@@ -50,7 +52,7 @@ public class Enemy extends Entity {
 
     public void linkPlayer(Player player) {
         this.player = player;
-        System.out.println(this.player);
+        //System.out.println(this.player);
     }
 
     public void update() {
@@ -62,15 +64,15 @@ public class Enemy extends Entity {
         //checkAttackBox();
         if (curHP <= 0 && !thisEntityDie) {
             thisEntityDie = true;
-            Constants.score += 100;
+            Constants.score += enemyScore;
         }
     }
 
     public void render(Graphics g) {
         if (!aniDone) {
             g.drawImage(animations[e_Action][aniIndex], (int) (hitbox.x - xHitboxOffset) + flipX, (int) (hitbox.y - yHitboxOffset), width * facing, height, null);
-            showHitbox(g);
-            showAttackBox(g);
+            //showHitbox(g);
+            //showAttackBox(g);
         }
     }
 
@@ -87,22 +89,32 @@ public class Enemy extends Entity {
             if (randomInt == 0) {
                 img = LodeSave.getAsset("Enemy/Canine_White_" + k + ".png");
                 this.setHP(1);
+                enemyScore = 100;
+                enemySpeed = 0.7;
             }
             if (randomInt == 1) {
                 img = LodeSave.getAsset("Enemy/Canine_Black_" + k + ".png");
                 //this.setHP(4);
                 this.setHP(1);
+                enemyScore = 400;
+                enemySpeed = 1.3;
             }
             if (randomInt == 2) {
                 img = LodeSave.getAsset("Enemy/Canine_Brown_" + k + ".png");
                 //this.setHP(2);
                 this.setHP(1);
+                enemyScore = 200;
+                enemySpeed = 0.85;
             }
             if (randomInt == 3) {
                 img = LodeSave.getAsset("Enemy/Canine_Gray_" + k + ".png");
                 //this.setHP(3);
                 this.setHP(1);
+                enemyScore = 300;
+                enemySpeed = 1;
             }
+            //enemyScore =100;
+            //enemySpeed = 1;
             //System.out.printf("Loaded sprite sheet %d\n", k);
 
             int cols = img.getWidth() / frameWidth;
@@ -182,12 +194,12 @@ public class Enemy extends Entity {
             if (LR) {
                 //right
                 flipX = width;
-                hitbox.x += movespeed;
+                hitbox.x += enemySpeed;
                 facing = -1;
             } else {
                 //left
                 flipX = 0;
-                hitbox.x -= movespeed;
+                hitbox.x -= enemySpeed;
                 facing = 1;
             }
         }
@@ -213,7 +225,7 @@ public class Enemy extends Entity {
         curHP--;
     }
 
-    private void updateHit(boolean hit) {
+    private void updateHit(/*boolean hit*/) {
         if(curHP <= 0){
             attack = false;
             e_Action = dead;

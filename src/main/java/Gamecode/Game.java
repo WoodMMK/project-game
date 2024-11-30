@@ -3,9 +3,16 @@ package Gamecode;
 import Entities.*;
 import Levels.level;
 import Utilities.Constants;
+import Utilities.LodeSave;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.Random;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -23,7 +30,9 @@ public class Game implements Runnable {
     private ArrayList<Enemy> enemyGrop;
     private Enemy enemy;
     private boolean runnable = true;
+    private boolean closeFram = false;
     private Random random = new Random();
+    private int timer = 800;
 
     public Player getPlayer() {
         return player;
@@ -31,6 +40,10 @@ public class Game implements Runnable {
 
     public Enemy getEnemy() {
         return enemy;
+    }
+
+    public GameWindow getGameWindow() {
+        return gamewindow;
     }
 
     public Game() {
@@ -44,13 +57,15 @@ public class Game implements Runnable {
         gamepanel = new GamePanel(this);
         gamewindow = new GameWindow(gamepanel);
         gamepanel.requestFocus();
-
+        gamepanel.showWave();
         startGameLoop();
     }
 
-    private void startGameLoop() {
+
+    public void startGameLoop() {
         loopThread = new Thread(this);
         loopThread.start();
+        System.out.println("start loop");
     }
 
     public void update() {
@@ -59,16 +74,34 @@ public class Game implements Runnable {
         player.update();
         for (int i = 0; i < enemyGrop.size(); i++) {
             enemyGrop.get(i).update();
-            if(enemyGrop.get(i).getCurHP()>0){
+            if (enemyGrop.get(i).getCurHP() > 0) {
                 checkAlive = true;
             }
         }
-        if(!checkAlive){
+        if (!checkAlive) {
+            timer = 800;
+            Constants.wave++;
+            gamepanel.showWave();
             createSetEnemy();
             player.linkEnemy(enemyGrop);
         }
+        timer--;
+        if (timer <= 0) {
+            gamepanel.removeWave();
+            //System.out.println("remove wavelabel");
+        }
         //enemy.update();
         //level.update();
+        if (player.getCurHP() < 1 && !closeFram) {
+
+            this.setRun(false);
+            closeFram = true;
+            JOptionPane.showMessageDialog(null, "your journey end here", "game end",
+                    JOptionPane.INFORMATION_MESSAGE);
+            gamewindow.getJFrame().dispose();
+
+            new Menu();
+        }
     }
 
     public void render(Graphics g) {
@@ -77,19 +110,21 @@ public class Game implements Runnable {
         //boolean checkAlive = false;
         for (int i = 0; i < enemyGrop.size(); i++) {
             enemyGrop.get(i).render(g);
-//            if (enemyGrop.get(i).getCurHP() > 0) {
-//                checkAlive = true;
-//            }
         }
-//        if (!checkAlive) {
-//            createSetEnemy();
-//            player.linkEnemy(enemyGrop);
-//        }
         //enemy.render(g);
     }
 
-    void setRun(boolean a) {
+
+    public void setRun(boolean a) {
         runnable = a;
+    }
+
+    public boolean getRun() {
+        return runnable;
+    }
+
+    public Thread getThread() {
+        return loopThread;
     }
 
     public void createSetEnemy() {
@@ -98,12 +133,12 @@ public class Game implements Runnable {
             for (int j = 0; j < 4; j++) {
                 int left_right = random.nextInt(0, 2);
                 int posx;
-                posx = random.nextInt(0, 1000);
-//        if (left_right == 0) {
-//            posx = 1000;
-//        } else {
-//            posx = 0;
-//        }
+                //posx = random.nextInt(0, 1000);
+                if (left_right == 0) {
+                    posx = random.nextInt(1800, 1900);
+                } else {
+                    posx = random.nextInt(-600, -500);
+                }
                 enemyGrop.add(new Enemy(posx, 0, 48 * 2, 32 * 2, this));
             }
         }

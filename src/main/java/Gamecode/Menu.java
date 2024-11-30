@@ -62,7 +62,6 @@ public class Menu {
     private Image defaultBG, settingPlate;
 
     //private String curMusic = Music1;
-
     private Font headerFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 60),
             defaultFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 45),
             choicFont = LodeSave.getFont("dpcomic.ttf", Font.PLAIN, 25),
@@ -70,6 +69,8 @@ public class Menu {
 
     public Menu() {
         SoundManager.stopTheme();
+        Constants.wave = 1;
+        Constants.score = 0;
         SoundManager.playTheme(Constants.curMusic);
         readPic();
 
@@ -219,13 +220,13 @@ public class Menu {
         JLabel valueLabel = new JLabel("volume: " + (int) (soundConstants.gameVolume * 100));
         valueLabel.setFont(choicFont);
         valueLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
-        volume = new JSlider(1, 100, (int) (soundConstants.gameVolume * 100));
+        volume = new JSlider(0, 100, (int) (soundConstants.gameVolume * 100));
         volume.setBorder(null);
         volume.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
                 valueLabel.setText("volume: " + volume.getValue());
-                if(soundB[0].isSelected()){
+                if (soundB[0].isSelected()) {
                     SoundManager.updateAllVolume((float) volume.getValue() / 100);
                 }
             }
@@ -279,7 +280,13 @@ public class Menu {
         difficultB[1].setName("Normal");
         difficultB[2] = new JRadioButton("Hard");
         difficultB[2].setName("Hard");
-        difficultB[0].setSelected(true);
+        if (Constants.difficult == 1) {
+            difficultB[0].setSelected(true);
+        } else if (Constants.difficult == 2) {
+            difficultB[1].setSelected(true);
+        } else if (Constants.difficult == 3) {
+            difficultB[2].setSelected(true);
+        }
         difficultGrop.add(difficultB[0]);
         difficultGrop.add(difficultB[1]);
         difficultGrop.add(difficultB[2]);

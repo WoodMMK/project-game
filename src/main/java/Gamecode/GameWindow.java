@@ -37,7 +37,7 @@ public class GameWindow {
         //jframe.setDefaultCloseOperation(3);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setVisible(true);
-//        gamepanel.setLayout(null);
+        gamepanel.setLayout(null);
 
         nameLabel = new JLabel("name : " + Constants.playerName);;
         nameLabel.setFont(scoreFont);
@@ -76,7 +76,7 @@ public class GameWindow {
 //        });
 //        test2B.setBounds(410, 300, 100, 100);
 //        gamepanel.add(test2B);
-        //gamepanel.add(scoreLabel);
+//gamepanel.add(scoreLabel);
         gamepanel.add(nameLabel);
         gamepanel.add(heartPanel);
     }
@@ -123,15 +123,5 @@ class heartPanel extends JPanel {
                 border += 10;
             }
         }
-        if (player.getCurHP() < 1 && !closeFram) {
-            game.setRun(false);
-            closeFram = true;
-            JOptionPane.showMessageDialog(null, "your journey end here", "game end",
-                    JOptionPane.INFORMATION_MESSAGE);
-            jframe.dispose();
-
-            new Menu();
-        }
-
     }
 }

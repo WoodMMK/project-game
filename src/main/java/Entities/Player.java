@@ -209,8 +209,8 @@ public class Player extends Entity {
         //g.drawRect(200, 500, 1000, 100);
         g.drawImage(animations[p_Action][aniIndex], (int) (hitbox.x - xHitboxOffset) + flipX, (int) (hitbox.y - yHitboxOffset), width * p_facing, height, null);
         //System.out.printf("%f %f\n", hitbox.x, hitbox.y);
-        showHitbox(g);
-        showAttackBox(g);
+        //showHitbox(g);
+        //showAttackBox(g);
     }
 
     private void updateAniTick() {
