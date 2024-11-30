@@ -156,6 +156,7 @@ public class Player extends Entity {
             curHP -= 1; // deduct hit damage
             System.out.println("took damage, Current HP: " + curHP);
             SoundManager.playOnce(SOUND_getHit);
+            attack = false;
             isDamaged = true;
             runningSound.stop();
 
@@ -188,7 +189,7 @@ public class Player extends Entity {
         }
 
         // Check for hit only if not invincible
-        if (!invincible && hitbox.intersects(200, 500, 1000, 100)) { // Check if hit
+        if (!invincible && hitbox.intersects(500, 500, 1000, 100)) { // Check if hit
             takeDamage(200);
         }
     }

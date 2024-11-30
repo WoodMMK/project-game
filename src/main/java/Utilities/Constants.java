@@ -43,7 +43,7 @@ public class Constants {
         public final static int running = 1;
         public final static int attacking = 2;
         public final static int dead = 3;
-        public final static int movespeed = 2;
+        public final static int movespeed = 1;
         
         public static int getSpriteAmount(int p_Action){
             switch(p_Action){

@@ -17,7 +17,7 @@ public class Enemy extends Entity {
     private Player player;
 
     private int e_Action = idling;
-    private boolean moveState = false, attack = false, hit = false, aniDone = false;
+    private boolean moveState = true, attack = false, hit = false, aniDone = false;
     private int facing = -1;
     int flipX;
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
@@ -124,11 +124,19 @@ public class Enemy extends Entity {
         if (aniTick >= aniSpeed) {
             aniTick = 0;
             aniIndex++;
+            if(attack){
+                if(aniIndex >= 2 && aniIndex <= 4){
+                    if(attackBox.intersects(player.getHitbox())){
+                        player.takeDamage((int)hitbox.x);
+                    }
+                }
+            }
             if (aniIndex >= getSpriteAmount(e_Action)) {
                 System.out.println(aniDone);
                 if(hit)
                     aniDone = true;
                 aniIndex = 0;
+                attack = false;
             }
         }
     }
@@ -136,6 +144,11 @@ public class Enemy extends Entity {
     public void changePos() {
         
         hitbox.y = LevelHandler.GroundPos;
+        
+        if (player.hitbox.x >= hitbox.x+ 70)
+            LR = true;
+        else if(player.hitbox.x <= hitbox.x - 70)
+            LR = false;
         
         if (moveState) {
             if (LR) {
@@ -149,24 +162,7 @@ public class Enemy extends Entity {
                 hitbox.x -= movespeed;
                 facing = 1;
             }
-
-            moveDuration--;
-            if (moveDuration <= 0) {
-                moveState = false;
-                idleDuration = new Random().nextInt(maxIdleTime) + 60;
-            }
-        } else {
-            idleDuration--;
-            if (idleDuration <= 0) {
-                Random Rand = new Random();
-                LR = Rand.nextBoolean();
-
-                moveDuration = new Random().nextInt(maxMoveTime) + 20; // Random move time
-                moveState = true;
-            }
         }
-
-        
     }
 
     private void createAttackBox() {
@@ -174,6 +170,9 @@ public class Enemy extends Entity {
     }
     
     private void updateAttackBox() {
+        if(attackBox.intersects(player.getHitbox())){
+            attack = true;
+        }
         if (LR) {
             attackBox.x = hitbox.x + hitbox.width - 12;
         } else if (!LR) {
@@ -188,6 +187,7 @@ public class Enemy extends Entity {
 
     private void updateHit(boolean hit) {
         if(hit){
+            attack = false;
             e_Action = dead;
             moveState = false;
         }
