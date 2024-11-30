@@ -190,9 +190,9 @@ public class Player extends Entity {
         }
 
         // Check for hit only if not invincible
-        if (!invincible && hitbox.intersects(200, 500, 1000, 100)) { // Check if hit
-            takeDamage(200);
-        }
+//        if (!invincible && hitbox.intersects(200, 500, 1000, 100)) { // Check if hit
+//            takeDamage(200);
+//        }
     }
 
     private void updateAttackBox() {
@@ -205,7 +205,7 @@ public class Player extends Entity {
     }
 
     public void render(Graphics g) {
-        g.drawRect(200, 500, 1000, 100);
+        //g.drawRect(200, 500, 1000, 100);
         g.drawImage(animations[p_Action][aniIndex], (int) (hitbox.x - xHitboxOffset) + flipX, (int) (hitbox.y - yHitboxOffset), width * p_facing, height, null);
         //System.out.printf("%f %f\n", hitbox.x, hitbox.y);
         showHitbox(g);
@@ -220,7 +220,7 @@ public class Player extends Entity {
             if (attack && aniIndex >= 4) {
                 for (int i = 0; i < enemyGrop.size(); i++) {
                     if (attackBox.intersects(enemyGrop.get(i).getHitbox())) {
-                        enemyGrop.get(i).setHit(true);
+                        enemyGrop.get(i).hit();
                     }
                 }
             }

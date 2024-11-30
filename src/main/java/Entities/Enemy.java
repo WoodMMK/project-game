@@ -14,10 +14,11 @@ import java.util.*;
  * @author Gateaux
  */
 public class Enemy extends Entity {
+
     private Player player;
 
     private int e_Action = idling;
-    private boolean moveState = false, attack = false, hit = false, aniDone = false;
+    private boolean moveState = false, attack = false, /*hit = false,*/ aniDone = false;
     private int facing = -1;
     int flipX;
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
@@ -32,23 +33,27 @@ public class Enemy extends Entity {
     private final int maxIdleTime = 100;
     private boolean LR;
 
+    private Random random = new Random();
+    private int randomInt;
+
     public Enemy(float x, float y, int width, int height, Game game) {
         super(x, y, width, height);
+        randomInt = random.nextInt(0, 4);
         //this.maxHP = 100;
         //this.curHP = maxHP;
         getAnimations();
-        createHitbox(xSpawn, ySpawn, 70, 44);
+        createHitbox(x, ySpawn, 70, 44);
         createAttackBox();
     }
-    
-    public void linkPlayer(Player player){
+
+    public void linkPlayer(Player player) {
         this.player = player;
         System.out.println(this.player);
     }
 
     public void update() {
         changePos();
-        updateHit(hit);
+        updateHit();
         updateAniTick();
         assignAni();
         updateAttackBox();
@@ -56,12 +61,12 @@ public class Enemy extends Entity {
     }
 
     public void render(Graphics g) {
-        if(!aniDone){
-            g.drawImage(animations[e_Action][aniIndex],(int) (hitbox.x - xHitboxOffset) + flipX,(int) (hitbox.y - yHitboxOffset), width * facing, height, null);
+        if (!aniDone) {
+            g.drawImage(animations[e_Action][aniIndex], (int) (hitbox.x - xHitboxOffset) + flipX, (int) (hitbox.y - yHitboxOffset), width * facing, height, null);
             showHitbox(g);
             showAttackBox(g);
         }
-            
+
     }
 
     public void getAnimations() {
@@ -74,10 +79,25 @@ public class Enemy extends Entity {
         int numSheets = 4;
 
         for (int k = 0; k < numSheets; k++) {
-            img = LodeSave.getAsset("Enemy/Canine_White_" + k + ".png");
-            img = LodeSave.getAsset("Enemy/Canine_Black_" + k + ".png");
-            img = LodeSave.getAsset("Enemy/Canine_Brown_" + k + ".png");
-            img = LodeSave.getAsset("Enemy/Canine_Gray_" + k + ".png");
+            if (randomInt == 0) {
+                img = LodeSave.getAsset("Enemy/Canine_White_" + k + ".png");
+                this.setHP(1);
+            }
+            if (randomInt == 1) {
+                img = LodeSave.getAsset("Enemy/Canine_Black_" + k + ".png");
+                //this.setHP(4);
+                this.setHP(1);
+            }
+            if (randomInt == 2) {
+                img = LodeSave.getAsset("Enemy/Canine_Brown_" + k + ".png");
+                //this.setHP(2);
+                this.setHP(1);
+            }
+            if (randomInt == 3) {
+                img = LodeSave.getAsset("Enemy/Canine_Gray_" + k + ".png");
+                //this.setHP(3);
+                this.setHP(1);
+            }
             //System.out.printf("Loaded sprite sheet %d\n", k);
 
             int cols = img.getWidth() / frameWidth;
@@ -85,7 +105,6 @@ public class Enemy extends Entity {
             int totalSprites = cols * rows;
 
             //System.out.printf("Sprite sheet dimensions: %d x %d (rows: %d, cols: %d, total sprites: %d)\n", img.getWidth(), img.getHeight(), rows, cols, totalSprites);
-
             int spriteIndex = 0;
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
@@ -111,8 +130,8 @@ public class Enemy extends Entity {
         if (attack) {
             e_Action = attacking;
         }
-        
-        if(hit){
+
+        if (curHP <= 0) {
             e_Action = dead;
         }
 
@@ -129,17 +148,18 @@ public class Enemy extends Entity {
             aniIndex++;
             if (aniIndex >= getSpriteAmount(e_Action)) {
                 System.out.println(aniDone);
-                if(hit)
+                if (curHP <= 0) {
                     aniDone = true;
+                }
                 aniIndex = 0;
             }
         }
     }
 
     public void changePos() {
-        
+
         hitbox.y = LevelHandler.GroundPos;
-        
+
         if (moveState) {
             if (LR) {
                 //right
@@ -169,13 +189,12 @@ public class Enemy extends Entity {
             }
         }
 
-        
     }
 
     private void createAttackBox() {
         attackBox = new Rectangle2D.Float(x, y, (int) 30, (int) 44);
     }
-    
+
     private void updateAttackBox() {
         if (LR) {
             attackBox.x = hitbox.x + hitbox.width - 12;
@@ -184,17 +203,16 @@ public class Enemy extends Entity {
         }
         attackBox.y = hitbox.y;
     }
-    
-    public void setHit(boolean tf){
-        hit = tf;
+
+    public void hit() {
+        curHP--;
     }
 
-    private void updateHit(boolean hit) {
-        if(hit){
+    private void updateHit(/*boolean hit*/) {
+        if (curHP <= 0) {
             e_Action = dead;
             moveState = false;
         }
     }
-    
 
 }

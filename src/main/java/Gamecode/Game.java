@@ -5,6 +5,7 @@ import Levels.level;
 import Utilities.Constants;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -22,6 +23,7 @@ public class Game implements Runnable {
     private ArrayList<Enemy> enemyGrop;
     private Enemy enemy;
     private boolean runnable = true;
+    private Random random = new Random();
 
     public Player getPlayer() {
         return player;
@@ -34,9 +36,9 @@ public class Game implements Runnable {
     public Game() {
         //enemy = new Enemy(0, 0, 48 * 2, 32 * 2, this);
         player = new Player(0, 0, 300, 300, this);
+        //enemy.linkPlayer(player);
         createSetEnemy();
         player.linkEnemy(enemyGrop);
-        //enemy.linkPlayer(player);
         player.setPHP();
         level = new level(this);
         gamepanel = new GamePanel(this);
@@ -53,9 +55,17 @@ public class Game implements Runnable {
 
     public void update() {
         //gamepanel.gupdate();
+        boolean checkAlive = false;
         player.update();
         for (int i = 0; i < enemyGrop.size(); i++) {
             enemyGrop.get(i).update();
+            if(enemyGrop.get(i).getCurHP()>0){
+                checkAlive = true;
+            }
+        }
+        if(!checkAlive){
+            createSetEnemy();
+            player.linkEnemy(enemyGrop);
         }
         //enemy.update();
         //level.update();
@@ -64,9 +74,17 @@ public class Game implements Runnable {
     public void render(Graphics g) {
         level.draw(g);
         player.render(g);
+        //boolean checkAlive = false;
         for (int i = 0; i < enemyGrop.size(); i++) {
             enemyGrop.get(i).render(g);
+//            if (enemyGrop.get(i).getCurHP() > 0) {
+//                checkAlive = true;
+//            }
         }
+//        if (!checkAlive) {
+//            createSetEnemy();
+//            player.linkEnemy(enemyGrop);
+//        }
         //enemy.render(g);
     }
 
@@ -78,7 +96,15 @@ public class Game implements Runnable {
         enemyGrop = new ArrayList<Enemy>();
         for (int i = 0; i < Constants.difficult; i++) {
             for (int j = 0; j < 4; j++) {
-                enemyGrop.add(new Enemy(0, 0, 48 * 2, 32 * 2, this));
+                int left_right = random.nextInt(0, 2);
+                int posx;
+                posx = random.nextInt(0, 1000);
+//        if (left_right == 0) {
+//            posx = 1000;
+//        } else {
+//            posx = 0;
+//        }
+                enemyGrop.add(new Enemy(posx, 0, 48 * 2, 32 * 2, this));
             }
         }
         for (int i = 0; i < enemyGrop.size(); i++) {
@@ -98,7 +124,6 @@ public class Game implements Runnable {
         int updates = 0;
         while (runnable) {
             long currentTime = System.nanoTime();
-
             fDiff += (currentTime - previousFrame) / timePerFrame;
             uDiff += (currentTime - previousFrame) / timePerUpdate;
             //System.out.printf("TPF : %f | TPU %f\n", timePerFrame, timePerUpdate);
