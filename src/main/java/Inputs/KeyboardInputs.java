@@ -51,7 +51,8 @@ public class KeyboardInputs implements KeyListener {
                 gamepanel.getGame().getPlayer().setRight(true);
                 break;
             case KeyEvent.VK_J:
-                gamepanel.getGame().getPlayer().setAttack(true);
+                if (!gamepanel.getGame().getPlayer().isDamage())
+                    gamepanel.getGame().getPlayer().setAttack(true);
                 break;
 //            case KeyEvent.VK_K:
 //                SoundManager.playOnce(Utilities.Constants.soundConstants.SOUND_GAME_OVER);

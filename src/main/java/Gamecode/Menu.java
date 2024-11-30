@@ -59,6 +59,7 @@ public class Menu {
 
     private CardLayout cardLayout = new CardLayout();
     private JPanel mainPanel;
+    private JLabel nametitel;
     private Image defaultBG, settingPlate;
 
     //private String curMusic = Music1;
@@ -69,8 +70,6 @@ public class Menu {
 
     public Menu() {
         SoundManager.stopTheme();
-        Constants.wave = 1;
-        Constants.score = 0;
         SoundManager.playTheme(Constants.curMusic);
         readPic();
 
@@ -136,22 +135,9 @@ public class Menu {
         backB2.setContentAreaFilled(false);
         backB2.addMouseListener(new buttonMouseListener(backB2, backI));
 
-        JLabel nametitel = new JLabel("Enter your name");
+        nametitel = new JLabel("Enter your name");
         goB = new JButton(startI[0]);
-        goB.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String txt = nameField.getText().trim();
-                if (!txt.isEmpty()) {
-                    Constants.playerName = nameField.getText().trim();
-                    System.out.println("player name = " + Constants.playerName);
-                    new Game();
-                    jframe.dispose();
-                } else {
-                    nametitel.setText("Enter your name : plaseeee");
-                }
-            }
-        });
+        goB.addActionListener(new closeFrameActionListener(this));
         goB.setBorder(null);
         goB.setFocusPainted(false);
         goB.setContentAreaFilled(false);
@@ -161,7 +147,7 @@ public class Menu {
         quitB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                jframe.dispose();
+                //jframe.dispose();
                 System.exit(0);
             }
         });
@@ -389,11 +375,13 @@ public class Menu {
         plate.add(goB, c);
 
         startPanel.setLayout(new GridBagLayout());
-        c.insets = new Insets(10, 25, 10, 100);
+        c.insets = new Insets(100, 25, 5, 100);
         //c.ipady = 10;
         c.gridx = 0;
         c.gridy = 0;
         startPanel.add(startB, c);
+        c.insets = new Insets(5, 25, 5, 100);
+        c.ipady = 20;
         c.gridy = 1;
         startPanel.add(settingB, c);
         c.gridy = 2;
@@ -601,6 +589,10 @@ public class Menu {
         }
     }
 
+    public JFrame getJFrame() {
+        return jframe;
+    }
+
     public void reScaleIcon(ImageIcon i, int x, int y) {
         Image a = i.getImage().getScaledInstance(x, y, Image.SCALE_SMOOTH);
         i.setImage(a);
@@ -643,6 +635,33 @@ public class Menu {
         label.setFont(defaultFont);
         label.setForeground(Color.WHITE);
         return label;
+    }
+
+    class closeFrameActionListener implements ActionListener {
+
+        private Menu m;
+
+        public closeFrameActionListener(Menu m) {
+            this.m = m;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String txt = nameField.getText().trim();
+            if (!txt.isEmpty()) {
+                Constants.playerName = nameField.getText().trim();
+                System.out.println("player name = " + Constants.playerName);
+                new Game(m);
+                //jframe.dispose();
+                jframe.setVisible(false);
+                nametitel.setText("Enter your name : ");
+            } else {
+                nametitel.setText("Enter your name : plaseeee");
+            }
+        }
+    }
+
+    public void backToStartPanel() {
+        cardLayout.show(mainPanel, "main");
     }
 }
 

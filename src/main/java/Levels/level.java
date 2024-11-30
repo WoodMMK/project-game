@@ -40,7 +40,7 @@ public class level {
         }
         for (int j = 0; j < cd.length; j++) {
             if (cd != null) {
-                g.drawImage(cd[j], cameraX / 3 - 300, 570, 928 * 2, 108 * 2, null);
+                g.drawImage(cd[j], cameraX / 3 - 300, 460, 928 * 2, 180 * 2, null);
             }
 
         }

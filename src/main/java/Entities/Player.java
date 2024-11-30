@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
  * @author tansan
  */
 public class Player extends Entity {
+
     private Game game;
     //private Enemy enemy;
     private ArrayList<Enemy> enemyGrop;
@@ -39,7 +40,8 @@ public class Player extends Entity {
     private BufferedImage img;
     private int boarder_left = 0;
     private int boarder_right = 1250;
-    private float xHitboxOffset = 135, yHitboxOffset = 115;
+    private float xHitboxOffset = 135 * 2, yHitboxOffset = 115 * 2;
+    private boolean closeFram = false, aniDone = false;
 
     private MySound runningSound = null;
 
@@ -61,14 +63,14 @@ public class Player extends Entity {
         createAttackBox();
         //linkEnemy(game);
     }
-    
-    public void linkEnemy(ArrayList<Enemy> enemy){
+
+    public void linkEnemy(ArrayList<Enemy> enemy) {
         this.enemyGrop = enemy;
         //System.out.println(this.enemy);
     }
 
     private void createAttackBox() {
-        attackBox = new Rectangle2D.Float(x, y, (int) 44, (int) 53);
+        attackBox = new Rectangle2D.Float(x, y, (int) 44 * 2, (int) 53 * 2);
         runningSound = new MySound(SOUND_RUNNING);
     }
 
@@ -82,6 +84,10 @@ public class Player extends Entity {
 
     private void assignAni() {
         int startAni = p_Action; // Store the current action for comparison
+        if (curHP <= 0) {
+            p_Action = dead;
+            return;
+        }
         if (isDamaged) {
             //System.out.println("in assign Ani");
             p_Action = damaged;
@@ -131,6 +137,16 @@ public class Player extends Entity {
         updateAttackBox();
         //updateHit();
         assignAni();
+        if (this.getCurHP() <= 0 && !closeFram && aniDone) {
+            game.setRun(false);
+            closeFram = true;
+            JOptionPane.showMessageDialog(null, "your journey end here", "game end",
+                    JOptionPane.INFORMATION_MESSAGE);
+            game.getGameWindow().getJFrame().dispose();
+            game.getMenu().getJFrame().setVisible(true);
+            game.getMenu().backToStartPanel();
+            //new Menu();
+        }
     }
 
     public void activeIframe() {
@@ -173,7 +189,7 @@ public class Player extends Entity {
 
     public void updateHit() {
         long currentTime = System.currentTimeMillis();
-        
+
         // Check if invincibility frames have expired
         if (invincible && (currentTime - iframeStartTime) >= iframeDuration) {
             invincible = false;
@@ -200,7 +216,7 @@ public class Player extends Entity {
         if (Right) {
             attackBox.x = hitbox.x + hitbox.width;
         } else if (Left) {
-            attackBox.x = hitbox.x - hitbox.width - 15;
+            attackBox.x = hitbox.x - hitbox.width - 15 * 2;
         }
         attackBox.y = hitbox.y;
     }
@@ -218,7 +234,7 @@ public class Player extends Entity {
         if (aniTick >= aniSpeed) {
             aniTick = 0;
             aniIndex++;
-            if (attack && aniIndex >= 4) {
+            if (attack && aniIndex >= 4 && aniIndex <= 5) {
                 for (int i = 0; i < enemyGrop.size(); i++) {
                     if (attackBox.intersects(enemyGrop.get(i).getHitbox())) {
                         enemyGrop.get(i).hit();
@@ -226,6 +242,9 @@ public class Player extends Entity {
                 }
             }
             if (aniIndex >= getSpriteAmount(p_Action)) {
+                if (curHP <= 0) {
+                    aniDone = true;
+                }
                 aniIndex = 0;
                 attack = false;
             }
@@ -271,7 +290,7 @@ public class Player extends Entity {
                 p_facing = 1;
             } else if (!Right && Left) {
                 moveState = true;
-                flipX = width;
+                flipX = width * 2;
                 hitbox.x -= movespeed;
                 p_facing = -1;
             }
@@ -339,6 +358,10 @@ public class Player extends Entity {
         }
     }
 
+    public boolean isDamage() {
+        return isDamaged;
+    }
+
     public void setAttack(boolean attacking) {
         this.attack = attacking;
     }
@@ -371,9 +394,10 @@ public class Player extends Entity {
     public void getHitSound() {
         SoundManager.playOnce("hit sound path");
     }
+
     // <<<<<<
     public void setPHP() {
-        if(Constants.difficult ==1){
+        if (Constants.difficult == 1) {
             maxHP = 5;
         }
         if (Constants.difficult == 2) {

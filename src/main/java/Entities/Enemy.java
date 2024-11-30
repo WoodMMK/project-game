@@ -27,7 +27,7 @@ public class Enemy extends Entity {
     int flipX;
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
     private float xSpawn = 200, ySpawn = 500;
-    private float xHitboxOffset = 10, yHitboxOffset = 20;
+    private float xHitboxOffset = 10 * 2, yHitboxOffset = 20 * 2;
     private BufferedImage[][] animations;
     private BufferedImage img;
 
@@ -90,28 +90,28 @@ public class Enemy extends Entity {
                 img = LodeSave.getAsset("Enemy/Canine_White_" + k + ".png");
                 this.setHP(1);
                 enemyScore = 100;
-                enemySpeed = 0.7;
+                enemySpeed = 0.7 * 1.3;
             }
             if (randomInt == 1) {
                 img = LodeSave.getAsset("Enemy/Canine_Black_" + k + ".png");
                 //this.setHP(4);
                 this.setHP(1);
                 enemyScore = 400;
-                enemySpeed = 1.3;
+                enemySpeed = 1.3 * 1.3;
             }
             if (randomInt == 2) {
                 img = LodeSave.getAsset("Enemy/Canine_Brown_" + k + ".png");
                 //this.setHP(2);
                 this.setHP(1);
                 enemyScore = 200;
-                enemySpeed = 0.85;
+                enemySpeed = 0.85 * 1.3;
             }
             if (randomInt == 3) {
                 img = LodeSave.getAsset("Enemy/Canine_Gray_" + k + ".png");
                 //this.setHP(3);
                 this.setHP(1);
                 enemyScore = 300;
-                enemySpeed = 1;
+                enemySpeed = 1 * 1.3;
             }
             //enemyScore =100;
             //enemySpeed = 1;
@@ -163,6 +163,7 @@ public class Enemy extends Entity {
         if (aniTick >= aniSpeed) {
             aniTick = 0;
             aniIndex++;
+            Constants.enemyAniEnd = false;
             if(attack){
                 if(aniIndex >= 2 && aniIndex <= 4){
                     if(attackBox.intersects(player.getHitbox())){
@@ -174,6 +175,7 @@ public class Enemy extends Entity {
                 //System.out.println(aniDone);
                 if (curHP <= 0) {
                     aniDone = true;
+                    Constants.enemyAniEnd = true;
                 }
                 aniIndex = 0;
                 attack = false;
@@ -183,7 +185,7 @@ public class Enemy extends Entity {
 
     public void changePos() {
 
-        hitbox.y = LevelHandler.GroundPos;
+        hitbox.y = LevelHandler.GroundPos + 11 * 2;
         
         if (player.hitbox.x >= hitbox.x+ 70)
             LR = true;
@@ -206,7 +208,7 @@ public class Enemy extends Entity {
     }
 
     private void createAttackBox() {
-        attackBox = new Rectangle2D.Float(x, y, (int) 30, (int) 44);
+        attackBox = new Rectangle2D.Float(x, y, (int) 30 * 2, (int) 44 * 2);
     }
 
     private void updateAttackBox() {
@@ -214,9 +216,9 @@ public class Enemy extends Entity {
             attack = true;
         }
         if (LR) {
-            attackBox.x = hitbox.x + hitbox.width - 12;
+            attackBox.x = hitbox.x + hitbox.width - 12 * 2;
         } else if (!LR) {
-            attackBox.x = hitbox.x - hitbox.width + 50;
+            attackBox.x = hitbox.x - hitbox.width + 50 * 2;
         }
         attackBox.y = hitbox.y;
     }

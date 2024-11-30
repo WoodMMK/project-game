@@ -39,7 +39,7 @@ public class GameWindow {
         jframe.setVisible(true);
         gamepanel.setLayout(null);
 
-        nameLabel = new JLabel("name : " + Constants.playerName);;
+        nameLabel = new JLabel("name : " + Constants.playerName);
         nameLabel.setFont(scoreFont);
         nameLabel.setForeground(Color.WHITE);
         nameLabel.setBounds(30, 30, 1000, 50);

@@ -18,8 +18,8 @@ public abstract class Entity {
     public Entity(float x, float y, int width, int height) {
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
+        this.width = width * 2;
+        this.height = height * 2;
     }
     
     protected void showAttackBox(Graphics g){
@@ -33,7 +33,7 @@ public abstract class Entity {
     }
 
     protected void createHitbox(float x, float y, float width, float height){
-            hitbox = new Rectangle2D.Float(x, y, width, height);
+        hitbox = new Rectangle2D.Float(x, y, width * 2, height * 2);
     }
 
     public Rectangle2D.Float getHitbox(){

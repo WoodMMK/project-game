@@ -23,9 +23,10 @@ public class GamePanel extends JPanel {
 
     private BufferedImage[] bg;
     private Game game;
-    private JLabel scoreLabel;
+    private JLabel scoreLabel, remainEnemyLabel;
     private JLabel waveLabel;
     private Font scoreFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 40);
+    //private int numberOfEnemy = 0;
 
     public GamePanel(Game game) {
         this.game = game;
@@ -33,13 +34,20 @@ public class GamePanel extends JPanel {
         addKeyListener(new KeyboardInputs(this));
         addMouseListener(new MouseInputs());
         addMouseMotionListener(new MouseInputs());
+        this.setLayout(null);
 
         scoreLabel = new JLabel("score : 0");;
         scoreLabel.setFont(scoreFont);
         scoreLabel.setForeground(Color.WHITE);
         scoreLabel.setBounds(1020, 30, 1000, 50);
-        this.setLayout(null);
         this.add(scoreLabel);
+
+        Constants.numberOfEnemy = game.getEnemyGrop().size();
+        remainEnemyLabel = new JLabel("Enemy remain : " + Constants.numberOfEnemy);
+        remainEnemyLabel.setFont(scoreFont);
+        remainEnemyLabel.setForeground(new Color(44, 53, 86));
+        remainEnemyLabel.setBounds(500, 620, 1000, 50);
+        this.add(remainEnemyLabel);
     }
 
     public Game getGame() {
@@ -63,17 +71,16 @@ public class GamePanel extends JPanel {
         this.repaint();
     }
 
-
     public void setPanelSize() {
         Dimension windowsize = new Dimension(1280, 720);
         setPreferredSize(windowsize);
     }
-
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         game.render(g);
         scoreLabel.setText("score : " + Constants.score);
+        remainEnemyLabel.setText("Enemy remain :  " + Constants.numberOfEnemy/*+" in this wave"*/);
     }
 }

@@ -12,6 +12,7 @@ Inputs\KeyboardInputs.class
 Gamecode\Menu$12.class
 Utilities\LodeSave.class
 Gamecode\Menu$10.class
+Gamecode\Menu$closeFrameActionListener.class
 Gamecode\Menu$9.class
 Gamecode\buttonMouseListener.class
 Utilities\Constants.class
@@ -29,7 +30,6 @@ Gamecode\Game.class
 Gamecode\Menu$3.class
 Gamecode\Menu$6.class
 Utilities\Constants$enemyConstants.class
-Gamecode\Menu$15.class
 Gamecode\Menu$4.class
 Entities\Player.class
 Gamecode\heartPanel.class

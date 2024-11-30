@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 public class Game implements Runnable {
 
     private GameWindow gamewindow;
+    private Menu menu;
     private GamePanel gamepanel;
     private Thread loopThread;
     private final int FPS_MAX = 120;
@@ -30,7 +31,7 @@ public class Game implements Runnable {
     private ArrayList<Enemy> enemyGrop;
     private Enemy enemy;
     private boolean runnable = true;
-    private boolean closeFram = false;
+//    private boolean closeFram = false;
     private Random random = new Random();
     private int timer = 800;
 
@@ -46,9 +47,12 @@ public class Game implements Runnable {
         return gamewindow;
     }
 
-    public Game() {
+    public Game(Menu menu) {
         //enemy = new Enemy(0, 0, 48 * 2, 32 * 2, this);
-        player = new Player(0, 0, 300, 300, this);
+        player = new Player(450, 50, 300, 300, this);
+        this.menu = menu;
+        Constants.wave = 1;
+        Constants.score = 0;
         //enemy.linkPlayer(player);
         createSetEnemy();
         player.linkEnemy(enemyGrop);
@@ -58,9 +62,17 @@ public class Game implements Runnable {
         gamewindow = new GameWindow(gamepanel);
         gamepanel.requestFocus();
         gamepanel.showWave();
+
         startGameLoop();
     }
 
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public ArrayList<Enemy> getEnemyGrop() {
+        return enemyGrop;
+    }
 
     public void startGameLoop() {
         loopThread = new Thread(this);
@@ -70,6 +82,12 @@ public class Game implements Runnable {
 
     public void update() {
         //gamepanel.gupdate();
+        Constants.numberOfEnemy = 0;
+        for (int i = 0; i < this.getEnemyGrop().size(); i++) {
+            if (this.getEnemyGrop().get(i).getCurHP() > 0) {
+                Constants.numberOfEnemy++;
+            };
+        }
         boolean checkAlive = false;
         player.update();
         for (int i = 0; i < enemyGrop.size(); i++) {
@@ -78,7 +96,7 @@ public class Game implements Runnable {
                 checkAlive = true;
             }
         }
-        if (!checkAlive) {
+        if (!checkAlive && Constants.enemyAniEnd) {
             timer = 800;
             Constants.wave++;
             gamepanel.showWave();
@@ -92,16 +110,16 @@ public class Game implements Runnable {
         }
         //enemy.update();
         //level.update();
-        if (player.getCurHP() < 1 && !closeFram) {
-
-            this.setRun(false);
-            closeFram = true;
-            JOptionPane.showMessageDialog(null, "your journey end here", "game end",
-                    JOptionPane.INFORMATION_MESSAGE);
-            gamewindow.getJFrame().dispose();
-
-            new Menu();
-        }
+//        if (player.getCurHP() < 1 && !closeFram) {
+//
+//            this.setRun(false);
+//            closeFram = true;
+//            JOptionPane.showMessageDialog(null, "your journey end here", "game end",
+//                    JOptionPane.INFORMATION_MESSAGE);
+//            gamewindow.getJFrame().dispose();
+//
+//            new Menu();
+//        }
     }
 
     public void render(Graphics g) {
@@ -113,7 +131,6 @@ public class Game implements Runnable {
         }
         //enemy.render(g);
     }
-
 
     public void setRun(boolean a) {
         runnable = a;

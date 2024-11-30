@@ -1,6 +1,5 @@
 package Utilities;
 
-
 /**
  *
  * @author Gateaux
@@ -11,8 +10,11 @@ public class Constants {
     //public static int maxHeart = 5;
     public static String curMusic = "src/main/resources/assets/music/bgm0.wav";
     public static int score = 0, difficult = 1, wave = 1;//1 esay 2 normal 3 heard
+    public static int numberOfEnemy = 0;
+    public static boolean enemyAniEnd = false;
 
-    public static class playerConstants{
+    public static class playerConstants {
+
         public final static int idling = 0;
         public final static int running = 1;
         public final static int attacking = 2;
@@ -20,11 +22,11 @@ public class Constants {
         public final static int damaged = 5;
         public final static int dead = 6;
         public static boolean jumpable = true;
-        public final static int jump_power = 10;
-        public final static int movespeed = 1;
-        
-        public static int getSpriteAmount(int p_Action){
-            switch(p_Action){
+        public final static int jump_power = (int) (10 * 1.5);
+        public final static int movespeed = (int) (1 * 1.5);
+
+        public static int getSpriteAmount(int p_Action) {
+            switch (p_Action) {
                 case idling:
                     return 6;
                 case running:
@@ -33,21 +35,24 @@ public class Constants {
                     return 6;
                 case damaged:
                     return 4;
+                case dead:
+                    return 4;
                 default:
                     return 0;
             }
         }
     }
-    
-    public static class enemyConstants{
+
+    public static class enemyConstants {
+
         public final static int idling = 0;
         public final static int running = 1;
         public final static int attacking = 2;
         public final static int dead = 3;
         public final static int movespeed = 1;
-        
-        public static int getSpriteAmount(int p_Action){
-            switch(p_Action){
+
+        public static int getSpriteAmount(int p_Action) {
+            switch (p_Action) {
                 case idling:
                     return 4;
                 case running:
@@ -61,7 +66,9 @@ public class Constants {
             }
         }
     }
-    public static class soundConstants{
+
+    public static class soundConstants {
+
         public static float gameVolume = 0.5f;
         static final String MusicPath = "src/main/resources/assets/music/";
         public static final String Music1 = MusicPath + "bgm0.wav";//src/main/resources/assets/music/bgm0.wav
@@ -76,7 +83,7 @@ public class Constants {
         public static final String SOUND_RUNNING = FXPath + "running_in_grass.wav";
         public static final String SOUND_getHit = FXPath + "getHit.wav";
         public static final String SOUND_HIT = null;
-        public static final String SOUND_BUTTON_RELEASED = FXPath+ "mouse_released.wav";
+        public static final String SOUND_BUTTON_RELEASED = FXPath + "mouse_released.wav";
         public static final String SOUND_BUTTON_HOLD = FXPath + "mouse_hold.wav";
         public static final String SOUND_GAME_OVER = FXPath + "gameover.wav";
     }
