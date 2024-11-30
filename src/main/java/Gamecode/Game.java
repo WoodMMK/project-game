@@ -20,14 +20,22 @@ public class Game implements Runnable {
     private level level;
     private Enemy enemy;
     private boolean runnable = true;
+    
     public Player getPlayer() {
         return player;
     }
+    
+    public Enemy getEnemy(){
+        return enemy;
+    }
+    
     public Game() {
-        player = new Player(0, 0, 300, 300);
+        enemy = new Enemy(0, 0, 48 * 2, 32 * 2, this);
+        player = new Player(0, 0, 300, 300, this);
+        player.linkEnemy(enemy);
+        enemy.linkPlayer(player);
         player.setHP(Constants.maxHeart);
         level = new level(this);
-        enemy = new Enemy(0, 0, 48 * 2, 32 * 2);
         gamepanel = new GamePanel(this);
         gamewindow = new GameWindow(gamepanel);
         gamepanel.requestFocus();

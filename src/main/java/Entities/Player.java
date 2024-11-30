@@ -1,9 +1,9 @@
 package Entities;
 
-import Gamecode.Menu;
 import java.awt.image.BufferedImage;
 import static Utilities.Constants.playerConstants.*;
 import static Utilities.Constants.soundConstants.*;
+import Gamecode.*;
 import Utilities.*;
 import Levels.LevelHandler;
 import static Levels.LevelHandler.gravity;
@@ -19,6 +19,8 @@ import javax.swing.JOptionPane;
  * @author tansan
  */
 public class Player extends Entity {
+    private Game game;
+    private Enemy enemy;
 
     private boolean invincible = false;
     private boolean knockedBack = false;
@@ -49,11 +51,18 @@ public class Player extends Entity {
     int flipX;
     int fixcam = 640;
 
-    public Player(float x, float y, int width, int height) {
+    public Player(float x, float y, int width, int height, Game game) {
         super(x, y, width, height);
+        this.game = game;
         getAnimations();
         createHitbox(x, y, 30, 54);
         createAttackBox();
+        //linkEnemy(game);
+    }
+    
+    public void linkEnemy(Enemy enemy){
+        this.enemy = game.getEnemy();
+        System.out.println(this.enemy);
     }
 
     private void createAttackBox() {
@@ -157,12 +166,11 @@ public class Player extends Entity {
                 SoundManager.playOnce(SOUND_GAME_OVER);
             }
         }
-
     }
 
     public void updateHit() {
         long currentTime = System.currentTimeMillis();
-
+        
         // Check if invincibility frames have expired
         if (invincible && (currentTime - iframeStartTime) >= iframeDuration) {
             invincible = false;
@@ -207,6 +215,13 @@ public class Player extends Entity {
         if (aniTick >= aniSpeed) {
             aniTick = 0;
             aniIndex++;
+            if(attack){
+                if(aniIndex >= 4 ){
+                    if(attackBox.intersects(enemy.getHitbox())){
+                        enemy.setHit(true);
+                    }
+                }
+            }
             if (aniIndex >= getSpriteAmount(p_Action)) {
                 aniIndex = 0;
                 attack = false;

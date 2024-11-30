@@ -2,8 +2,10 @@ package Entities;
 
 import Levels.LevelHandler;
 import static Utilities.Constants.enemyConstants.*;
+import Gamecode.*;
 import Utilities.LodeSave;
 import java.awt.Graphics;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
@@ -12,9 +14,10 @@ import java.util.*;
  * @author Gateaux
  */
 public class Enemy extends Entity {
+    private Player player;
 
     private int e_Action = idling;
-    private boolean moveState = false, attack = false;
+    private boolean moveState = false, attack = false, hit = false, aniDone = false;
     private int facing = -1;
     int flipX;
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
@@ -29,25 +32,36 @@ public class Enemy extends Entity {
     private final int maxIdleTime = 100;
     private boolean LR;
 
-    public Enemy(float x, float y, int width, int height) {
+    public Enemy(float x, float y, int width, int height, Game game) {
         super(x, y, width, height);
         this.maxHP = 100;
         this.curHP = maxHP;
         getAnimations();
         createHitbox(xSpawn, ySpawn, 70, 44);
-        //createAttackBox();
+        createAttackBox();
+    }
+    
+    public void linkPlayer(Player player){
+        this.player = player;
+        System.out.println(this.player);
     }
 
     public void update() {
         changePos();
+        updateHit(hit);
         updateAniTick();
         assignAni();
+        updateAttackBox();
+        //checkAttackBox();
     }
 
     public void render(Graphics g) {
-        g.drawImage(animations[e_Action][aniIndex],(int) (hitbox.x - xHitboxOffset) + flipX,(int) (hitbox.y - yHitboxOffset), width * facing, height, null);
-        showHitbox(g);
-        //showAttackBox(g);
+        if(!aniDone){
+            g.drawImage(animations[e_Action][aniIndex],(int) (hitbox.x - xHitboxOffset) + flipX,(int) (hitbox.y - yHitboxOffset), width * facing, height, null);
+            showHitbox(g);
+            showAttackBox(g);
+        }
+            
     }
 
     public void getAnimations() {
@@ -94,6 +108,10 @@ public class Enemy extends Entity {
         if (attack) {
             e_Action = attacking;
         }
+        
+        if(hit){
+            e_Action = dead;
+        }
 
         if (e_Action != startAni) {
             aniTick = 0;
@@ -107,6 +125,9 @@ public class Enemy extends Entity {
             aniTick = 0;
             aniIndex++;
             if (aniIndex >= getSpriteAmount(e_Action)) {
+                System.out.println(aniDone);
+                if(hit)
+                    aniDone = true;
                 aniIndex = 0;
             }
         }
@@ -147,5 +168,30 @@ public class Enemy extends Entity {
 
         
     }
+
+    private void createAttackBox() {
+        attackBox = new Rectangle2D.Float(x, y, (int) 30, (int) 44);
+    }
+    
+    private void updateAttackBox() {
+        if (LR) {
+            attackBox.x = hitbox.x + hitbox.width - 12;
+        } else if (!LR) {
+            attackBox.x = hitbox.x - hitbox.width + 50;
+        }
+        attackBox.y = hitbox.y;
+    }
+    
+    public void setHit(boolean tf){
+        hit = tf;
+    }
+
+    private void updateHit(boolean hit) {
+        if(hit){
+            e_Action = dead;
+            moveState = false;
+        }
+    }
+    
 
 }
