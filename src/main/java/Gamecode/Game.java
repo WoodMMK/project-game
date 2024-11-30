@@ -4,6 +4,7 @@ import Entities.*;
 import Levels.level;
 import Utilities.Constants;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 /**
  *
@@ -18,23 +19,25 @@ public class Game implements Runnable {
     private final int UPS_MAX = 200;
     private Player player;
     private level level;
+    private ArrayList<Enemy> enemyGrop;
     private Enemy enemy;
     private boolean runnable = true;
-    
+
     public Player getPlayer() {
         return player;
     }
-    
-    public Enemy getEnemy(){
+
+    public Enemy getEnemy() {
         return enemy;
     }
-    
+
     public Game() {
-        enemy = new Enemy(0, 0, 48 * 2, 32 * 2, this);
+        //enemy = new Enemy(0, 0, 48 * 2, 32 * 2, this);
         player = new Player(0, 0, 300, 300, this);
-        player.linkEnemy(enemy);
-        enemy.linkPlayer(player);
-        player.setHP(Constants.maxHeart);
+        createSetEnemy();
+        player.linkEnemy(enemyGrop);
+        //enemy.linkPlayer(player);
+        player.setPHP();
         level = new level(this);
         gamepanel = new GamePanel(this);
         gamewindow = new GameWindow(gamepanel);
@@ -42,7 +45,6 @@ public class Game implements Runnable {
 
         startGameLoop();
     }
-
 
     private void startGameLoop() {
         loopThread = new Thread(this);
@@ -52,18 +54,36 @@ public class Game implements Runnable {
     public void update() {
         //gamepanel.gupdate();
         player.update();
-        enemy.update();
+        for (int i = 0; i < enemyGrop.size(); i++) {
+            enemyGrop.get(i).update();
+        }
+        //enemy.update();
         //level.update();
     }
 
     public void render(Graphics g) {
         level.draw(g);
         player.render(g);
-        enemy.render(g);
+        for (int i = 0; i < enemyGrop.size(); i++) {
+            enemyGrop.get(i).render(g);
+        }
+        //enemy.render(g);
     }
 
     void setRun(boolean a) {
         runnable = a;
+    }
+
+    public void createSetEnemy() {
+        enemyGrop = new ArrayList<Enemy>();
+        for (int i = 0; i < Constants.difficult; i++) {
+            for (int j = 0; j < 4; j++) {
+                enemyGrop.add(new Enemy(0, 0, 48 * 2, 32 * 2, this));
+            }
+        }
+        for (int i = 0; i < enemyGrop.size(); i++) {
+            enemyGrop.get(i).linkPlayer(player);
+        }
     }
 
     @Override

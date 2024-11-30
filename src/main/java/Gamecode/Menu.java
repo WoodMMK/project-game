@@ -307,19 +307,22 @@ public class Menu {
         difficultB[0].addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                Constants.maxHeart = 5;
+                //Constants.maxHeart = 5;
+                Constants.difficult = 1;
             }
         });
         difficultB[1].addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                Constants.maxHeart = 4;
+                //Constants.maxHeart = 4;
+                Constants.difficult = 2;
             }
         });
         difficultB[2].addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                Constants.maxHeart = 3;
+                //Constants.maxHeart = 3;
+                Constants.difficult = 3;
             }
         });
 

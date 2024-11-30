@@ -34,8 +34,8 @@ public class Enemy extends Entity {
 
     public Enemy(float x, float y, int width, int height, Game game) {
         super(x, y, width, height);
-        this.maxHP = 100;
-        this.curHP = maxHP;
+        //this.maxHP = 100;
+        //this.curHP = maxHP;
         getAnimations();
         createHitbox(xSpawn, ySpawn, 70, 44);
         createAttackBox();
@@ -75,6 +75,9 @@ public class Enemy extends Entity {
 
         for (int k = 0; k < numSheets; k++) {
             img = LodeSave.getAsset("Enemy/Canine_White_" + k + ".png");
+            img = LodeSave.getAsset("Enemy/Canine_Black_" + k + ".png");
+            img = LodeSave.getAsset("Enemy/Canine_Brown_" + k + ".png");
+            img = LodeSave.getAsset("Enemy/Canine_Gray_" + k + ".png");
             //System.out.printf("Loaded sprite sheet %d\n", k);
 
             int cols = img.getWidth() / frameWidth;

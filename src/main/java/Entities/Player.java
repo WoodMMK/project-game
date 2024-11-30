@@ -12,6 +12,7 @@ import Utilities.LodeSave;
 
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,7 +21,8 @@ import javax.swing.JOptionPane;
  */
 public class Player extends Entity {
     private Game game;
-    private Enemy enemy;
+    //private Enemy enemy;
+    private ArrayList<Enemy> enemyGrop;
 
     private boolean invincible = false;
     private boolean knockedBack = false;
@@ -60,9 +62,9 @@ public class Player extends Entity {
         //linkEnemy(game);
     }
     
-    public void linkEnemy(Enemy enemy){
-        this.enemy = game.getEnemy();
-        System.out.println(this.enemy);
+    public void linkEnemy(ArrayList<Enemy> enemy){
+        this.enemyGrop = enemy;
+        //System.out.println(this.enemy);
     }
 
     private void createAttackBox() {
@@ -215,10 +217,10 @@ public class Player extends Entity {
         if (aniTick >= aniSpeed) {
             aniTick = 0;
             aniIndex++;
-            if(attack){
-                if(aniIndex >= 4 ){
-                    if(attackBox.intersects(enemy.getHitbox())){
-                        enemy.setHit(true);
+            if (attack && aniIndex >= 4) {
+                for (int i = 0; i < enemyGrop.size(); i++) {
+                    if (attackBox.intersects(enemyGrop.get(i).getHitbox())) {
+                        enemyGrop.get(i).setHit(true);
                     }
                 }
             }
@@ -369,5 +371,17 @@ public class Player extends Entity {
         SoundManager.playOnce("hit sound path");
     }
     // <<<<<<
+    public void setPHP() {
+        if(Constants.difficult ==1){
+            maxHP = 5;
+        }
+        if (Constants.difficult == 2) {
+            maxHP = 4;
+        }
+        if (Constants.difficult == 3) {
+            maxHP = 3;
+        }
+        curHP = maxHP;
+    }
 
 }
