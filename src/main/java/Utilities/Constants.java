@@ -10,7 +10,7 @@ public class Constants {
     public static String playerName = "";
     public static int maxHeart = 5;
     public static String curMusic = "src/main/resources/assets/music/bgm0.wav";
-    public static int score, difficult = 1;//1 esay 2 normal 3 heard
+    public static int score = 0, difficult = 1;//1 esay 2 normal 3 heard
 
     public static class playerConstants{
         public final static int idling = 0;

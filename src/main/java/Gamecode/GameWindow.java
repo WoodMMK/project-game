@@ -26,7 +26,7 @@ public class GameWindow {
 
     private JFrame jframe;
     private Font scoreFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 40);
-    private JLabel scoreLabel, nameLabel;
+    private JLabel /*scoreLabel,*/ nameLabel;
     private Image[] heart;
 
     public GameWindow(GamePanel gamepanel) {
@@ -37,11 +37,7 @@ public class GameWindow {
         //jframe.setDefaultCloseOperation(3);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setVisible(true);
-        gamepanel.setLayout(null);
-        scoreLabel = new JLabel("score : 0");;
-        scoreLabel.setFont(scoreFont);
-        scoreLabel.setForeground(Color.WHITE);
-        scoreLabel.setBounds(1020, 30, 1000, 50);
+//        gamepanel.setLayout(null);
 
         nameLabel = new JLabel("name : " + Constants.playerName);;
         nameLabel.setFont(scoreFont);
@@ -80,7 +76,7 @@ public class GameWindow {
 //        });
 //        test2B.setBounds(410, 300, 100, 100);
 //        gamepanel.add(test2B);
-        gamepanel.add(scoreLabel);
+        //gamepanel.add(scoreLabel);
         gamepanel.add(nameLabel);
         gamepanel.add(heartPanel);
     }

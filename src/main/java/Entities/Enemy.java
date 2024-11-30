@@ -3,6 +3,7 @@ package Entities;
 import Levels.LevelHandler;
 import static Utilities.Constants.enemyConstants.*;
 import Gamecode.*;
+import Utilities.Constants;
 import Utilities.LodeSave;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
@@ -16,6 +17,7 @@ import java.util.*;
 public class Enemy extends Entity {
 
     private Player player;
+    private boolean thisEntityDie = false;
 
     private int e_Action = idling;
     private boolean moveState = false, attack = false, /*hit = false,*/ aniDone = false;
@@ -58,6 +60,10 @@ public class Enemy extends Entity {
         assignAni();
         updateAttackBox();
         //checkAttackBox();
+        if (curHP <= 0 && !thisEntityDie) {
+            thisEntityDie = true;
+            Constants.score += 100;
+        }
     }
 
     public void render(Graphics g) {
@@ -66,7 +72,6 @@ public class Enemy extends Entity {
             showHitbox(g);
             showAttackBox(g);
         }
-
     }
 
     public void getAnimations() {
@@ -116,7 +121,7 @@ public class Enemy extends Entity {
                 }
             }
         }
-        System.out.println("Finished");
+        //System.out.println("Finished");
     }
 
     private void assignAni() {
@@ -147,7 +152,7 @@ public class Enemy extends Entity {
             aniTick = 0;
             aniIndex++;
             if (aniIndex >= getSpriteAmount(e_Action)) {
-                System.out.println(aniDone);
+                //System.out.println(aniDone);
                 if (curHP <= 0) {
                     aniDone = true;
                 }
