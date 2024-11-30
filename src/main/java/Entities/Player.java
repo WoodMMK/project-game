@@ -158,6 +158,7 @@ public class Player extends Entity {
             curHP -= 1; // deduct hit damage
             System.out.println("took damage, Current HP: " + curHP);
             SoundManager.playOnce(SOUND_getHit);
+            attack = false;
             isDamaged = true;
             runningSound.stop();
 
