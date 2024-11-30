@@ -379,11 +379,13 @@ public class Menu {
         plate.add(goB, c);
 
         startPanel.setLayout(new GridBagLayout());
-        c.insets = new Insets(10, 25, 10, 100);
+        c.insets = new Insets(150, 25, 10, 100);
         //c.ipady = 10;
         c.gridx = 0;
         c.gridy = 0;
         startPanel.add(startB, c);
+        c.insets = new Insets(5, 25, 10, 100);
+        c.gridx = 0;
         c.gridy = 1;
         startPanel.add(settingB, c);
         c.gridy = 2;
