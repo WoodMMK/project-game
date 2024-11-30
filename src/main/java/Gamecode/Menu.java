@@ -13,7 +13,7 @@ import Inputs.ButtonMouseListener;
 
 public class Menu {
 
-    private String title = "ONE NIGHT MIRACLE";
+    private String title = "BEAT that dogs";
     private JFrame jframe;
     private JPanel startPanel, settingPanel, creditPanel, enterNamePanel;
     private JButton startB, settingB, backB, quitB, creditB, backB2, goB;
@@ -29,7 +29,7 @@ public class Menu {
     private CardLayout cardLayout = new CardLayout();
     private JPanel mainPanel;
     private JLabel nametitel;
-    private Image defaultBG, settingPlate;
+    private Image defaultBG, defaultBG2, settingPlate;
 
     private Font headerFont = LodeSave.getFont(Constants.fontName, Font.BOLD, 60),
             defaultFont = LodeSave.getFont(Constants.fontName, Font.BOLD, 45),
@@ -42,8 +42,9 @@ public class Menu {
         readPic();
 
         startPanel = new newPanelBaG(defaultBG);
-        settingPanel = new newPanelBaG(defaultBG);
-        enterNamePanel = new newPanelBaG(defaultBG);
+        settingPanel = new newPanelBaG(defaultBG2);
+        enterNamePanel = new newPanelBaG(defaultBG2);
+        creditPanel = new newPanelBaG(defaultBG2);
 
         mainPanel = new JPanel(cardLayout);
         Dimension windowSize = new Dimension(1280, 720);
@@ -59,7 +60,8 @@ public class Menu {
         jframe.setLocationRelativeTo(null);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setVisible(true);
-        jframe.setLocation(100, 100);
+        //jframe.setLocation(100, 100);
+        jframe.setLocationRelativeTo(null);
 
         startB = new JButton(startI[0]);
         startB.addActionListener(new ActionListener() {
@@ -455,7 +457,6 @@ public class Menu {
         settingPanel.add(backB, c);
 
         JLabel creditLabelHead = newTitleLabel("Credits");
-        creditPanel = new newPanelBaG(defaultBG);
         JPanel creditPlatePanel = new newPanelBaG(settingPlate);
         creditPanel.setLayout(new GridBagLayout());
         creditPanel.add(creditPlatePanel);
@@ -535,6 +536,7 @@ public class Menu {
             creditI = new ImageIcon[2];
             checkI = new ImageIcon[2];
             defaultBG = LodeSave.getImage("Background/defaultBG.png");
+            defaultBG2 = LodeSave.getImage("Background/defaultBG2.png");
             settingPlate = LodeSave.getImage("settingPlate.png");
             for (int i = 0; i < 2; i++) {
                 checkI[i] = LodeSave.getIcon("button/Check" + i + ".png");

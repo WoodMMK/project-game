@@ -58,7 +58,7 @@ public class Player extends Entity {
         super(x, y, width, height);
         this.game = game;
         getAnimations();
-        createHitbox(x, y, 30, 54);
+        createHitbox(x, LevelHandler.GroundPos, 30, 54);
         createAttackBox();
         //linkEnemy(game);
     }
@@ -83,7 +83,7 @@ public class Player extends Entity {
     private void assignAni() {
         int startAni = player_action; // Store the current action for comparison
         if (curHP <= 0) {
-            p_Action = dead;
+            player_action = dead;
             return;
         }
         if (isDamaged) {
@@ -95,22 +95,19 @@ public class Player extends Entity {
                 SoundManager.playOnce(SOUND_SWORD_ATTACK);
             }
             player_action = attacking;
-        } 
-        else if (moveState && !isOnAir()) { // running animation 
+        } else if (moveState && !isOnAir()) { // running animation
             if (startAni != running) { // Transition to running
                 runningSound.playLoop();
             }
             player_action = running;
-        } 
-        else if (!moveState && !isOnAir()) { // idling animation
+        } else if (!moveState && !isOnAir()) { // idling animation
             if (startAni == running) { // Transition from running to idle
                 runningSound.stop();
             }
             player_action = idling;
-        } 
-        else if (isOnAir()) { // jumping animation
+        } else if (isOnAir()) { // jumping animation
             if (startAni != jumping) { // Transition to jumping
-                runningSound.stop(); 
+                runningSound.stop();
             }
             player_action = jumping;
         }
@@ -188,7 +185,7 @@ public class Player extends Entity {
         if (knockedBack) {
             if ((currentTime - knockbackStartTime) >= knockbackDuration) {
                 knockedBack = false;
-                isDamaged = false; 
+                isDamaged = false;
             }
         }
     }

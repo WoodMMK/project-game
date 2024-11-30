@@ -29,8 +29,6 @@ public class GamePanel extends JPanel {
         this.game = game;
         setPanelSize();
         addKeyListener(new KeyboardInputs(this));
-        addMouseListener(new MouseInputs());
-        addMouseMotionListener(new MouseInputs());
         this.setLayout(null);
 
         scoreLabel = new JLabel("score : 0");

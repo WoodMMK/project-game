@@ -15,10 +15,13 @@ public class GameWindow {
     public GameWindow(GamePanel gamepanel) {
         jframe = new JFrame();
         jframe.add(gamepanel);
+        jframe.setTitle("BEAT that dogs");
         jframe.pack();
         jframe.setLocationRelativeTo(null);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setVisible(true);
+        //jframe.setLocation(100, 100);
+        jframe.setLocationRelativeTo(null);
         gamepanel.setLayout(null);
 
         nameLabel = new JLabel("name : " + Constants.playerName);

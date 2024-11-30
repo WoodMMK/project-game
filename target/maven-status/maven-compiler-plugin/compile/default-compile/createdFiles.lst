@@ -27,6 +27,7 @@ Gamecode\Menu$13.class
 Gamecode\Game.class
 Gamecode\Menu$3.class
 Gamecode\Menu$6.class
+Inputs\ButtonMouseListener.class
 Utilities\Constants$enemyConstants.class
 Gamecode\Menu$4.class
 Entities\Player.class
