@@ -5,16 +5,9 @@ import Inputs.ButtonMouseListener;
 import Inputs.KeyboardInputs;
 import Utilities.Constants;
 import Utilities.LodeSave;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 public class GamePanel extends JPanel {
 
@@ -23,7 +16,6 @@ public class GamePanel extends JPanel {
     private JLabel scoreLabel, remainEnemyLabel;
     private JLabel waveLabel;
     private Font scoreFont = LodeSave.getFont(Constants.fontName, Font.BOLD, 40);
-    //private int numberOfEnemy = 0;
 
     public GamePanel(Game game) {
         this.game = game;
@@ -37,7 +29,7 @@ public class GamePanel extends JPanel {
         scoreLabel.setBounds(1020, 30, 1000, 50);
         this.add(scoreLabel);
 
-        Constants.numberOfEnemy = game.getEnemyGrop().size();
+        Constants.numberOfEnemy = game.getEnemyGroup().size();
         remainEnemyLabel = new JLabel("Enemy remain : " + Constants.numberOfEnemy);
         remainEnemyLabel.setFont(scoreFont);
         remainEnemyLabel.setForeground(new Color(44, 53, 86));
@@ -74,6 +66,6 @@ public class GamePanel extends JPanel {
         super.paintComponent(g);
         game.render(g);
         scoreLabel.setText("score : " + Constants.score);
-        remainEnemyLabel.setText("Enemy remain :  " + Constants.numberOfEnemy/*+" in this wave"*/);
+        remainEnemyLabel.setText("Enemy remain :  " + Constants.numberOfEnemy);
     }
 }

@@ -10,10 +10,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
-/**
- *
- * @author Gateaux
- */
 public class Enemy extends Entity {
 
     private Player player;
@@ -22,7 +18,7 @@ public class Enemy extends Entity {
     private double enemySpeed;
 
     private int e_Action = idling;
-    private boolean moveState = true, attack = false, /*hit = false,*/ aniDone = false;
+    private boolean moveState = true, attack = false, aniDone = false;
     private int facing = -1;
     int flipX;
     private int aniTick = 0, aniIndex = 0, aniSpeed = 20;
@@ -43,8 +39,6 @@ public class Enemy extends Entity {
     public Enemy(float x, float y, int width, int height, Game game) {
         super(x, y, width, height);
         randomInt = random.nextInt(0, 4);
-        //this.maxHP = 100;
-        //this.curHP = maxHP;
         getAnimations();
         createHitbox(x, ySpawn, 70, 44);
         createAttackBox();
@@ -52,7 +46,6 @@ public class Enemy extends Entity {
 
     public void linkPlayer(Player player) {
         this.player = player;
-        //System.out.println(this.player);
     }
 
     public void update() {
@@ -61,7 +54,6 @@ public class Enemy extends Entity {
         updateAniTick();
         assignAni();
         updateAttackBox();
-        //checkAttackBox();
         if (curHP <= 0 && !thisEntityDie) {
             thisEntityDie = true;
             Constants.score += enemyScore;
@@ -71,8 +63,6 @@ public class Enemy extends Entity {
     public void render(Graphics g) {
         if (!aniDone) {
             g.drawImage(animations[e_Action][aniIndex], (int) (hitbox.x - xHitboxOffset) + flipX, (int) (hitbox.y - yHitboxOffset), width * facing, height, null);
-            //showHitbox(g);
-            //showAttackBox(g);
         }
     }
 
@@ -113,15 +103,9 @@ public class Enemy extends Entity {
                 enemyScore = 300;
                 enemySpeed = 1 * 1.3;
             }
-            //enemyScore =100;
-            //enemySpeed = 1;
-            //System.out.printf("Loaded sprite sheet %d\n", k);
-
             int cols = img.getWidth() / frameWidth;
             int rows = img.getHeight() / frameHeight;
             int totalSprites = cols * rows;
-
-            //System.out.printf("Sprite sheet dimensions: %d x %d (rows: %d, cols: %d, total sprites: %d)\n", img.getWidth(), img.getHeight(), rows, cols, totalSprites);
             int spriteIndex = 0;
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
@@ -133,7 +117,6 @@ public class Enemy extends Entity {
                 }
             }
         }
-        //System.out.println("Finished");
     }
 
     private void assignAni() {
@@ -172,7 +155,6 @@ public class Enemy extends Entity {
                 }
             }
             if (aniIndex >= getSpriteAmount(e_Action)) {
-                //System.out.println(aniDone);
                 if (curHP <= 0) {
                     aniDone = true;
                     Constants.enemyAniEnd = true;

@@ -15,10 +15,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author tansan
- */
 public class Player extends Entity {
 
     private Game game;
@@ -47,7 +43,6 @@ public class Player extends Entity {
     private long airtimeStart = 0;
     private long airtimeDif;
 
-    long keyPressStartTime = 0;
     long keyPressLimit = 100;
 
     private boolean Up, Right, Left, Down;
@@ -132,7 +127,6 @@ public class Player extends Entity {
             game.getGameWindow().getJFrame().dispose();
             game.getMenu().getJFrame().setVisible(true);
             game.getMenu().backToStartPanel();
-            //new Menu();
         }
     }
 
@@ -208,7 +202,7 @@ public class Player extends Entity {
         if (aniTick >= aniSpeed) {
             aniTick = 0;
             aniIndex++;
-            if (attack && aniIndex >= 4 && aniIndex <= 5) {
+            if (attack && aniIndex >= 4 && aniIndex <= 5) { //apply hitbox at frame 4 - 5
                 for (int i = 0; i < enemyGrop.size(); i++) {
                     if (attackBox.intersects(enemyGrop.get(i).getHitbox())) {
                         enemyGrop.get(i).hit();
@@ -239,7 +233,6 @@ public class Player extends Entity {
                 jumpSound();
             }
             this.Up = up;
-            this.keyPressStartTime = System.currentTimeMillis();
         }
     }
 
@@ -277,10 +270,6 @@ public class Player extends Entity {
                 airtimeStart = System.currentTimeMillis();
             }
             airtimeDif = System.currentTimeMillis() - airtimeStart;
-
-            //y += gravity;);
-            //hitbox.y += gravity * airtimeDif / 1000;
-            //hitbox.y += gravity * 2;
             hitbox.y += gravity;
             if (airtimeDif > keyPressLimit) {
                 Up = false; // Disable jump if air-time limit exceeds
@@ -288,7 +277,6 @@ public class Player extends Entity {
         } else {
             airtimeDif = 0;
             airtimeStart = 0;
-            //jumpcount = 0;
             jumpable = true;
             hitbox.y = LevelHandler.GroundPos;
         }
@@ -298,10 +286,8 @@ public class Player extends Entity {
             moveState = true;
             flipX = 0;
             if (hitbox.x < boarder_right) {
-                //x += movespeed;
                 hitbox.x += movespeed;
             } else {
-                //x = 1132;
                 hitbox.x = boarder_right;
             }
             p_facing = 1;
@@ -313,7 +299,6 @@ public class Player extends Entity {
             } else {
                 hitbox.x = boarder_left;
             }
-            //hitbox.x -= movespeed;
             p_facing = -1;
         }
 
@@ -356,17 +341,6 @@ public class Player extends Entity {
         }
     }
 
-    // wait for implement in code 
-    // >>>>>
-    public void hitSound() {
-        SoundManager.playOnce("hit sound path");
-    }
-
-    public void getHitSound() {
-        SoundManager.playOnce("hit sound path");
-    }
-
-    // <<<<<<
     public void setPHP() {
         if (Constants.difficult == 1) {
             maxHP = 5;

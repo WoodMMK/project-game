@@ -5,11 +5,6 @@ import Utilities.SoundManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-/**
- *
- * @author Gateaux
- */
-
 public class KeyboardInputs implements KeyListener {
 
     private GamePanel gamepanel;
@@ -20,7 +15,6 @@ public class KeyboardInputs implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // we don't use this function
     }
 
     @Override
@@ -54,9 +48,6 @@ public class KeyboardInputs implements KeyListener {
                 if (!gamepanel.getGame().getPlayer().isDamage())
                     gamepanel.getGame().getPlayer().setAttack(true);
                 break;
-//            case KeyEvent.VK_K:
-//                SoundManager.playOnce(Utilities.Constants.soundConstants.SOUND_GAME_OVER);
-//                break;
         }
     }
 

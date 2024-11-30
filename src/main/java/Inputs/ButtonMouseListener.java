@@ -1,8 +1,9 @@
 package Inputs;
 
-import static Utilities.Constants.soundConstants.SOUND_BUTTON_HOLD;
-import static Utilities.Constants.soundConstants.SOUND_BUTTON_RELEASED;
+//for clicking sounds
 import Utilities.SoundManager;
+import static Utilities.Constants.soundConstants.SOUND_BUTTON_HOLD; 
+import static Utilities.Constants.soundConstants.SOUND_BUTTON_RELEASED;
 
 import java.awt.Cursor;
 import java.awt.event.*;

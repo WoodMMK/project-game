@@ -9,7 +9,6 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class LodeSave {
-
     static String path = "src/main/resources/assets/";
 
     public static BufferedImage getAsset(String name) {

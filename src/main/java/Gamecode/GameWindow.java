@@ -20,7 +20,6 @@ public class GameWindow {
         jframe.setLocationRelativeTo(null);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setVisible(true);
-        //jframe.setLocation(100, 100);
         jframe.setLocationRelativeTo(null);
         gamepanel.setLayout(null);
 

@@ -60,7 +60,6 @@ public class MySound {
         }
         float volume = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
         gainControl.setValue(volume);
-        System.out.println("changed volume");
     }
 
     public static MySound getSound(String soundFileName) {

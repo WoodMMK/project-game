@@ -28,19 +28,107 @@ public class Menu {
 
     private CardLayout cardLayout = new CardLayout();
     private JPanel mainPanel;
-    private JLabel nametitel;
+    private JLabel nametitel, valueLabel;
     private Image defaultBG, defaultBG2, settingPlate;
 
     private Font headerFont = LodeSave.getFont(Constants.fontName, Font.BOLD, 60),
             defaultFont = LodeSave.getFont(Constants.fontName, Font.BOLD, 45),
-            choicFont = LodeSave.getFont(Constants.fontName, Font.PLAIN, 25),
+            choiceFont = LodeSave.getFont(Constants.fontName, Font.PLAIN, 25),
             creditFont = LodeSave.getFont(Constants.fontName, Font.BOLD, 35);
 
+
     public Menu() {
+        // start default background music
         SoundManager.stopTheme();
         SoundManager.playTheme(Constants.curMusic);
-        readPic();
 
+        // Get all main menu pictures
+        readPic();
+        
+        // Set Java Swing components
+        
+        setPanel();
+        setFrame();
+        setGridMenu();
+        addAllPanel();
+
+        jframe.validate();
+    }
+    public JFrame getJFrame() {
+        return jframe;
+    }
+    public void backToStartPanel() {
+        cardLayout.show(mainPanel, "main");
+    }
+    
+    // custom classes
+    ActionListener backButtonActionListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            cardLayout.show(mainPanel, "main");
+        }
+    };
+    private static class newPanelBaG extends JPanel {
+        private Image backgroundImage;
+
+        public newPanelBaG(Image backgroundImage) {
+            this.backgroundImage = backgroundImage;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (backgroundImage != null) {
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            }
+        }
+    }
+    private JLabel newTitleLabel(String txt) {
+        JLabel label = new JLabel(txt);
+        label.setFont(defaultFont);
+        label.setForeground(Color.WHITE);
+        return label;
+    }
+    class closeFrameActionListener implements ActionListener {
+
+        private Menu m;
+
+        public closeFrameActionListener(Menu m) {
+            this.m = m;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String txt = nameField.getText().trim();
+            if (!txt.isEmpty()) {
+                Constants.playerName = nameField.getText().trim();
+                new Game(m);
+                jframe.setVisible(false);
+                nametitel.setText("Enter your name : ");
+            } else {
+                nametitel.setText("Enter your name : please");
+            }
+        }
+    }
+
+    // Component setting methods
+    private void addAllPanel() {
+        mainPanel.add(startPanel, "main");
+        mainPanel.add(settingPanel, "setting");
+        mainPanel.add(creditPanel, "credit");
+        mainPanel.add(enterNamePanel, "name");
+    }
+    private void setFrame() {
+        jframe = new JFrame();
+        jframe.add(mainPanel);
+        jframe.pack();
+        jframe.setTitle(title);
+        jframe.setLocationRelativeTo(null);
+        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jframe.setVisible(true);
+        jframe.setLocationRelativeTo(null);
+    }
+    private void setPanel() {
         startPanel = new newPanelBaG(defaultBG);
         settingPanel = new newPanelBaG(defaultBG2);
         enterNamePanel = new newPanelBaG(defaultBG2);
@@ -53,15 +141,8 @@ public class Menu {
         mainPanel.setPreferredSize(windowSize);
         enterNamePanel.setPreferredSize(windowSize);
 
-        jframe = new JFrame();
-        jframe.add(mainPanel);
-        jframe.pack();
-        jframe.setTitle(title);
-        jframe.setLocationRelativeTo(null);
-        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jframe.setVisible(true);
-        //jframe.setLocation(100, 100);
-        jframe.setLocationRelativeTo(null);
+    }
+    private void setAllButton() {
 
         startB = new JButton(startI[0]);
         startB.addActionListener(new ActionListener() {
@@ -115,7 +196,6 @@ public class Menu {
         quitB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //jframe.dispose();
                 System.exit(0);
             }
         });
@@ -170,61 +250,6 @@ public class Menu {
         soundB[1].setSelectedIcon(checkI[1]);
         soundB[0].setIcon(checkI[0]);
         soundB[0].setSelectedIcon(checkI[1]);
-
-        JLabel valueLabel = new JLabel("volume: " + (int) (gameVolume * 100));
-        valueLabel.setFont(choicFont);
-        valueLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
-        volume = new JSlider(0, 100, (int) (gameVolume * 100));
-        volume.setBorder(null);
-        volume.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                valueLabel.setText("volume: " + volume.getValue());
-                if (soundB[0].isSelected()) {
-                    SoundManager.updateAllVolume((float) volume.getValue() / 100);
-                }
-            }
-        });
-        volume.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                int mouseX = e.getX();
-                int sliderWidth = volume.getWidth();
-                int value = (int) ((double) mouseX / sliderWidth * (volume.getMaximum() - volume.getMinimum()));
-                volume.setValue(volume.getMinimum() + value);
-            }
-        });
-        volume.setUI(new BasicSliderUI(volume) {
-            @Override
-            public void paintTrack(Graphics g) {
-                Image trackimg = LodeSave.getAsset("bar.png");
-                Image fillimg = LodeSave.getAsset("fill.png");
-                Image trackBG = LodeSave.getAsset("barBG.png");
-                int trackHeight = slider.getHeight();
-                int trackWidth = slider.getWidth();
-                int currentValue = slider.getValue();
-                int filledWidth = (int) (((double) currentValue - slider.getMinimum())
-                        / (slider.getMaximum() - slider.getMinimum()) * trackWidth);
-//                g.setColor(Color.BLUE); 
-//                g.fillRect(trackRect.x, trackRect.y, filledWidth, trackRect.height);
-                g.drawImage(trackBG, trackRect.x - 5, trackRect.y, trackRect.width + 10, trackRect.height, null);
-                g.drawImage(fillimg, trackRect.x, trackRect.y, filledWidth, trackRect.height, null);
-                g.drawImage(trackimg, 0, (slider.getHeight() - trackHeight) / 2, trackWidth, trackHeight, null);
-
-            }
-
-            @Override
-            public void paintThumb(Graphics g) {
-                g = null;
-//                g.setColor(Color.RED);
-//                g.fillOval(thumbRect.x, thumbRect.y, thumbRect.width, thumbRect.height);
-            }
-
-            @Override
-            public void paintFocus(Graphics g) {
-                //remove highlight when select
-            }
-        });
 
         difficultB = new JToggleButton[3];
         difficultGrop = new ButtonGroup();
@@ -286,6 +311,58 @@ public class Menu {
                 Constants.difficult = 3;
             }
         });
+    }
+    private void setVolumeSetting() {
+
+        valueLabel = new JLabel("volume: " + (int) (gameVolume * 100));
+        valueLabel.setFont(choiceFont);
+        valueLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
+        volume = new JSlider(0, 100, (int) (gameVolume * 100));
+        volume.setBorder(null);
+        volume.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                valueLabel.setText("volume: " + volume.getValue());
+                if (soundB[0].isSelected()) {
+                    SoundManager.updateAllVolume((float) volume.getValue() / 100);
+                }
+            }
+        });
+        volume.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int mouseX = e.getX();
+                int sliderWidth = volume.getWidth();
+                int value = (int) ((double) mouseX / sliderWidth * (volume.getMaximum() - volume.getMinimum()));
+                volume.setValue(volume.getMinimum() + value);
+            }
+        });
+        volume.setUI(new BasicSliderUI(volume) {
+            @Override
+            public void paintTrack(Graphics g) {
+                Image trackimg = LodeSave.getAsset("bar.png");
+                Image fillimg = LodeSave.getAsset("fill.png");
+                Image trackBG = LodeSave.getAsset("barBG.png");
+                int trackHeight = slider.getHeight();
+                int trackWidth = slider.getWidth();
+                int currentValue = slider.getValue();
+                int filledWidth = (int) (((double) currentValue - slider.getMinimum())
+                        / (slider.getMaximum() - slider.getMinimum()) * trackWidth);
+                g.drawImage(trackBG, trackRect.x - 5, trackRect.y, trackRect.width + 10, trackRect.height, null);
+                g.drawImage(fillimg, trackRect.x, trackRect.y, filledWidth, trackRect.height, null);
+                g.drawImage(trackimg, 0, (slider.getHeight() - trackHeight) / 2, trackWidth, trackHeight, null);
+
+            }
+
+            @Override
+            public void paintThumb(Graphics g) {
+                g = null;
+            }
+
+            @Override
+            public void paintFocus(Graphics g) {
+            }
+        });
 
         song = new JComboBox(songList);
         song.addItemListener(new ItemListener() {
@@ -319,7 +396,11 @@ public class Menu {
             }
         });
 
-//set grid
+    }
+    private void setGridMenu() {
+        setAllButton();
+        setVolumeSetting();
+
         GridBagConstraints c = new GridBagConstraints();
         JPanel plate = new newPanelBaG(settingPlate);
         plate.setPreferredSize(new Dimension(600, 320));
@@ -329,7 +410,7 @@ public class Menu {
         nametitel.setFont(defaultFont);
         nameField = new JTextField("");
         nameField.setPreferredSize(new Dimension(300, 40));
-        nameField.setFont(choicFont);
+        nameField.setFont(choiceFont);
         enterNamePanel.setLayout(new GridBagLayout());
         enterNamePanel.add(plate, c);
 
@@ -393,13 +474,13 @@ public class Menu {
         b.gridy = 0;
         b.anchor = GridBagConstraints.WEST;
         difficultP.add(difficultB[0], b);
-        difficultB[0].setFont(choicFont);
+        difficultB[0].setFont(choiceFont);
         b.gridy = 1;
         difficultP.add(difficultB[1], b);
-        difficultB[1].setFont(choicFont);
+        difficultB[1].setFont(choiceFont);
         b.gridy = 2;
         difficultP.add(difficultB[2], b);
-        difficultB[2].setFont(choicFont);
+        difficultB[2].setFont(choiceFont);
         c.gridx = 2;
         c.gridy = 1;
         c.ipady = 20;
@@ -414,7 +495,7 @@ public class Menu {
         c.insets = new Insets(0, 15, 0, 0);
         settingPlatePanel.add(song, c);
         c.insets = new Insets(0, 0, 0, 0);
-        song.setFont(choicFont);
+        song.setFont(choiceFont);
 
         JLabel on_offLebel = newTitleLabel("Sound");
         c.gridy = 3;
@@ -427,10 +508,10 @@ public class Menu {
         b.gridy = 0;
         b.gridx = 0;
         on_offPanel.add(soundB[0], b);
-        soundB[0].setFont(choicFont);
+        soundB[0].setFont(choiceFont);
         b.gridx = 1;
         on_offPanel.add(soundB[1], b);
-        soundB[1].setFont(choicFont);
+        soundB[1].setFont(choiceFont);
         c.gridx = 2;
         c.gridy = 3;
         settingPlatePanel.add(on_offPanel, c);
@@ -519,14 +600,9 @@ public class Menu {
         c.ipady = 20;
         creditPanel.add(backB2, c);
 
-        mainPanel.add(startPanel, "main");
-        mainPanel.add(settingPanel, "setting");
-        mainPanel.add(creditPanel, "credit");
-        mainPanel.add(enterNamePanel, "name");
-
-        jframe.validate();
     }
-
+    
+    // image setting methods
     public void readPic() {
         try {
             startI = new ImageIcon[2];
@@ -556,16 +632,10 @@ public class Menu {
             System.out.println("readPic method errors : " + e);
         }
     }
-
-    public JFrame getJFrame() {
-        return jframe;
-    }
-
     public void reScaleIcon(ImageIcon i, int x, int y) {
         Image a = i.getImage().getScaledInstance(x, y, Image.SCALE_SMOOTH);
         i.setImage(a);
     }
-
     public void reScaleIcon(ImageIcon i) {
         double scale = 6.5;
         int Width = (int) (i.getIconWidth() * scale);
@@ -574,61 +644,8 @@ public class Menu {
         i.setImage(a);
     }
 
-    ActionListener backButtonActionListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            cardLayout.show(mainPanel, "main");
-        }
-    };
+    
+    
 
-    private static class newPanelBaG extends JPanel {
 
-        private Image backgroundImage;
-
-        public newPanelBaG(Image backgroundImage) {
-            this.backgroundImage = backgroundImage;
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            if (backgroundImage != null) {
-                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-            }
-        }
-    }
-
-    private JLabel newTitleLabel(String txt) {
-        JLabel label = new JLabel(txt);
-        label.setFont(defaultFont);
-        label.setForeground(Color.WHITE);
-        return label;
-    }
-
-    class closeFrameActionListener implements ActionListener {
-
-        private Menu m;
-
-        public closeFrameActionListener(Menu m) {
-            this.m = m;
-        }
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            String txt = nameField.getText().trim();
-            if (!txt.isEmpty()) {
-                Constants.playerName = nameField.getText().trim();
-                System.out.println("player name = " + Constants.playerName);
-                new Game(m);
-                //jframe.dispose();
-                jframe.setVisible(false);
-                nametitel.setText("Enter your name : ");
-            } else {
-                nametitel.setText("Enter your name : plaseeee");
-            }
-        }
-    }
-
-    public void backToStartPanel() {
-        cardLayout.show(mainPanel, "main");
-    }
 }

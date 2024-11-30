@@ -4,18 +4,20 @@ public class Constants {
     public static String fontName = "dpcomic.ttf";
     public static String playerName = "";
     public static String curMusic = "src/main/resources/assets/music/bgm0.wav";
-    public static int score = 0, difficult = 1, wave = 1;//1 esay 2 normal 3 heard
+    public static int score = 0, difficult = 1, wave = 1;//1 easy, 2 normal, 3 hard
     public static int numberOfEnemy = 0;
     public static boolean enemyAniEnd = false;
 
     public static class playerConstants {
-
+        // animation index
         public final static int idling = 0;
         public final static int running = 1;
         public final static int attacking = 2;
         public final static int jumping = 3;
         public final static int damaged = 5;
         public final static int dead = 6;
+        
+        // movements
         public static boolean jumpable = true;
         public final static int jump_power = (int) (10 * 1.5);
         public final static int movespeed = (int) (1 * 1.5);
@@ -39,11 +41,13 @@ public class Constants {
     }
 
     public static class enemyConstants {
-
+        // animation index
         public final static int idling = 0;
         public final static int running = 1;
         public final static int attacking = 2;
         public final static int dead = 3;
+        
+        // movements
         public final static int movespeed = 1;
 
         public static int getSpriteAmount(int p_Action) {

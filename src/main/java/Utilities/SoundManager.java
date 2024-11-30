@@ -52,8 +52,6 @@ public class SoundManager {
     public static void stopTheme(){
         if(currentTheme != null){
             currentTheme.stop();
-        }else{
-            System.err.println("stopTheme method, Sound not found");
         }
     }
     
