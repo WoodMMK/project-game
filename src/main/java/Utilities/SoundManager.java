@@ -1,22 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Utilities;
 
 import java.util.HashMap;
 import java.util.Map;
 import static Utilities.Constants.soundConstants.*;
-/**
- *
- * @author woody
- */
+
 public class SoundManager {
-    // Cache to store preloaded sounds
-    private static Map<String, MySound> soundCache = new HashMap<>();
+    private static final Map<String, MySound> soundCache = new HashMap<>();
     private static MySound currentTheme = null;
-    // preloaded sounds
-    // so, ready since load Soundmanager
+    
     static {
         preloadSound(Music1);
         preloadSound(Music2);
@@ -28,7 +19,6 @@ public class SoundManager {
         preloadSound(SOUND_JUMP);
         preloadSound(SOUND_RUNNING);
         preloadSound(SOUND_getHit);
-        preloadSound(SOUND_HIT);
         preloadSound(SOUND_BUTTON_HOLD);
         preloadSound(SOUND_BUTTON_RELEASED);
         preloadSound(SOUND_GAME_OVER);
@@ -76,13 +66,12 @@ public class SoundManager {
         }
     }
 
-    // for sound setting 
     public static void stopSound(String soundFilePath) {
         MySound sound = soundCache.get(soundFilePath);
         if (sound != null) {
             sound.stop();
         } else {
-            System.err.println("stop method, Sound not found: " + soundFilePath);
+            System.err.println("stopSound method, Sound not found: " + soundFilePath);
         }
     }
     public static void updateAllVolume(float newVolume){
@@ -92,8 +81,6 @@ public class SoundManager {
         }
     }
     
-    // gain = Volume level (0.0 to 1.0)
-    // update individual sound's volume
     public static void setVolume(String soundFilePath, float gain) {
         MySound sound = soundCache.get(soundFilePath);
         if (sound != null) {

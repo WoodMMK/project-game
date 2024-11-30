@@ -2,22 +2,13 @@ package Gamecode;
 
 import Entities.*;
 import Levels.level;
-import Utilities.Constants;
-import Utilities.LodeSave;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import Utilities.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Gateaux
- */
 public class Game implements Runnable {
 
     private GameWindow gamewindow;
@@ -106,7 +97,6 @@ public class Game implements Runnable {
         timer--;
         if (timer <= 0) {
             gamepanel.removeWave();
-            //System.out.println("remove wavelabel");
         }
         //enemy.update();
         //level.update();
@@ -125,11 +115,9 @@ public class Game implements Runnable {
     public void render(Graphics g) {
         level.draw(g);
         player.render(g);
-        //boolean checkAlive = false;
         for (int i = 0; i < enemyGrop.size(); i++) {
             enemyGrop.get(i).render(g);
         }
-        //enemy.render(g);
     }
 
     public void setRun(boolean a) {

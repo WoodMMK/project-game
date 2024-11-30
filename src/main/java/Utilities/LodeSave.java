@@ -5,15 +5,9 @@ import java.awt.FontFormatException;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-/**
- *
- * @author tansan
- */
 public class LodeSave {
 
     static String path = "src/main/resources/assets/";

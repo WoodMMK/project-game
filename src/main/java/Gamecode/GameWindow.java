@@ -1,32 +1,15 @@
 package Gamecode;
 
-/**
- *
- * @author Gateaux
- */
 import Entities.Player;
-import Utilities.Constants;
-import Utilities.LodeSave;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import Utilities.*;
+import java.awt.*;
+import javax.swing.*;
 
 public class GameWindow {
 
     private JFrame jframe;
-    private Font scoreFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 40);
-    private JLabel /*scoreLabel,*/ nameLabel;
+    private Font scoreFont = LodeSave.getFont(Constants.fontName, Font.BOLD, 40);
+    private JLabel nameLabel;
     private Image[] heart;
 
     public GameWindow(GamePanel gamepanel) {
@@ -34,7 +17,6 @@ public class GameWindow {
         jframe.add(gamepanel);
         jframe.pack();
         jframe.setLocationRelativeTo(null);
-        //jframe.setDefaultCloseOperation(3);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setVisible(true);
         gamepanel.setLayout(null);
@@ -54,29 +36,6 @@ public class GameWindow {
         heartPanel.setOpaque(false);
         heartPanel.setBorder(null);
 
-//test heart
-//        JButton test1B = new JButton("-heart");
-//        test1B.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                Constants.currHeart--;
-//                gamepanel.requestFocus();
-//            }
-//        });
-//        test1B.setBounds(300, 300, 100, 100);
-//        gamepanel.add(test1B);
-//
-//        JButton test2B = new JButton("+heart");
-//        test2B.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                Constants.currHeart++;
-//                gamepanel.requestFocus();
-//            }
-//        });
-//        test2B.setBounds(410, 300, 100, 100);
-//        gamepanel.add(test2B);
-//gamepanel.add(scoreLabel);
         gamepanel.add(nameLabel);
         gamepanel.add(heartPanel);
     }
