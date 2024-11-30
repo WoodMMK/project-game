@@ -5,10 +5,6 @@ import Utilities.LodeSave;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-/**
- *
- * @author tansan
- */
 public class level {
 
     private Game game;

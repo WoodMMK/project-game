@@ -4,10 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 
-/**
- *
- * @author tansan
- */
 public abstract class Entity {
 
     protected float x, y;

@@ -2,22 +2,13 @@ package Gamecode;
 
 import Entities.*;
 import Levels.level;
-import Utilities.Constants;
-import Utilities.LodeSave;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import Utilities.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Gateaux
- */
 public class Game implements Runnable {
 
     private GameWindow gamewindow;
@@ -47,9 +38,7 @@ public class Game implements Runnable {
     }
 
     public Game() {
-        //enemy = new Enemy(0, 0, 48 * 2, 32 * 2, this);
         player = new Player(0, 0, 300, 300, this);
-        //enemy.linkPlayer(player);
         createSetEnemy();
         player.linkEnemy(enemyGrop);
         player.setPHP();
@@ -60,7 +49,6 @@ public class Game implements Runnable {
         gamepanel.showWave();
         startGameLoop();
     }
-
 
     public void startGameLoop() {
         loopThread = new Thread(this);
@@ -88,16 +76,14 @@ public class Game implements Runnable {
         timer--;
         if (timer <= 0) {
             gamepanel.removeWave();
-            //System.out.println("remove wavelabel");
         }
-        //enemy.update();
-        //level.update();
         if (player.getCurHP() < 1 && !closeFram) {
 
             this.setRun(false);
             closeFram = true;
             JOptionPane.showMessageDialog(null, "your journey end here", "game end",
                     JOptionPane.INFORMATION_MESSAGE);
+            
             gamewindow.getJFrame().dispose();
 
             new Menu();
@@ -107,13 +93,10 @@ public class Game implements Runnable {
     public void render(Graphics g) {
         level.draw(g);
         player.render(g);
-        //boolean checkAlive = false;
         for (int i = 0; i < enemyGrop.size(); i++) {
             enemyGrop.get(i).render(g);
         }
-        //enemy.render(g);
     }
-
 
     public void setRun(boolean a) {
         runnable = a;

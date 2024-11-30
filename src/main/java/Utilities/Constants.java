@@ -1,14 +1,8 @@
 package Utilities;
 
-
-/**
- *
- * @author Gateaux
- */
 public class Constants {
-
+    public static String fontName = "dpcomic.ttf";
     public static String playerName = "";
-    //public static int maxHeart = 5;
     public static String curMusic = "src/main/resources/assets/music/bgm0.wav";
     public static int score = 0, difficult = 1, wave = 1;//1 esay 2 normal 3 heard
 
@@ -64,7 +58,7 @@ public class Constants {
     public static class soundConstants{
         public static float gameVolume = 0.5f;
         static final String MusicPath = "src/main/resources/assets/music/";
-        public static final String Music1 = MusicPath + "bgm0.wav";//src/main/resources/assets/music/bgm0.wav
+        public static final String Music1 = MusicPath + "bgm0.wav";
         public static final String Music2 = MusicPath + "bgm1.wav";
         public static final String Music3 = MusicPath + "bgm2.wav";
         public static final String Music4 = MusicPath + "bgm3.wav";
@@ -75,7 +69,6 @@ public class Constants {
         public static final String SOUND_JUMP = FXPath + "edited_jump.wav";
         public static final String SOUND_RUNNING = FXPath + "running_in_grass.wav";
         public static final String SOUND_getHit = FXPath + "getHit.wav";
-        public static final String SOUND_HIT = null;
         public static final String SOUND_BUTTON_RELEASED = FXPath+ "mouse_released.wav";
         public static final String SOUND_BUTTON_HOLD = FXPath + "mouse_hold.wav";
         public static final String SOUND_GAME_OVER = FXPath + "gameover.wav";

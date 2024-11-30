@@ -1,47 +1,16 @@
 package Gamecode;
 
-import Utilities.Constants;
-import Utilities.Constants.soundConstants;
-import Utilities.LodeSave;
-import Utilities.MySound;
-import Utilities.SoundManager;
+import Utilities.*;
 import static Utilities.Constants.soundConstants.*;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSlider;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
+import Inputs.ButtonMouseListener;
 
-/**
- *
- * @author tansan
- */
 public class Menu {
 
     private String title = "ONE NIGHT MIRACLE";
@@ -61,11 +30,10 @@ public class Menu {
     private JPanel mainPanel;
     private Image defaultBG, settingPlate;
 
-    //private String curMusic = Music1;
-    private Font headerFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 60),
-            defaultFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 45),
-            choicFont = LodeSave.getFont("dpcomic.ttf", Font.PLAIN, 25),
-            creditFont = LodeSave.getFont("dpcomic.ttf", Font.BOLD, 35);
+    private Font headerFont = LodeSave.getFont(Constants.fontName, Font.BOLD, 60),
+            defaultFont = LodeSave.getFont(Constants.fontName, Font.BOLD, 45),
+            choicFont = LodeSave.getFont(Constants.fontName, Font.PLAIN, 25),
+            creditFont = LodeSave.getFont(Constants.fontName, Font.BOLD, 35);
 
     public Menu() {
         SoundManager.stopTheme();
@@ -100,11 +68,9 @@ public class Menu {
             public void actionPerformed(ActionEvent e) {
                 startB.setIcon(startI[1]);
                 cardLayout.show(mainPanel, "name");
-                //new Game();
-                //jframe.dispose();
             }
         });
-        startB.addMouseListener(new buttonMouseListener(startB, startI));
+        startB.addMouseListener(new ButtonMouseListener(startB, startI));
         startB.setBorder(null);
         startB.setFocusPainted(false);
         startB.setContentAreaFilled(false);
@@ -120,21 +86,21 @@ public class Menu {
         settingB.setBorder(null);
         settingB.setContentAreaFilled(false);
         settingB.setFocusPainted(false);
-        settingB.addMouseListener(new buttonMouseListener(settingB, settingI));
+        settingB.addMouseListener(new ButtonMouseListener(settingB, settingI));
 
         backB = new JButton(backI[0]);
         backB.addActionListener(backButtonActionListener);
         backB.setBorder(null);
         backB.setContentAreaFilled(false);
         backB.setFocusPainted(false);
-        backB.addMouseListener(new buttonMouseListener(backB, backI));
+        backB.addMouseListener(new ButtonMouseListener(backB, backI));
 
         backB2 = new JButton(backI[0]);
         backB2.addActionListener(backButtonActionListener);
         backB2.setBorder(null);
         backB2.setFocusPainted(false);
         backB2.setContentAreaFilled(false);
-        backB2.addMouseListener(new buttonMouseListener(backB2, backI));
+        backB2.addMouseListener(new ButtonMouseListener(backB2, backI));
 
         JLabel nametitel = new JLabel("Enter your name");
         goB = new JButton(startI[0]);
@@ -155,7 +121,7 @@ public class Menu {
         goB.setBorder(null);
         goB.setFocusPainted(false);
         goB.setContentAreaFilled(false);
-        goB.addMouseListener(new buttonMouseListener(goB, startI));
+        goB.addMouseListener(new ButtonMouseListener(goB, startI));
 
         quitB = new JButton(quitI[0]);
         quitB.addActionListener(new ActionListener() {
@@ -168,7 +134,7 @@ public class Menu {
         quitB.setBorder(null);
         quitB.setContentAreaFilled(false);
         quitB.setFocusPainted(false);
-        quitB.addMouseListener(new buttonMouseListener(quitB, quitI));
+        quitB.addMouseListener(new ButtonMouseListener(quitB, quitI));
 
         creditB = new JButton(creditI[0]);
         creditB.addActionListener(new ActionListener() {
@@ -181,7 +147,7 @@ public class Menu {
         creditB.setBorder(null);
         creditB.setContentAreaFilled(false);
         creditB.setFocusPainted(false);
-        creditB.addMouseListener(new buttonMouseListener(creditB, creditI));
+        creditB.addMouseListener(new ButtonMouseListener(creditB, creditI));
 
         soundB = new JToggleButton[2];
         soundGroup = new ButtonGroup();
@@ -217,10 +183,10 @@ public class Menu {
         soundB[0].setIcon(checkI[0]);
         soundB[0].setSelectedIcon(checkI[1]);
 
-        JLabel valueLabel = new JLabel("volume: " + (int) (soundConstants.gameVolume * 100));
+        JLabel valueLabel = new JLabel("volume: " + (int) (gameVolume * 100));
         valueLabel.setFont(choicFont);
         valueLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
-        volume = new JSlider(0, 100, (int) (soundConstants.gameVolume * 100));
+        volume = new JSlider(0, 100, (int) (gameVolume * 100));
         volume.setBorder(null);
         volume.addChangeListener(new ChangeListener() {
             @Override
@@ -580,7 +546,7 @@ public class Menu {
             settingI = new ImageIcon[2];
             creditI = new ImageIcon[2];
             checkI = new ImageIcon[2];
-            defaultBG = LodeSave.getImage("defaultBg.png");
+            defaultBG = LodeSave.getImage("Background/defaultBG.png");
             settingPlate = LodeSave.getImage("settingPlate.png");
             for (int i = 0; i < 2; i++) {
                 checkI[i] = LodeSave.getIcon("button/Check" + i + ".png");
@@ -597,7 +563,7 @@ public class Menu {
                 reScaleIcon(creditI[i], 80, 80);
             }
         } catch (Exception e) {
-            System.out.println("err " + e);
+            System.out.println("readPic method errors : " + e);
         }
     }
 
@@ -643,38 +609,5 @@ public class Menu {
         label.setFont(defaultFont);
         label.setForeground(Color.WHITE);
         return label;
-    }
-}
-
-class buttonMouseListener extends MouseAdapter {
-
-    private JButton button;
-    private ImageIcon[] icon;
-
-    public buttonMouseListener(JButton button, ImageIcon[] i) {
-        this.button = button;
-        this.icon = i;
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        button.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        button.setIcon(icon[1]);
-        SoundManager.playOnce(SOUND_BUTTON_HOLD);
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        button.setIcon(icon[0]);
-        SoundManager.playOnce(SOUND_BUTTON_RELEASED);
     }
 }

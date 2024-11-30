@@ -2,7 +2,6 @@ Levels\LevelHandler.class
 Utilities\Constants$soundConstants.class
 Entities\Enemy.class
 Gamecode\Menu$5.class
-Inputs\MouseInputs.class
 Utilities\SoundManager.class
 Levels\level.class
 Gamecode\GamePanel.class
@@ -13,7 +12,6 @@ Gamecode\Menu$12.class
 Utilities\LodeSave.class
 Gamecode\Menu$10.class
 Gamecode\Menu$9.class
-Gamecode\buttonMouseListener.class
 Utilities\Constants.class
 Gamecode\MainClass.class
 Utilities\Constants$playerConstants.class
