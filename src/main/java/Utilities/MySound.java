@@ -3,7 +3,12 @@ package Utilities;
 import Utilities.Constants.soundConstants;
 import java.io.IOException;
 import javax.sound.sampled.*;
-
+/*
+Nantaphop Nawaphanpimol 6613120 
+Rapeepat Boolsuk 6613269
+Bhwin Thongrueang 6613266
+Maimongkol Thokanokwan 6613268
+*/
 public class MySound {
 
     private Clip clip;

@@ -3,7 +3,12 @@ package Utilities;
 import java.util.HashMap;
 import java.util.Map;
 import static Utilities.Constants.soundConstants.*;
-
+/*
+Nantaphop Nawaphanpimol 6613120 
+Rapeepat Boolsuk 6613269
+Bhwin Thongrueang 6613266
+Maimongkol Thokanokwan 6613268
+*/
 public class SoundManager {
     private static final Map<String, MySound> soundCache = new HashMap<>();
     private static MySound currentTheme = null;

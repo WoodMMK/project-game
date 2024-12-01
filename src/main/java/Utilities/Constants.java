@@ -1,5 +1,10 @@
 package Utilities;
-
+/*
+Nantaphop Nawaphanpimol 6613120 
+Rapeepat Boolsuk 6613269
+Bhwin Thongrueang 6613266
+Maimongkol Thokanokwan 6613268
+*/
 public class Constants {
     public static String fontName = "dpcomic.ttf";
     public static String playerName = "";

@@ -8,7 +8,12 @@ import java.util.ArrayList;
 import java.util.Random;
 //import javax.swing.JLabel;
 //import javax.swing.JOptionPane;
-
+/*
+Nantaphop Nawaphanpimol 6613120 
+Rapeepat Boolsuk 6613269
+Bhwin Thongrueang 6613266
+Maimongkol Thokanokwan 6613268
+*/
 public class Game implements Runnable {
 
     private GameWindow gamewindow;

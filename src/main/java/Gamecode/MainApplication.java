@@ -10,7 +10,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
 import Inputs.ButtonMouseListener;
-
+/*
+Nantaphop Nawaphanpimol 6613120 
+Rapeepat Boolsuk 6613269
+Bhwin Thongrueang 6613266
+Maimongkol Thokanokwan 6613268
+*/
 public class MainApplication {
 
     private String title = "BEAT that dogs";

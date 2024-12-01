@@ -4,7 +4,12 @@ import Entities.Player;
 import Utilities.*;
 import java.awt.*;
 import javax.swing.*;
-
+/*
+Nantaphop Nawaphanpimol 6613120 
+Rapeepat Boolsuk 6613269
+Bhwin Thongrueang 6613266
+Maimongkol Thokanokwan 6613268
+*/
 public class GameWindow {
 
     private JFrame jframe;
