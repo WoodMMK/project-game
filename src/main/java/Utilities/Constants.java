@@ -68,7 +68,7 @@ public class Constants {
 
     public static class soundConstants {
 
-        public static float gameVolume = 0.5f;
+        public static float gameVolume = 0.2f;
         static final String MusicPath = "src/main/resources/assets/music/";
         public static final String Music1 = MusicPath + "bgm0.wav";
         public static final String Music2 = MusicPath + "bgm1.wav";

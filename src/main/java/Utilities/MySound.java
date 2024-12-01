@@ -16,7 +16,8 @@ public class MySound {
             clip = AudioSystem.getClip();
             clip.open(audioStream);
             gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(soundConstants.gameVolume);
+            float volume = (float) (Math.log(soundConstants.gameVolume) / Math.log(10.0) * 20.0);
+            gainControl.setValue(volume);
         } catch (IOException e) {
             System.err.println("Error: Unable to read the audio file. " + e.getMessage());
         } catch (LineUnavailableException e) {
