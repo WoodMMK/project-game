@@ -11,7 +11,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
 import Inputs.ButtonMouseListener;
 
-public class Menu {
+public class MainApplication {
 
     private String title = "BEAT that dogs";
     private JFrame jframe;
@@ -37,7 +37,7 @@ public class Menu {
             creditFont = LodeSave.getFont(Constants.fontName, Font.BOLD, 35);
 
 
-    public Menu() {
+    public MainApplication() {
         // start default background music
         SoundManager.stopTheme();
         SoundManager.playTheme(Constants.curMusic);
@@ -91,9 +91,9 @@ public class Menu {
     }
     class closeFrameActionListener implements ActionListener {
 
-        private Menu m;
+        private MainApplication m;
 
-        public closeFrameActionListener(Menu m) {
+        public closeFrameActionListener(MainApplication m) {
             this.m = m;
         }
 

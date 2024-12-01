@@ -12,7 +12,7 @@ import java.util.Random;
 public class Game implements Runnable {
 
     private GameWindow gamewindow;
-    private Menu menu;
+    private MainApplication menu;
     private GamePanel gamepanel;
     private Thread loopThread;
     private final int FPS_MAX = 120;
@@ -37,7 +37,7 @@ public class Game implements Runnable {
         return gamewindow;
     }
 
-    public Game(Menu menu) {
+    public Game(MainApplication menu) {
         player = new Player(450, 50, 300, 300, this);
         this.menu = menu;
         Constants.wave = 1;
@@ -54,7 +54,7 @@ public class Game implements Runnable {
         startGameLoop();
     }
 
-    public Menu getMenu() {
+    public MainApplication getMenu() {
         return menu;
     }
 
